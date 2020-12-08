@@ -7,19 +7,19 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Extensions\Media\Models;
+namespace Arikaim\Extensions\Image\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Arikaim\Extensions\Media\Models\Media;
+use Arikaim\Extensions\Image\Models\Image;
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
 use Arikaim\Core\Db\Traits\DateCreated;
 
 /**
- * Media thumbnails db model class
+ * Image thumbnails db model class
  */
-class MediaThumbnails extends Model  
+class ImageThumbnails extends Model  
 {
     use Uuid,           
         Find,
@@ -30,7 +30,7 @@ class MediaThumbnails extends Model
      *
      * @var string
     */
-    protected $table = 'media_thumbnails';
+    protected $table = 'image_thumbnails';
 
     /**
      * Fillable attributes
@@ -63,7 +63,7 @@ class MediaThumbnails extends Model
      */
     public function media()
     {
-        return $this->belongsTo(Media::class,'media_id');
+        return $this->belongsTo(Image::class,'media_id');
     }
 
     /**
@@ -73,7 +73,7 @@ class MediaThumbnails extends Model
     */
     public function scopeSmall($query, $mediaId = null)
     {
-        $query = (empty($mediaId) == false) ? $query->where('media_id','=',$mediaId) : $query;
+        $query = (empty($mediaId) == false) ? $query->where('image_id','=',$mediaId) : $query;
 
         return $query->orderBy('width','asc')->first();
     }
@@ -142,7 +142,7 @@ class MediaThumbnails extends Model
      */
     public function findOrCreateThumbnailModel($width, $height)
     {
-        $model = new MediaThumbnails();
+        $model = new ImageThumbnails();
         $query = $model->findThumbnail($this->id,$width,$height)->first();
         if (\is_object($query) == true) {
             return $query;

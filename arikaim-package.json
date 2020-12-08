@@ -1,29 +1,27 @@
 {
-    "title": "Media",
-    "name": "media",
+    "title": "Images",
+    "name": "image",
     "package-type": "extension",
     "type": "user",
-    "description": "Create media website.",
-    "short-description": "Create media website.",
+    "description": "Manage images, thumbnails, image storage and relations.",
+    "short-description": "Manage images.",
     "private-repository": true,
-    "repository": "https://github.com/arikaim-repository/media-extension.git",
+    "repository": "https://github.com/arikaim-repository/image-extension.git",
     "version": "1.0.0",
     "position": "3",
     "require": {
         "extensions": [
-            "tags",
-            "category",
-            "comments:optional"
+            "users:optional"
         ],
         "modules": [
-            "mobile:image"           
+            "image"           
         ]
     },
     "admin-menu": {        
-        "title": "Media",
-        "icon": "film",
-        "page-title": "Media",
-        "page-icon": "film",
-        "component": "media::admin"
+        "title": "Images",
+        "icon": "image",
+        "page-title": "Images",
+        "page-icon": "images",
+        "component": "image::admin"
     }
 }

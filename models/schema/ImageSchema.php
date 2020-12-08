@@ -7,21 +7,21 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Extensions\Media\Models\Schema;
+namespace Arikaim\Extensions\Image\Models\Schema;
 
 use Arikaim\Core\Db\Schema;
 
 /**
- * Media database table schema definition.
+ * Image database table schema definition.
  */
-class MediaSchema extends Schema  
+class ImageSchema extends Schema  
 {    
     /**
      * Table name
      *
      * @var string
      */
-    protected $tableName = 'media';
+    protected $tableName = 'image';
 
     /**
      * Create table
@@ -35,25 +35,19 @@ class MediaSchema extends Schema
         $table->id();
         $table->prototype('uuid');  
         $table->userId();
-        $table->position();
         $table->status();
         $table->slug();
-        $table->string('title')->nullable(false);   
-        $table->string('display_name')->nullable(true);      
+        $table->string('title')->nullable(true);   
         $table->text('description')->nullable(true);       
         $table->string('mime_type')->nullable(true);
         $table->string('file_size')->nullable(true);
-        $table->string('file')->nullable(true);
-        $table->string('provider')->nullable(true);
-        $table->string('video_id')->nullable(true);
-        $table->string('duration')->nullable(true);        
-        $table->integer('featured')->nullable(true);              
+        $table->string('src')->nullable(true);
+        
         $table->integer('views')->nullable(false)->default(0);       
-        $table->text('options')->nullable(true);  
         $table->dateCreated();
         $table->dateDeleted();
         // indexes        
-        $table->unique('title'); 
+        $table->unique('src'); 
         $table->index('views');
         $table->index('mime_type');
     }

@@ -7,26 +7,21 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Extensions\Media\Controllers;
+namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
 use Arikaim\Extensions\Media\Classes\Import;
-use Arikaim\Core\Utils\Utils;
-use Arikaim\Core\Utils\File;
-use Arikaim\Core\Utils\ZipFile;
 use Arikaim\Core\Controllers\Traits\Status;
 use Arikaim\Core\Controllers\Traits\FileUpload;
-use Arikaim\Core\Controllers\Traits\MetaTags;
 
 /**
- * Media contorl panel api controller
+ * Image contorl panel api controller
 */
-class MediaControlPanel extends ControlPanelApiController
+class ImageControlPanel extends ControlPanelApiController
 {
     use 
         Status,
-        MetaTags,      
         FileUpload;
 
     /**
@@ -36,7 +31,7 @@ class MediaControlPanel extends ControlPanelApiController
      */
     public function init()
     {
-        $this->loadMessages('media::admin.messages');
+        $this->loadMessages('image::admin.messages');
     }
 
     /**
@@ -47,8 +42,8 @@ class MediaControlPanel extends ControlPanelApiController
     public function __construct($container = null) 
     {
         parent::__construct($container);
-        $this->setModelClass('Media');
-        $this->setExtensionName('media');
+        $this->setModelClass('Image');
+        $this->setExtensionName('image');
     }
 
     /**

@@ -7,7 +7,7 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Extensions\Media\Controllers;
+namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
@@ -30,7 +30,7 @@ class ThumbnailsControlPanel extends ControlPanelApiController
      */
     public function init()
     {
-        $this->loadMessages('media::admin.messages');
+        $this->loadMessages('Image::admin.messages');
     }
 
     /**
@@ -41,8 +41,8 @@ class ThumbnailsControlPanel extends ControlPanelApiController
     public function __construct($container = null) 
     {
         parent::__construct($container);
-        $this->setModelClass('MediaThumbnails');
-        $this->setExtensionName('media');
+        $this->setModelClass('ImageThumbnails');
+        $this->setExtensionName('Image');
     }
 
     /**

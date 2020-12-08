@@ -1,6 +1,6 @@
-## Media Extension
+## Image Extension
 
-Arikaim CMS media site extension.
+Arikaim CMS image extension.
 
 
 #### Requirements   
@@ -8,12 +8,3 @@ Arikaim CMS media site extension.
   
   
 #### Features
-  * Control Panel 
-    * Sort media file by status, title, date, plays 
-    * Categories
-    * Tags
-    * Edit media
-    * Upload media file 
-    * Search media file
-    * Disable media
-    * Delete media

@@ -1,13 +1,9 @@
 {
     "labels": {
         "video": {
-            "content": "Video",
-            "title": "View videos"
-        },   
-        "import": {
-            "content": "Import",
-            "title": "Import videos"
-        }, 
+            "content": "Image",
+            "title": "View images"
+        },         
         "settings": {
             "content": "Settings",
             "title": "Settings"

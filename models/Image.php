@@ -7,16 +7,15 @@
  * @license     http://www.arikaim.com/license
  * 
 */
-namespace Arikaim\Extensions\Media\Models;
+namespace Arikaim\Extensions\Image\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
 use Arikaim\Core\Db\Model as DbModel;
-use Arikaim\Extensions\Media\Models\MediaThumbnails;
-use Arikaim\Extensions\Media\Models\MediaTranslations;
+use Arikaim\Extensions\Media\Models\ImageThumbnails;
+
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
-use Arikaim\Core\Utils\TimeInterval;
 
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
@@ -24,11 +23,9 @@ use Arikaim\Core\Db\Traits\Slug;
 use Arikaim\Core\Db\Traits\UserRelation;
 use Arikaim\Core\Db\Traits\Status;
 use Arikaim\Core\Db\Traits\DateCreated;
-use Arikaim\Core\Db\Traits\Translations;
 use Arikaim\Core\Db\Traits\SoftDelete;
 use Arikaim\Core\Db\Traits\FileTypeTrait;
 
-use Arikaim\Extensions\Category\Models\Traits\CategoryRelations;
 
 /**
  * Media db model class
@@ -39,9 +36,7 @@ class Media extends Model
         Find,
         Slug,
         DateCreated,  
-        UserRelation,  
-        CategoryRelations,    
-        Translations,    
+        UserRelation,   
         FileTypeTrait,
         SoftDelete,
         Status;
@@ -51,15 +46,14 @@ class Media extends Model
      *
      * @var string
      */
-    protected $table = 'media';
+    protected $table = 'image';
 
     /**
      * Append custom attributes
      *
      * @var array
      */
-    protected $appends = [     
-        'display_title'       
+    protected $appends = [           
     ];
 
     /**
@@ -70,33 +64,17 @@ class Media extends Model
     protected $fillable = [
         'position',
         'description',     
-        'file',
-        'provider',
-        'video_id',
-        'duration',
+        'src',
         'file_size',
         'mime_type',
-        'options',
         'status',
-        'featured',
         'title',
         'uuid',
-        'display_name',   
         'date_deleted',   
         'slug',           
         'user_id'       
     ];
     
-    /**
-     * Db column names which are translated to other languages
-     *
-     * @var array
-     */
-    protected $translatedAttributes = [
-        'display_name',
-        'description'
-    ];
-
     /**
      * Disable timestamps
      *
@@ -110,37 +88,13 @@ class Media extends Model
     protected $customMediaPathSuffix = '';
 
     /**
-     * Translation column ref
-     *
-     * @var string
-     */
-    protected $translationReference = 'media_id';
-
-    /**
-     * Translatin model class
-     *
-     * @var string
-     */
-    protected $translationModelClass = MediaTranslations::class;
-
-    /**
-     * Get duration time as text
-     *
-     * @return string|null
-     */
-    public function getDurationTimeAttribute()
-    {
-        return (empty($this->duration) == false) ? TimeInterval::create($this->duration)->format('%h:%i:%s') : null;                      
-    }
-
-    /**
-     * Get user files query
+     * Get user images query
      *
      * @param Builder $query
      * @param int $userId
      * @return Builder
      */
-    public function scopeUserFilesQuery($query, $userId)
+    public function scopeUserImagesQuery($query, $userId)
     {
         return $query->where('user_id','=',$userId);
     }
@@ -152,7 +106,7 @@ class Media extends Model
      */
     public function thumbnails()
     {
-        return $this->hasMany(MediaThumbnails::class,'media_id');
+        return $this->hasMany(ImageThumbnails::class,'image_id');
     }
 
     /**
@@ -194,16 +148,6 @@ class Media extends Model
         }      
 
         return (bool)\is_object($model->first());
-    }
-
-    /**
-     * display_title model attribute
-     *
-     * @return string
-     */
-    public function getDisplayTitleAttribute()
-    {        
-        return (empty($this->display_name) == true) ? $this->title : $this->display_name;
     }
 
     /**

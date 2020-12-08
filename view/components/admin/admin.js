@@ -6,7 +6,7 @@
  */
 'use strict';
 
-function MediaControlPanel() {
+function ImageControlPanel() {
 
     this.add = function(formId,onSuccess,onError) {
         return arikaim.post('/api/media/admin/add',formId,onSuccess,onError);          
@@ -33,21 +33,12 @@ function MediaControlPanel() {
         return arikaim.put('/api/media/admin/status',data,onSuccess,onError);      
     };
 
-    this.setFeatured = function(uuid, featured, onSuccess, onError) {   
-        var data = { 
-            uuid: uuid,
-            featured: featured 
-        };
-        
-        return arikaim.put('/api/media/admin/featured',data,onSuccess,onError);      
-    };
-
     this.init = function() {    
         arikaim.ui.tab();
     };
 };
 
-var media = new MediaControlPanel();
+var imageControlPanel = new ImageControlPanel();
 
 $(document).ready(function() {
     media.init();

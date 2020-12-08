@@ -6,8 +6,8 @@
  */
 'use strict';
 
-function MediaApi() {
+function ImageApi() {
 
 };
 
-var mediaApi = new MediaApi();
+var imageApi = new ImageApi();
