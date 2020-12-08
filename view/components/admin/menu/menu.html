@@ -1,0 +1,28 @@
+<div class="ui dropdown actions-dropdown">
+    <i class="tasks icon"></i>
+    <div class="menu">                 
+        <div class="item edit-button" uuid="{{ category.uuid }}" {{ buttons.edit.title|attr('title') }}>
+            <i class="icon edit"></i>
+            {{ buttons.edit.content }}
+        </div>
+        <div class="item delete-button" uuid="{{ category.uuid }}" {{ buttons.delete.title|attr('title') }} language="{{ language }}" parent-id="{{ category.parent_id }}" data-title="{{ category.description().title }}">
+            <i class="icon orange trash"></i>
+            {{ buttons.delete.content }}
+        </div>
+        <div class="item add-button" uuid="{{ category.uuid }}" {{ buttons.add.title|attr('title') }} parent-id="{{ category.id }}" language="{{ language }}">
+            <i class="icon plus"></i>
+            {{ buttons.add.content }}
+        </div>
+        {% if category.status == 1 %}
+        <div class="item status-button" uuid="{{ category.uuid }}" {{ buttons.disable.title|attr('title') }} language="{{ language }}" parent-id="{{ category.parent_id }}">
+            <i class="icon eye slash outline"></i>
+            {{ buttons.disable.content }}
+        </div>
+        {% else %}
+        <div class="item status-button" uuid="{{ category.uuid }}" {{ buttons.enable.title|attr('title') }} language="{{ language }}" parent-id="{{ category.parent_id }}">
+            <i class="icon eye outline"></i>
+            {{ buttons.enable.content }}
+        </div>
+        {% endif %}
+    </div>
+</div>     

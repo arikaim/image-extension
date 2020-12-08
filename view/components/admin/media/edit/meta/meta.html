@@ -1,0 +1,18 @@
+{% component 'components:tabs.vertical.content' %}
+    {% set language = language|default(current_language) %}
+    <div>
+        <div class="ui segment">
+            <h4>{{ labels.language }}</h4>
+            {{  component('components:language.dropdown',{
+                    name: 'language', 
+                    id: 'choose_language', 
+                    selected: language, 
+                    class: 'inline search selection' 
+                }) 
+            }}            
+        </div>     
+        <div class="mt-2" id="meta_content" media-uuid="{{ uuid }}">                 
+            {{ component('media::admin.media.edit.meta.form',{ uuid: uuid, language: language }) }}
+        </div>  
+    </div>     
+{% endcomponent %}

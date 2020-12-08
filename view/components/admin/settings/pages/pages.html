@@ -1,0 +1,23 @@
+{% component 'components:tabs.vertical.content' %}
+{% set items_per_page = getOption('media.items.per.page',50) %}
+{% set show_comments = getOption('media.comments',false) %}
+<form class="ui form mt-8" id="arcade_settings">
+    <div class="ui segment">  
+        <div class="four wide field">
+            <label>{{ labels.per_page }}</label>
+            <input id="items_per_page" name="media.items.per.page" type="text" value="{{ items_per_page }}">
+        </div>
+    </div>  
+    {% if hasExtension('comments') == true %}
+        <div class="ui field segment">
+            {{  component('components:option.checkbox',{ 
+                    name: 'media.comments',
+                    value: show_comments, 
+                    label: labels.comments 
+                }) 
+            }}           
+        </div> 
+    {% endif %}
+    {{ component('components:form.footer') }}
+</form>   
+{% endcomponent %}

@@ -1,0 +1,11 @@
+{% set model = createModel('Media','media') %}
+<div class="ui mini horizontal teal statistics">
+    <div class="statistic">
+        <div class="value">{{ model.count() }}</div>
+        <div class="label">{{ labels.files }}</div>
+    </div>               
+    <div class="statistic">
+        <div class="value">{{ model.sum('views') }}</div>
+        <div class="label">{{ labels.views }}</div>
+    </div>
+</div>

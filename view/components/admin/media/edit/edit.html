@@ -1,0 +1,16 @@
+{% component 'components:tabs.vertical.content' %}
+{% set class = 'sixteen wide column' %}
+{% set panel_class = '' %}
+<div class="ui segment padded">
+    <div class="ui grid">
+        <div class="ui five wide column">
+            {{ component('media::admin.dropdown',{ selected: uuid, id: 'select_media', class: 'fluid' }) }}
+        </div> 
+    </div>   
+</div>
+<div id="media_edit_tabs"> 
+    {% if uuid is not empty %}
+        {{ component('media::admin.media.edit.tabs',{ uuid: uuid }) }}
+    {% endif %}
+</div>
+{% endcomponent %}

@@ -1,0 +1,13 @@
+{
+    "fields": {
+        "title": {
+            "label": "Title",               
+            "placeholder": "Enter media title"            
+        }      
+    },
+    "buttons": {
+        "save": {
+            "content": "Upload"
+        }
+    }
+}

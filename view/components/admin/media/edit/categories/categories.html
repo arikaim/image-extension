@@ -1,0 +1,36 @@
+{% component 'components:tabs.vertical.content' %}
+{% set media = createModel('Media','media').findById(uuid) %}
+
+<div class="mt-2" id="media_categories_content">  
+    <div class="ui form">
+        <div class="field">                              
+            <label>{{ labels.categories }}</label>
+            {% set category = createModel('Category','category').getList(null,'media') %}           
+            {{  component('system:admin.orm.relations.fields.dropdown',{ 
+                    model: 'CategoryRelations',
+                    extension: 'category',
+                    type: 'media',
+                    relation_id: media.id,
+                    items: category,
+                    class: 'fluid'
+                }) 
+            }}                                                  
+        </div>
+        <div class="field">                              
+            <label>{{ labels.tags }}</label>
+            {% set selections = createModel('TagsRelations','tags').getRelatedItems(media.id,'media') %}
+            {% set tags = createModel('Tags','tags').get() %}
+            {{  component('system:admin.orm.relations.fields.dropdown',{ 
+                    model: 'TagsRelations',
+                    extension: 'tags',
+                    type: 'media',
+                    selections: selections,
+                    relation_id: media.id,
+                    items: tags,
+                    class: 'fluid'
+                }) 
+            }}    
+        </div>
+    </div>
+</div>  
+{% endcomponent %}

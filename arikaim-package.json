@@ -1,0 +1,29 @@
+{
+    "title": "Media",
+    "name": "media",
+    "package-type": "extension",
+    "type": "user",
+    "description": "Create media website.",
+    "short-description": "Create media website.",
+    "private-repository": true,
+    "repository": "https://github.com/arikaim-repository/media-extension.git",
+    "version": "1.0.0",
+    "position": "3",
+    "require": {
+        "extensions": [
+            "tags",
+            "category",
+            "comments:optional"
+        ],
+        "modules": [
+            "mobile:image"           
+        ]
+    },
+    "admin-menu": {        
+        "title": "Media",
+        "icon": "film",
+        "page-title": "Media",
+        "page-icon": "film",
+        "component": "media::admin"
+    }
+}

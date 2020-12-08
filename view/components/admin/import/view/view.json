@@ -1,0 +1,20 @@
+{
+    "title": {
+        "content": "Import movie",
+        "icon": "table"
+    },
+    "labels": {
+        "feed": "Feed",
+        "keywords": "Keywords",
+        "placeholder": "Enter keywords",
+        "search": "Search"
+    },
+    "columns": {        
+        "action": "Action",       
+        "status": "Status",
+        "title": "Title",             
+        "category": "Category",
+        "description": "Description",
+        "tags": "Tags"
+    }
+}

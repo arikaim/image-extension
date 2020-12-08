@@ -1,0 +1,11 @@
+{
+    "labels": {
+        "empty": "..",
+        "status": {
+            "active": "active",
+            "disabled": "disabled"
+        },     
+        "install": "Install movie",
+        "installed": "Installed"           
+    }
+}

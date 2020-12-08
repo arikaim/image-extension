@@ -1,0 +1,55 @@
+{
+    "fields": {
+        "title": {
+            "label": "Title",               
+            "placeholder": "Enter game title"            
+        },
+        "display": {
+            "label": "Display Name",               
+            "placeholder": "Enter display name"            
+        },
+        "url": {
+            "label": "Game Url",
+            "placeholder": "Enter game Url"
+        },
+        "description": {
+            "label": "Description",
+            "placeholder": "Enter game descriptions"
+        },
+        "instructions": {
+            "label": "Instructions",
+            "placeholder": "Enter game instructions"
+        },
+        "width": {
+            "label": "Width",
+            "placeholder": "Game width"
+        },
+        "height": {
+            "label": "Height",
+            "placeholder": "Game height"
+        },
+        "type": {
+            "label": "Type"            
+        },
+        "featured": {
+            "label": "Featured"
+        },
+       
+        "remote": {
+            "label": "Remote game"
+        },
+        "thumbnail": {
+            "label": "Thumbnail Url",
+            "placeholder": "Thumbnail image url"           
+        },
+        "categories": {
+            "label": "Categories",
+            "placeholder": ""
+        }
+    },
+    "buttons": {
+        "save": {
+            "content": "Save"
+        }
+    }
+}

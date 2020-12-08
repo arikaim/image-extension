@@ -1,0 +1,55 @@
+{% component 'components:tabs.vertical.content' %}
+{% set job = service('queue').getJob('installGames') %}
+{% set feed_driver = getOption('media.job.feeds.driver') %}
+{% set from_page = getOption('media.job.feeds.from.page') %}
+{% set to_page = getOption('media.job.feeds.to.page') %}
+{% set current_feed_item = getOption('media.current.feed.item') %}
+{% set max_install = getOption('media.job.max.install',5) %}
+{% set disabled = (demo_mode == true) ? 'disabled' : '' %}
+{% if demo_mode == true %}
+<div class="ui warning message">
+    {{ labels.demo }}
+</div>
+{% endif %}
+<form class="ui form mt-10 {{ disabled }}" id="job_settings_form" method="POST">
+    <div class="field {{ disabled }}">      
+        <div class="ui toggle checkbox {{ disabled }}" id="install_games_toggle">
+            <input type="checkbox" {{ job.status|ifthen(1,'checked') }} uuid="{{ job.uuid }}" value="1">
+            <label class="font-bold">{{ labels.install }}</label>
+            <span class="ml-16 pl-1 text-gray-700">{{ descriptions.install }}</span>
+        </div>  
+        <div class="mt-4 {{ job.status|ifthen(0,'invisible') }}" id="feed_settings">      
+            <div class="field {{ disabled }}" id="feed_driver">
+                <label>{{ labels.feed }}</label>
+                {{ component('system:admin.drivers.dropdown',{ selected: feed_driver, category: 'feeds.media', calss: 'fluid' }) }}                       
+            </div>
+            <div class="two fields">
+                <div class="field {{ disabled }}">
+                    <label>{{ labels.from }}</label>
+                    <input rule="integer" type="text" name="" id="from_page" value="{{ from_page }}">
+                </div>
+                <div class="field {{ disabled }}">
+                    <label>{{ labels.to }}</label>
+                    <input rule="integer" type="text" name="" id="to_page" value="{{ to_page }}">
+                </div>
+            </div>   
+            <div class="two fields">
+                <div class="field">
+                    <label>{{ labels.current }}</label>
+                    <input rule="number" type="text" name="" id="current_feed_item" value="{{ current_feed_item }}">
+                </div>
+                <div class="field">
+                    <label>{{ labels.max }}</label>
+                    <input rule="number" type="text" name="" id="max_install" value="{{ max_install }}">
+                </div>
+            </div>
+            <div class="ui basic accordion mt-2" id="install_games_job">                      
+                {{ component('system:admin.jobs.job',{ job: job }) }}                     
+            </div>    
+            {% if demo_mode != true %}
+            {{ component('components:form.footer') }}    
+            {% endif %}      
+        </div>            
+    </div>
+</form>   
+{% endcomponent %}

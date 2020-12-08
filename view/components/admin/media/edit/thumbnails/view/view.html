@@ -1,0 +1,36 @@
+{% set media = createModel('Media','media').findById(uuid) %}
+<div class="ui segment">   
+    {% if media.thumbnails().count() == 0 %}
+        <div class="ui image">
+            <i class="icon huge grey image outline"></i>
+        </div>
+    {% endif %}
+    <div class="ui images">       
+        {% for item in media.thumbnails().get() %}
+        <div>          
+            <img class="ui image" src="{{ item.file }}">
+        </div>
+        {% endfor %}
+    </div>
+    <div class="ui divider"></div>
+    <div class="mt-2">
+        <div class="content">            
+            {{ component('media::thumbnails.size',{ class: 'selection mini' }) }}
+        </div>
+        <form class="ui mini form mt-2" id="create_thumbnail_form">
+            <input type="hidden" name="uuid" id="uuid" value="{{ uuid }}">
+            <input type="hidden" name="size" id="size" value="">
+            <div class="two fields">
+                <div class="one wide field hidden size-field">
+                    <label>{{ labels.width }}</label>
+                    <input type="text" rule="integer" id="width" name="width" value="">
+                </div>
+                <div class="one wide field hidden size-field">
+                    <label>{{ labels.height }}</label>
+                    <input type="text" rule="integer" id="height" name="height" value="">
+                </div>
+            </div>
+            {{ component('components:form.footer',{ button_title: labels.create }) }}               
+        </form>
+    </div>
+</div>

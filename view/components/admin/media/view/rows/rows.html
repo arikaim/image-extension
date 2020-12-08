@@ -1,0 +1,101 @@
+{% set media = createModel('Media','media').where('id','>',0) %}
+{% set status_filter = searchValue('status','media') %}
+{% if status_filter is not empty %}
+    {% set media = media.where('status','=',status_filter) %}
+{% endif %}
+{{ createSearch('title','media','ilike:%{value}%','and') }}
+{% set media = applyOrderBy(media,'media') %}
+{% set media = applySearch(media,'media') %}
+{% set items = paginate(media,'media')  %}
+
+{% if items.getItems()|length == 0 %}
+    <tr>
+        <td colspan="9">{{ labels.empty }}</td>
+    </tr>
+{% endif %}
+
+{% for item in items.getItems() %}  
+    <tr id="{{ item.uuid }}">             
+        <td>            
+            <div class="ui buttons">                     
+                <button class="ui icon mini basic button edit-button" uuid="{{ item.uuid }}">
+                    <i class="icon edit"></i>
+                </button>
+                {% if item.isDeleted() == false %}
+                <a href="{{ url('game/' ~ item.slug,true) }}" class="ui icon mini basic button" target="_{{ item.title }}">
+                    <i class="external alternate icon"></i>
+                </a>   
+                {% else %}   
+                <button class="ui icon mini basic button restore-button" uuid="{{ item.uuid }}" title="{{ labels.restore }}">
+                    <i class="icon edit olive trash restore alternate"></i>
+                </button>  
+                {% endif %}                                         
+                <button class="ui icon mini basic button delete-button" uuid="{{ item.uuid }}" data-title="{{ item.title }}">
+                    <i class="icon trash orange"></i>
+                </button>  
+            </div>          
+        </td>  
+        <td>
+            {{ item.date_created|dateFormat }}
+        </td>
+        <td>
+            {% if item.isDeleted() == false %}
+                {{ component('components:status.dropdown',{ status: item.status, uuid: item.uuid, skip: [2,3,4,5] }) }}
+            {% else %}
+                <div class="ui basic label horizontal orange">
+                    {{ labels.deleted }}
+                </div>
+            {% endif %}
+        </td>
+        <td class="center aligned">
+            {% set thumbnail = item.thumbnailSmall() %}
+            {% if thumbnail is not empty %}
+                <img src="{{ thumbnail.url }}" class="ui image rouded">
+            {% endif %}
+        </td>
+        <td>           
+            {{ item.title }}
+        </td>                            
+        <td>                             
+            {% for category in item.categories %}            
+                <div class="ui mini left pointign basic label">
+                    {{ category.getTitle()|string }}
+                </div>
+            {% endfor %}
+        </td>
+        <td> 
+            {{  component('tags::tags.relations',{ 
+                    relation_id: item.id, 
+                    class: 'basic mini left pointing',
+                    limit: 5,
+                    show_error: false 
+                }) 
+            }}          
+        </td>
+        <td>        
+            {% if item.provider is empty %}
+                {% if item.isImage() == true %}
+                    <i class="icon image blue" title="{{ labels.image }}"></i>
+                {% elseif item.isVideo() == true %}
+                    <i class="icon film blue" title="{{ labels.video }}"></i>                  
+                {% endif %}             
+                <i class="icon folder outline blue pr-2"></i>../{{ item.file }} 
+                <div class="ui basic horizontal right floated mini label">
+                    {{ item.file_size|fileSize }}
+                </div>    
+            {% else %}
+            <div class="ui basic horizontal mini label">
+                {{ item.provider }}
+            </div>   
+            {{ item.video_id }}      
+            <div class="ui basic horizontal mini label">
+                {{ labels.duration }}
+                {{ item.duration_time }}     
+            </div>                      
+            {% endif %}
+        </td>
+        <td>{{ item.user.user_name }}</td>               
+        <td>{{ item.mime_type }}</td>                 
+        <td>{{ item.views }}</td>         
+    </tr>
+{% endfor %}

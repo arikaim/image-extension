@@ -1,0 +1,17 @@
+{
+    "labels": {
+        "browse": "Browse",
+        "config": "Config",
+        "view": "View",
+        "list": "List",
+        "add": "Add",
+        "edit": "Edit",
+        "empty": "No game feeds installed."
+    },
+    "messages": {
+        "remove": {
+            "title": "Confirm Remove Feed",
+            "content": "Confirm remove feed '<b><% name %></b>'."
+        }
+    }   
+}

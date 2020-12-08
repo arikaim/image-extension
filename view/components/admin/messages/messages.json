@@ -1,0 +1,29 @@
+{
+    "upload": "Media file uploaded successfully.",
+    "import": "Movie imported successfully.",
+    "update": "Saved successfully.",  
+    "metatags": "Meta tags saved successfully.",
+    "option": "Media option saved successfully.",    
+    "delete": "Media file deleted successfully.",          
+    "errors": {
+        "thumbnail": {
+
+        },
+        "id": "Not valid media file id",          
+        "upload": "Upload medi file error",   
+        "update": "Update media file error",
+        "path": "Can't create media assets directory",
+        "exists": "Media title not available!",
+        "metatags": "Can't save meta tags.",
+        "option": "Can't save media option."        
+    },
+    "messages": {
+        "thumbnail": {
+
+        },
+        "remove": {
+            "title": "Confirm Remove",
+            "content": "Confirm remove media '<b><% title %></b>'."
+        }
+    }  
+}

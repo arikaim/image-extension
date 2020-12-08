@@ -1,0 +1,15 @@
+{
+    "labels": {
+        "empty": "...",
+        "image": "Image",
+        "video": "Video",
+        "restore": "Restore",
+        "deleted": "Deleted",
+        "duration": "Duration",
+        "status": {
+            "active": "active",
+            "disabled": "disabled"
+        },
+        "featured": "Featured"                
+    }
+}

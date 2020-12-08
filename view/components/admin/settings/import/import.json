@@ -1,0 +1,18 @@
+{
+    "title": {
+        "content": "Import movies",
+        "icon": "redo alternate"
+    },
+    "labels": {
+        "install": "Import movies",
+        "feed": "Movie Feed",
+        "from": "From Page",
+        "demo": "Disabled in demo mode",
+        "to": "To Page",
+        "max": "Max movies install per job run",
+        "current": "Current Feed Item"
+    },
+    "descriptions": {
+        "install": "Automated movies import"
+    }
+}

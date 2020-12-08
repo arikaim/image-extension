@@ -1,0 +1,13 @@
+{
+    "include": {
+        "js": [
+            "components:search",
+            "components:paginator.google"                        
+        ]
+    },
+    "access": {
+        "auth": "session",
+        "redirect": "/admin",
+        "permission": "ControlPanel:full"           
+    }
+}
