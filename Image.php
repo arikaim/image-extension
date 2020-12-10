@@ -33,9 +33,9 @@ class Image extends Extension
         $this->addApiRoute('DELETE','/api/image/admin/delete/{uuid}','ImageControlPanel','delete','session'); 
         $this->addApiRoute('PUT','/api/image/admin/status','ImageControlPanel','setStatus','session');         
         // thumbnails
-        $this->addApiRoute('POST','/api/media/admin/thumbnail/create','ThumbnailsControlPanel','create','session');        
-        $this->addApiRoute('POST','/api/media/admin/thumbnail/upload','ThumbnailsControlPanel','upload','session');     
-        $this->addApiRoute('DELETE','/api/media/admin/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
+        $this->addApiRoute('POST','/api/image/admin/thumbnail/create','ThumbnailsControlPanel','create','session');        
+        $this->addApiRoute('POST','/api/image/admin/thumbnail/upload','ThumbnailsControlPanel','upload','session');     
+        $this->addApiRoute('DELETE','/api/image/admin/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
         // Api 
         $this->addApiRoute('GET','/api/image/view/{slug}','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}/{uuid}','ImageApi','viewThumbnail',null);  
@@ -45,6 +45,7 @@ class Image extends Extension
         $this->createDbTable('ImageThumbnailsSchema');         
         // Relation map 
         $this->addRelationMap('image','Image');
+        
         
         // Options       
         $this->createOption('media.comments',true);

@@ -1,12 +1,12 @@
 {%  set items = [ 
-        { id: 'image_button', title: labels.video.content, component: 'media::admin.media', icon: 'video', active: true },            
-        { id: 'settings_button', title: labels.settings.content, component: 'media::admin.settings', icon: 'cogs' }
+        { id: 'image_button', title: labels.video.content, component: 'image::admin.images', icon: 'items', active: true },            
+        { id: 'settings_button', title: labels.settings.content, component: 'image::admin.settings', icon: 'cogs' }
     ] 
 %}
 
 {{  component('components:tabs',{ 
         items: items,
-        menu: { component: 'system:admin.extensions.menu.actions', extension: 'media' },
-        content: { component: 'media::admin.media' } 
+        menu: { component: 'system:admin.extensions.menu.actions', extension: 'image' },
+        content: { component: 'image::admin.images' } 
     })
 }}

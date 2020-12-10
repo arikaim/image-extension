@@ -7,13 +7,9 @@
         "action": "Action",  
         "user": "User",     
         "status": "Status",
-        "title": "Title",
+        "name": "Name",
         "thumbnail": "Thumbnail",
-        "source": "Source",
-        "category": "Category",
-        "tags": "Tags",
         "type": "Type",
-        "created": "Date Added",
-        "views": "Views"       
+        "created": "Date"
     }
 }

@@ -6,20 +6,18 @@
  */
 'use strict';
 
-function MediaView() {
+function ImagesView() {
     var self = this;
     this.messages = null;
 
     this.init = function() {
-        order.init('media_rows','media::admin.media.view.rows','media');
-    
-        paginator.init('media_rows',"media::admin.media.view.rows",'media'); 
+        paginator.init('images_rows',"image::admin.images.view.rows",'images'); 
 
         search.init({
-            id: 'media_rows',
-            component: 'media::admin.media.view.rows',
-            event: 'media.search.load'
-        },'media')  
+            id: 'images_rows',
+            component: 'image::admin.media.view.rows',
+            event: 'image.search.load'
+        },'image')  
         
         $('.status-filter').dropdown({          
             onChange: function(value) {      
@@ -28,13 +26,13 @@ function MediaView() {
                         status: value,                       
                     }          
                 }              
-                search.setSearch(searchData,'media',function(result) {                  
+                search.setSearch(searchData,'images',function(result) {                  
                     self.loadList();
                 });               
             }
         });
 
-        arikaim.events.on('media.search.load',function(result) {      
+        arikaim.events.on('image.search.load',function(result) {      
             paginator.reload();
             self.initRows();    
         },'mediaSearch');
@@ -42,20 +40,18 @@ function MediaView() {
         this.loadMessages();
     };
 
-    this.loadMessages = function() {
-        if (isObject(this.messages) == true) {
-            return;
+    this.loadMessages = function() {      
+        if (isObject(this.messages) == false) {
+            arikaim.component.loadProperties('image::admin.messages',function(params) { 
+                self.messages = params.messages;
+            }); 
         }
-
-        arikaim.component.loadProperties('media::admin.messages',function(params) { 
-            self.messages = params.messages;
-        }); 
     };
 
     this.loadList = function() {        
         arikaim.page.loadContent({
-            id: 'media_rows',         
-            component: 'media::admin.media.view.rows'
+            id: 'image_rows',         
+            component: 'image::admin.images.view.rows'
         },function(result) {
             self.initRows();  
             paginator.reload(); 
@@ -67,7 +63,7 @@ function MediaView() {
         $('.status-dropdown').dropdown({
             onChange: function(value) {               
                 var uuid = $(this).attr('uuid');
-                media.setStatus(uuid,value);
+                imagesView.setStatus(uuid,value);
             }
         });    
 
@@ -84,7 +80,7 @@ function MediaView() {
                 title: self.messages.remove.title,
                 description: message
             },function() {
-                media.delete(uuid,function(result) {
+                imagesView.delete(uuid,function(result) {
                     arikaim.ui.table.removeRow('#' + uuid);     
                 });
             });
@@ -93,7 +89,7 @@ function MediaView() {
         arikaim.ui.button('.featured-button',function(element) {
             var uuid = $(element).attr('uuid');
         
-            media.setFeatured(uuid,'toggle',function(result) {
+            imagesView.setFeatured(uuid,'toggle',function(result) {
                 if (result.featured == 1 || result.featured == '1') {    
                     $(element).removeClass('olive');                                         
                 } else {                
@@ -107,16 +103,16 @@ function MediaView() {
             arikaim.ui.setActiveTab('#edit_media','.media-tab-item');
             arikaim.page.loadContent({
                 id: 'media_content',
-                component: 'media::admin.media.edit',
+                component: 'image::admin.media.edit',
                 params: { uuid: uuid }
             });          
         });
     };
 };
 
-var mediaView = new MediaView();
+var imagesView = new ImagesView();
 
 $(document).ready(function() {  
-    mediaView.init();
-    mediaView.initRows();  
+    imagesView.init();
+    imagesView.initRows();  
 }); 
