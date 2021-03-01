@@ -112,7 +112,7 @@ function ImagesView() {
 
 var imagesView = new ImagesView();
 
-$(document).ready(function() {  
+arikaim.component.onLoaded(function() {
     imagesView.init();
     imagesView.initRows();  
 }); 

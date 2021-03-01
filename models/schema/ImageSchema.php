@@ -36,20 +36,23 @@ class ImageSchema extends Schema
         $table->prototype('uuid');  
         $table->userId();
         $table->status();
-        $table->slug();
+        $table->slug(false);
         $table->string('title')->nullable(true);   
-        $table->text('description')->nullable(true);       
+        $table->string('file_name')->nullable(true);
         $table->string('mime_type')->nullable(true);
         $table->string('file_size')->nullable(true);
-        $table->string('src')->nullable(true);
-        
+        $table->string('url')->nullable(true);
+        $table->integer('private')->nullable(true); 
+        $table->integer('width')->nullable(true); 
+        $table->integer('height')->nullable(true); 
         $table->integer('views')->nullable(false)->default(0);       
         $table->dateCreated();
-        $table->dateDeleted();
         // indexes        
-        $table->unique('src'); 
+        $table->unique('url'); 
+        $table->unique(['slug','user_id']);
+        $table->unique(['file_name','user_id']);
         $table->index('views');
-        $table->index('mime_type');
+        $table->index('mime_type');       
     }
 
     /**

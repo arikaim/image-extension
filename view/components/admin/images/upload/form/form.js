@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function() {    
+arikaim.component.onLoaded(function() {
     arikaim.ui.form.addRules("#upload_form");
 
     var fileUpload = new FileUpload('#upload_form',{

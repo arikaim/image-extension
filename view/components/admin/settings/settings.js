@@ -1,5 +1,5 @@
 'use strict';
 
-$(document).ready(function() {  
+arikaim.component.onLoaded(function() { 
     arikaim.ui.tab('.settings-item','settings_content');
 });

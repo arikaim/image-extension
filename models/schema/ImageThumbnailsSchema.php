@@ -34,17 +34,16 @@ class ImageThumbnailsSchema extends Schema
         // columns
         $table->id();
         $table->prototype('uuid');        
-        $table->relation('image_id','media');
+        $table->relation('image_id','image');
         $table->string('mime_type')->nullable(true);
-        $table->string('file_size')->nullable(true);
         $table->string('file_name')->nullable(true);       
-        $table->string('src')->nullable(true);       
+        $table->string('url')->nullable(true);       
         $table->integer('width')->nullable(true);
         $table->integer('height')->nullable(true);
         $table->string('key')->nullable(true);     
         $table->dateCreated();
         // indexes        
-        $table->index('file');
+        $table->index('file_name');
         $table->unique(['image_id','key']);
         $table->unique(['image_id','width','height']);
     }

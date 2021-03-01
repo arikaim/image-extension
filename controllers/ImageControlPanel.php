@@ -47,35 +47,7 @@ class ImageControlPanel extends ControlPanelApiController
     }
 
     /**
-     * Import video file
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-    */
-    public function importVideoController($request, $response, $data) 
-    {          
-        $this->onDataValid(function($data) use ($request) { 
-            $videoId = $data->get('video_id');
-            $driverName = $data->get('driver_name');
-           
-            $driver = $this->get('driver')->create($driverName);
-            $video = Import::importMovie($driver,$videoId,$this->getUserId());
-
-            $this->setResponse(\is_object($video),function() use($video) {                  
-                $this
-                    ->message('import')
-                    ->field('uuid',$video->uuid);                  
-            },'errors.import');
-        });
-        $data
-            ->addRule('text:min=2','video_id')
-            ->validate();   
-    }
-
-    /**
-     * Upload media file
+     * Upload image
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
@@ -148,7 +120,7 @@ class ImageControlPanel extends ControlPanelApiController
     }
 
     /**
-     * Update media
+     * Update image
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response

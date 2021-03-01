@@ -65,7 +65,7 @@ function ThumbnailsView() {
 
 var thumbnailsView = new ThumbnailsView();
 
-$(document).ready(function() {  
+arikaim.component.onLoaded(function() {
     thumbnailsView.init();  
     thumbnailsView.initRows();  
 }); 

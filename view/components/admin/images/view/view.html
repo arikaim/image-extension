@@ -1,32 +1,24 @@
 {% set status_filter = searchValue('status','images') %}
-<div class="ui stackable grid">
-    <div class="sixteen wide column mt-10">             
-        <div class="ui two column centered stackable grid">
-            <div class="row">
-                <div class="ui four computer two tablet column left aligned">
-                    {{ component('components:search.form',{ namespace: 'images' }) }}
-                </div>
-            </div>  
-            <div class="row">
-                <div class="ui four computer two tablet column left aligned">
-                    <i class="icon filter"></i>
-                    {{  component('components:status.dropdown',{ 
-                            status: status_filter,
-                            class: 'status-filter clearable selection',                       
-                            all: false 
-                        }) 
-                    }} 
-                </div>
-            </div>   
-        </div>               
+<div class="ui segment">
+    <div class="ui stackable grid">
+        <div class="ui seven wide column left aligned">
+            {{ component('components:search.form',{ namespace: 'images' }) }}
+        </div>
+        <div class="ui seven wide column left aligned">
+            <i class="icon filter"></i>
+            {{  component('components:status.dropdown',{ 
+                    status: status_filter,
+                    class: 'status-filter clearable selection',                       
+                    all: false 
+                }) 
+            }} 
+        </div>
+        <div class="two wide right aligned column">       
+            {{ component('components:paginator.dropdown',{ namespace: 'images' }) }}
+        </div>                 
     </div>
 </div>
-<div class="ui stackable text menu">
-    <div class="item right floated">       
-        {{ component('components:paginator.dropdown',{ namespace: 'images' }) }}
-    </div>
-</div>
-<div class="ui mt-2">
+<div class="ui mt-4">
     <table class="ui compact stackable selectable borderless basic table">
         <thead class="table-head">
             <tr>              

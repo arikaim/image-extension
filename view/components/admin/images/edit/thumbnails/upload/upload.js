@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function() {
+arikaim.component.onLoaded(function() {
     var fileUpload = new FileUpload('#game_images_form',{
         url: '/api/arcade/admin/upload/file',
         maxFiles: 1,

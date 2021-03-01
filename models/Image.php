@@ -11,11 +11,11 @@ namespace Arikaim\Extensions\Image\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Arikaim\Core\Db\Model as DbModel;
-use Arikaim\Extensions\Media\Models\ImageThumbnails;
+use Arikaim\Extensions\Image\Models\ImageThumbnails;
 
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
+use Arikaim\Core\Arikaim;
 
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
@@ -23,9 +23,7 @@ use Arikaim\Core\Db\Traits\Slug;
 use Arikaim\Core\Db\Traits\UserRelation;
 use Arikaim\Core\Db\Traits\Status;
 use Arikaim\Core\Db\Traits\DateCreated;
-use Arikaim\Core\Db\Traits\SoftDelete;
 use Arikaim\Core\Db\Traits\FileTypeTrait;
-
 
 /**
  * Media db model class
@@ -38,7 +36,6 @@ class Media extends Model
         DateCreated,  
         UserRelation,   
         FileTypeTrait,
-        SoftDelete,
         Status;
     
     /**
@@ -62,16 +59,18 @@ class Media extends Model
      * @var array
      */
     protected $fillable = [
-        'position',
-        'description',     
-        'src',
+        'title',
+        'private',
+        'status',     
+        'slig',
         'file_size',
         'mime_type',
-        'status',
+        'file_name',
         'title',
-        'uuid',
-        'date_deleted',   
-        'slug',           
+        'slug',     
+        'url',
+        'width',
+        'height',      
         'user_id'       
     ];
     
@@ -83,9 +82,19 @@ class Media extends Model
     public $timestamps = false;
    
     /**
-     *  Custom media path suffix
+     * Get images storage path
+     *
+     * @param integer $userId
+     * @param boolean $relative
+     * @return string
      */
-    protected $customMediaPathSuffix = '';
+    public function getStoragePath(int $userId, bool $relative = true): string
+    {
+        $path = 'images' . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR;
+        $path = (empty($this->private) == true) ? 'public' . DIRECTORY_SEPARATOR . $path : $path;
+
+        return ($relative == true) ? $path : Path::STORAGE_PATH . $path;
+    }
 
     /**
      * Get user images query
@@ -94,7 +103,7 @@ class Media extends Model
      * @param int $userId
      * @return Builder
      */
-    public function scopeUserImagesQuery($query, $userId)
+    public function scopeUserImagesQuery($query, int $userId)
     {
         return $query->where('user_id','=',$userId);
     }
@@ -102,7 +111,7 @@ class Media extends Model
     /**
      * Thumbnails relation
      *
-     * @return Relation
+     * @return Relation|null
      */
     public function thumbnails()
     {
@@ -130,58 +139,75 @@ class Media extends Model
     }
 
     /**
-     * Check if media file exists
+     * Find image
+     *
+     * @param string $name
+     * @param integer $userId
+     * @param string|null $excludeId
+     * @return Model|null
+     */
+    public function findImage(string $name, int $userId = null, ?string $excludeId = null)
+    {
+        $userId = (empty($userId) == true) ? Arikaim::get('access')->getid() : $userId;
+        // by id, uuid
+        $query = $this->where(function($query) use ($name,$excludeId) {
+            $query->where('uuid','=',$name);
+            if (empty($excludeId) == false) {
+                $query->where('uuid','<>', $excludeId);
+            }
+        })->orWhere(function($query) use ($name,$userId,$excludeId) {
+            $query->where('file_name','=',$name);
+            $query->where('user_id','=',$userId);
+            if (empty($excludeId) == false) {
+                $query->where('uuid','<>', $excludeId);
+            }
+        })->orWhere(function($query) use ($name,$userId,$excludeId) {
+            $query->where('slug','=',$name);
+            $query->where('user_id','=',$userId);
+            if (empty($excludeId) == false) {
+                $query->where('uuid','<>', $excludeId);
+            }
+        })->orWhere(function($query) use ($name,$excludeId) {
+            $query->where('url','=',$name);
+            if (empty($excludeId) == false) {
+                $query->where('uuid','<>', $excludeId);
+            }
+        });
+        
+        return $query->first(); 
+    } 
+
+    /**
+     * Check if image file exists
      *
      * @param string $title
-     * @param string $excludeUuid
+     * @param int $userid
+     * @param string|null $excludeId
      * @return boolean
      */
-    public function hasMedia($title, $excludeUuid = null)
+    public function hasImage(string $title, int $userId, ?string $excludeId = null): bool
     {
-        if (empty($title) == true) {
-            return false;
-        }
-
-        $model = $this->where('title','=',$title);
-        if (empty($excludeUuid) == false) {
-            $model = $model->where('uuid','<>', $excludeUuid);
-        }      
-
-        return (bool)\is_object($model->first());
+        return (bool)\is_object($this->findImage($title,$userId,$excludeId));
     }
 
     /**
-     * Delete media and relations 
+     * Delete image and relations 
      *
-     * @param string|integer $id
+     * @param string $name
+     * @param int $userId
      * @return boolean
      */
-    public function deleteMedia($id = null)
+    public function deleteImage(string $name, int $userId)
     {
-        $id = (empty($id) == true) ? $this->id : $id;
-        $model = $this->findById($id);     
-        if (\is_object($model) == false) {
+        $model = $this->findImage($name,$userId);
+        if (\is_null($model) == true) {
             return false;
         }
-        // Delete Translations
-        $model->removeTranslations();
 
         // Delete thumbnail
         $this->thumbnails()->delete();
 
-        // Delete category relations
-        $categoryRelations = DbModel::create('CategoryRelations','category');
-        if (\is_object($categoryRelations) == true) {
-            $query = $categoryRelations->getRelationsQuery($model->id,'media');
-            $query->delete();
-        }
         
-        // Delete tags relations
-        $tagsRelations = DbModel::create('TagsRelations','tags');
-        if (\is_object($tagsRelations) == true) {
-            $query = $tagsRelations->getRelationsQuery($model->id,'media');
-            $query->delete();
-        }
 
         return $model->delete();
     } 

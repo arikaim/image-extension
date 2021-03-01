@@ -1,7 +1,7 @@
 {% set id = id|default('media_dropdown') %}
 {% set name = name|default('media') %}
 {% set size = size|default(15) %}
-{% set model = createModel('Media','media') %}
+{% set model = createModel('Image','image') %}
 {% set items = model.orderBy('position').take(size).get() %}
 {% if selected is not empty %}
     {% set selected = model.findById(selected) %}

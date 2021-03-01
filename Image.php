@@ -23,10 +23,6 @@ class Image extends Extension
     */
     public function install()
     {
-        // Pages
-        // view image
-        $this->addPageRoute('/image/{slug}','MediaPages','showMediaFile','media>view',null,'showMediaFile',true);
-        
         // Control Panel
         $this->addApiRoute('POST','/api/image/admin/upload','ImageControlPanel','upload','session');        
         $this->addApiRoute('PUT','/api/image/admin/update','ImageControlPanel','update','session');  
@@ -41,7 +37,8 @@ class Image extends Extension
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}/{uuid}','ImageApi','viewThumbnail',null);  
 
         // Create db tables
-        $this->createDbTable('ImageSchema');            
+        $this->createDbTable('ImageSchema');   
+        $this->createDbTable('ImageRelationsSchema');                    
         $this->createDbTable('ImageThumbnailsSchema');         
         // Relation map 
         $this->addRelationMap('image','Image');

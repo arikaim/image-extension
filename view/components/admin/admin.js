@@ -40,6 +40,6 @@ function ImageControlPanel() {
 
 var imageControlPanel = new ImageControlPanel();
 
-$(document).ready(function() {
+arikaim.component.onLoaded(function() {
     imageControlPanel.init();
 });

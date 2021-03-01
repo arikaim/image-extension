@@ -23,6 +23,6 @@ function ThumbnailsControlPanel() {
 
 var thumbnailsControlPanel = new ThumbnailsControlPanel();
 
-$(document).ready(function() {
+arikaim.component.onLoaded(function() {
     thumbnailsControlPanel.init();
 });

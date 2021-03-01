@@ -1,5 +1,5 @@
-{% set media = createModel('Media','media').where('id','>',0) %}
-{% set status_filter = searchValue('status','media') %}
+{% set media = createModel('Image','image').where('id','>',0) %}
+{% set status_filter = searchValue('status','image') %}
 {% if status_filter is not empty %}
     {% set media = media.where('status','=',status_filter) %}
 {% endif %}

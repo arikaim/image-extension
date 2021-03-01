@@ -1,7 +1,7 @@
 'use strict';
 
-$(document).ready(function() {     
-    safeCall('mediaView',function(obj) {
+arikaim.component.onLoaded(function() {   
+    safeCall('imagesView',function(obj) {
         obj.initRows();
     },true);   
 }); 

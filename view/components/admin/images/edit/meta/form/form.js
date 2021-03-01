@@ -1,6 +1,6 @@
 'use strict';
 
-$(document).ready(function() {   
+arikaim.component.onLoaded(function() {
     arikaim.ui.form.onSubmit("#meta_tags_form",function() {     
         var language = $('#choose_language').dropdown('get value');
         $('#language').val(language);
