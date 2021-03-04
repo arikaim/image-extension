@@ -1,12 +1,6 @@
 {
     "labels": {
-        "video": {
-            "content": "Image",
-            "title": "View images"
-        },         
-        "settings": {
-            "content": "Settings",
-            "title": "Settings"
-        }                   
+        "view": "View",            
+        "settings": "Settings"                       
     }  
 }

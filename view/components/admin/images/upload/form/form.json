@@ -1,5 +1,9 @@
 {
     "fields": {
+        "protected": {
+            "label": "Protected",               
+            "placeholder": "Upload image in protected storage."        
+        },
         "title": {
             "label": "Title",               
             "placeholder": "Enter media title"            

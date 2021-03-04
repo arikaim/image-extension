@@ -8,8 +8,7 @@
 
 function ImagesView() {
     var self = this;
-    this.messages = null;
-
+   
     this.init = function() {
         paginator.init('images_rows',"image::admin.images.view.rows",'images'); 
 
@@ -37,15 +36,7 @@ function ImagesView() {
             self.initRows();    
         },'mediaSearch');
 
-        this.loadMessages();
-    };
-
-    this.loadMessages = function() {      
-        if (isObject(this.messages) == false) {
-            arikaim.component.loadProperties('image::admin.messages',function(params) { 
-                self.messages = params.messages;
-            }); 
-        }
+        this.loadMessages('image::admin.messages');
     };
 
     this.loadList = function() {        
@@ -59,58 +50,53 @@ function ImagesView() {
     };
 
     this.initRows = function() {
-       
         $('.status-dropdown').dropdown({
             onChange: function(value) {               
                 var uuid = $(this).attr('uuid');
-                imagesView.setStatus(uuid,value);
+                imageControlPanel.setStatus(uuid,value);
             }
         });    
 
-        arikaim.ui.button('.restore-button',function(element) {
+        arikaim.ui.button('.image-relations-button',function(element) {
             var uuid = $(element).attr('uuid');
+            arikaim.ui.setActiveTab('#image_relations','.image-tab-item');
+
+            return arikaim.page.loadContent({
+                id: 'image_content',
+                component: 'image::admin.images.relations',
+                params: { uuid: uuid }
+            });     
         });
 
         arikaim.ui.button('.delete-button',function(element) {
             var uuid = $(element).attr('uuid');
             var title = $(element).attr('data-title');
+            var message = arikaim.ui.template.render(self.getMessage('remove.content'),{ title: title });
 
-            var message = arikaim.ui.template.render(self.messages.remove.content,{ title: title });
             modal.confirmDelete({ 
-                title: self.messages.remove.title,
+                title: self.getMessage('remove.title'),
                 description: message
             },function() {
-                imagesView.delete(uuid,function(result) {
+                imageControlPanel.delete(uuid,function(result) {
                     arikaim.ui.table.removeRow('#' + uuid);     
                 });
             });
         });
 
-        arikaim.ui.button('.featured-button',function(element) {
-            var uuid = $(element).attr('uuid');
-        
-            imagesView.setFeatured(uuid,'toggle',function(result) {
-                if (result.featured == 1 || result.featured == '1') {    
-                    $(element).removeClass('olive');                                         
-                } else {                
-                    $(element).addClass('olive');       
-                }
-            });
-        });
-
-        arikaim.ui.button('.edit-button',function(element) {
+        arikaim.ui.button('.thumbnails-button',function(element) {
             var uuid = $(element).attr('uuid');    
-            arikaim.ui.setActiveTab('#edit_media','.media-tab-item');
+            arikaim.ui.setActiveTab('#thumbnails_image','.image-tab-item');
+            
             arikaim.page.loadContent({
-                id: 'media_content',
-                component: 'image::admin.media.edit',
+                id: 'image_content',
+                component: 'image::admin.thumbnails',
                 params: { uuid: uuid }
             });          
         });
     };
 };
 
-var imagesView = new ImagesView();
+var imagesView = createObject(ImagesView,ControlPanelView);
 
 arikaim.component.onLoaded(function() {
     imagesView.init();

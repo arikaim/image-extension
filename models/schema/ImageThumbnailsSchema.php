@@ -39,12 +39,11 @@ class ImageThumbnailsSchema extends Schema
         $table->string('file_name')->nullable(true);       
         $table->string('url')->nullable(true);       
         $table->integer('width')->nullable(true);
-        $table->integer('height')->nullable(true);
-        $table->string('key')->nullable(true);     
+        $table->integer('height')->nullable(true);       
         $table->dateCreated();
         // indexes        
-        $table->index('file_name');
-        $table->unique(['image_id','key']);
+        $table->unique('file_name');
+        $table->unique(['image_id','file_name']);
         $table->unique(['image_id','width','height']);
     }
 

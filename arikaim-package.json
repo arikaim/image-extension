@@ -3,10 +3,9 @@
     "name": "image",
     "package-type": "extension",
     "type": "user",
-    "description": "Manage images, thumbnails, image storage and relations.",
+    "description": "Images media library, create thumbnails, upload or import images.",
     "short-description": "Manage images.",
-    "private-repository": true,
-    "repository": "https://github.com/arikaim-repository/image-extension.git",
+    "repository": "https://github.com/arikaim/image-extension.git",
     "version": "1.0.0",
     "position": "3",
     "require": {

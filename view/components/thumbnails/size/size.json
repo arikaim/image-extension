@@ -16,6 +16,10 @@
             "width": 400,
             "height": 400           
         },
+        "square-256": {
+            "width": 256,
+            "height": 256           
+        },
         "square-small": {
             "width": 200,
             "height": 200           
@@ -24,10 +28,18 @@
             "width": 164,
             "height": 164           
         },
+        "smal-128": {
+            "width": 128,
+            "height": 128           
+        },
         "mini": {
             "width": 64,
             "height": 64           
-        },       
+        }, 
+        "nano": {
+            "width": 32,
+            "height": 32           
+        },      
         "custom": {
             "width": "",
             "height": ""   

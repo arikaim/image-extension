@@ -1,0 +1,43 @@
+{% if uuid is not empty %}
+    {% set image = createModel('Image','image').findById(uuid) %}
+{% endif %}
+<div class="mt-4 w-full">  
+    <table class="ui table very basic definition">
+        <thead>
+            <tr>
+                <th class="four wide right aligned"></th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="right aligned">{{ labels.id }}</td>
+                <td>{{ image.uuid }}</td>
+            </tr>
+            <tr>
+                <td class="right aligned">{{ labels.type }}</td>
+                <td>
+                    {{ image.mime_type }}
+                </td>
+            </tr>
+            <tr>
+                <td class="right aligned">{{ labels.size }}</td>
+                <td>
+                    {{ image.width }} x {{ image.height }}
+                </td>
+            </tr>
+            <tr>
+                <td class="right aligned">{{ labels.file_size }}</td>
+                <td>
+                    {{ image.file_size|fileSize }}
+                </td>
+            </tr>
+            <tr>
+                <td class="right aligned">{{ labels.owner }}</td>
+                <td>
+                    {{ image.user.user_name_or_email }}
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,5 +1,0 @@
-{% set media = createModel('Media','media').findById(uuid) %}
-{% set translation = media.translation(language) %}
-{% set language = language|default(current_language) %}
-
-{{ component('components:form.meta',{ uuid: uuid,language: language,translation: translation }) }}

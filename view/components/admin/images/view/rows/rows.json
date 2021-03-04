@@ -2,14 +2,12 @@
     "labels": {
         "empty": "...",
         "image": "Image",
-        "video": "Video",
-        "restore": "Restore",
-        "deleted": "Deleted",
-        "duration": "Duration",
+        "protected": "Protected",
+        "public": "Public",
+        "thumbnails": "Thumbnails",
         "status": {
             "active": "active",
             "disabled": "disabled"
-        },
-        "featured": "Featured"                
+        }       
     }
 }

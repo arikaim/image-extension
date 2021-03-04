@@ -11,6 +11,8 @@ namespace Arikaim\Extensions\Image\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
+use Arikaim\Core\Utils\File;
+use Arikaim\Extensions\Image\Classes\ImageLibrary;
 use Arikaim\Extensions\Image\Models\Image;
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
@@ -38,15 +40,12 @@ class ImageThumbnails extends Model
      * @var array
      */
     protected $fillable = [        
-        'file',
-        'media_id',      
-        'file_size',
-        'mime_type',
-        'key',
+        'file_name',
+        'image_id',            
+        'mime_type',     
         'url',
         'width',
-        'height',
-        'size'
+        'height'
     ];
     
     /**
@@ -57,78 +56,96 @@ class ImageThumbnails extends Model
     public $timestamps = false;
    
     /**
-     * Media relation
+     * Delete thumbnail
      *
-     * @return Relation
+     * @param string|null $name
+     * @param int|null $userId
+     * @return boolean
      */
-    public function media()
+    public function deleteThumbnail(?string $name = null): bool
     {
-        return $this->belongsTo(Image::class,'media_id');
+        $name  = $name ?? $this->id;
+        $model = $this->findById($name);
+        if (\is_object($model) == false) {
+            $model = $this->where('file_name','=',$name)->first();
+            if (\is_object($model) == false) {
+                return false;
+            }
+        }
+        
+        $path = ImageLibrary::getThumbnailsStoragePath(false) . $model->file_name;
+        if (File::exists($path) == true) {
+            File::delete($path);
+        }    
+        
+        return (bool)$model->delete();
     }
 
     /**
-     * Gte smallest thumbnail
+     * Image relation
      *
-     * @return Model|null
-    */
-    public function scopeSmall($query, $mediaId = null)
+     * @return Relation|null
+     */
+    public function image()
     {
-        $query = (empty($mediaId) == false) ? $query->where('image_id','=',$mediaId) : $query;
-
-        return $query->orderBy('width','asc')->first();
+        return $this->belongsTo(Image::class,'image_id');
     }
 
-    /**
-     * Create file name
+     /**
+     * src attribute
      *
-     * @param string $fileName
-     * @param string $width
-     * @param string $height
      * @return string
      */
-    public function createFileName($fileName, $width, $height)
+    public function getSrcAttribute()
     {
-        $info = \pathinfo($fileName);
-
-        return 'thumbnail-' . $info['filename'] . '-' . $width . 'x' . $height . '.' . $info['extension'];
+        if (empty($this->url) == false) {
+            return $this->url;
+        }
+       
+        return ImageLibrary::getThumbnailsStoragePath(true) . $this->file_name;
     }
 
     /**
-     * Creathe file name form media name
+     * Get image thumbnails
      *
-     * @param string $fileName
-     * @return void
-     */
-    public function resolveFileName($fileName)
+     * @param int|null $imageId
+     * @return Builder|null
+    */
+    public function scopeImageThumbnails($query, ?int $imageId = null)
     {
-        $this->file = $this->createFileName($fileName,$this->width,$this->height);
+        $imageId = $imageId ?? $this->image_id;
+        
+        return $query->where('image_id','=',$imageId)->orderBy('width','asc');      
     }
 
     /**
      * Find thumbnail query
      *
-     * @param Builder $query
-     * @param integer $id
-     * @param string $width
-     * @param string $height
+     * @param Builder $query    
+     * @param integer $width
+     * @param integer $height
+     * @param integer|null $imageId
      * @return Builder
      */
-    public function scopeFindThumbnail($query, $id, $width, $height)
+    public function scopeFindThumbnail($query, int $width, int $height, ?int $imageId = null)
     {
-        return $query->where('media_id',$id)->where('width','=',$width)->where('height','=',$height);
+        $imageId = $imageId ?? $this->image_id;
+
+        return $query->where('image_id','=',$imageId)->where('width','=',$width)->where('height','=',$height);
     }
 
     /**
      * Return true if thumbnail exist
      *
-     * @param integer $id
-     * @param string $width
-     * @param string $height
+     * @param integer|null $imageId
+     * @param integer $width
+     * @param integer $height
      * @return boolean
      */
-    public function hasThumbnail($id, $width, $height)
+    public function hasThumbnail(int $width, int $height, ?int $imageId = null): bool
     {
-        $query = $this->findThumbnail($id,$width,$height)->first();
+        $imageId = $imageId ?? $this->image_id;
+        $query = $this->findThumbnail($width,$height,$imageId)->first();
 
         return \is_object($query);
     }
@@ -136,23 +153,47 @@ class ImageThumbnails extends Model
     /**
      * Create thumbnail model
      *
-     * @param string $width
-     * @param string $height
+     * @param integer|null $imageId
+     * @param integer $width
+     * @param integer $height
      * @return Model
      */
-    public function findOrCreateThumbnailModel($width, $height)
+    public function findOrCreate(int $width, int $height, ?int $imageId = null)
     {
-        $model = new ImageThumbnails();
-        $query = $model->findThumbnail($this->id,$width,$height)->first();
-        if (\is_object($query) == true) {
-            return $query;
+        $imageId = $imageId ?? $this->image_id;
+       
+        $model = $this->findThumbnail($width,$height,$imageId)->first();
+        if (\is_object($model) == true) {
+            return $model;
         }
 
-        return $model->create([
-            'media_id' => $this->id,
-            'width'    => $width,
-            'height'   => $height,
-            'file'     => $model->createFileName($this->file,$width,$height) 
+        return $this->createThumbnail($width,$height,$imageId);
+    }
+
+    /**
+     * Create thumbnail model
+     *
+     * @param integer|null $imageId
+     * @param integer $width
+     * @param integer $height
+     * @return Model|null
+    */
+    public function createThumbnail(int $width, int $height, ?int $imageId = null)
+    {
+        $imageId = $imageId ?? $this->image_id;
+      
+        $image = new Image();
+        $image = $image->findByid($imageId);
+        if (\is_object($image) == false) {
+            return null;
+        }
+
+        return $this->create([
+            'image_id'  => $imageId,
+            'width'     => $width,
+            'height'    => $height,
+            'mime_type' => $image->mime_type,
+            'file_name' => ImageLibrary::createThumbnailFileName($image->file_name,(string)$width,(string)$height) 
         ]);
     }
 }

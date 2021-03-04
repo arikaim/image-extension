@@ -1,23 +1,10 @@
-{% if uuid is not empty %}
-    {% set media = createModel('media','media').findById(uuid) %} 
-{% endif %}
-
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
-    <input type="hidden" name="uuid" id="uuid" value="{{ uuid }}">
-    {% if uuid is empty %}    
-        <div class="field required">
-            <label>{{ fields.title.label }}</label>
-            <div class="ui right action input">                            
-                <input rule="empty" type="text" name="title" id="title" {{ fields.title.placeholder|attr('placeholder') }} value="{{ game.title }}"> 
-                {{ component('components:clipboard.copy',{ selector: '#title',icon: 'copy blue outline' }) }}                
-            </div>          
-        </div>
-        {{  component('components:form.fields.slug',{ 
-                slug_source: 'title', 
-                url_path: media.getGamePageUrlPath()  
-            }) 
-        }}  
-    {% endif %}
+    <div class="field">
+        <div class="ui toggle checkbox private-image">
+            <input type="checkbox" name="private" id="private" class="hidden">
+            <label>{{ fields.protected.label }}</label>
+        </div>      
+    </div>
     <div class="field required">                    
         <input name="file" id="file" type="file">                                          
     </div>        

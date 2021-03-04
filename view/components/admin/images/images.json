@@ -1,7 +1,10 @@
 {
     "labels": {
-        "upload": "Upload",      
-        "view": "View",    
+        "upload": "Upload",    
+        "import": "Import",      
+        "view": "View",  
+        "relations": "Relations",
+        "thumbnails": "Thumbnails",  
         "edit": "Edit"    
     }        
 }

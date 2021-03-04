@@ -1,29 +1,24 @@
 {
-    "upload": "Media file uploaded successfully.",
-    "import": "Movie imported successfully.",
-    "update": "Saved successfully.",  
-    "metatags": "Meta tags saved successfully.",
-    "option": "Media option saved successfully.",    
-    "delete": "Media file deleted successfully.",          
+    "upload": "Image uploaded successfully.",    
+    "update": "Saved successfully.",         
+    "delete": "Image deleted successfully.",          
     "errors": {
         "thumbnail": {
-
         },
-        "id": "Not valid media file id",          
-        "upload": "Upload medi file error",   
-        "update": "Update media file error",
-        "path": "Can't create media assets directory",
-        "exists": "Media title not available!",
-        "metatags": "Can't save meta tags.",
-        "option": "Can't save media option."        
+        "id": "Not valid image Id",          
+        "upload": "Upload image error",   
+        "update": "Update image error",
+        "path": "Can't create image assets directory",
+        "exists": "Image title not available!"    
     },
     "messages": {
-        "thumbnail": {
-
+        "thumbnail_remove": {
+            "title": "Confirm Remove",
+            "content": "Confirm remove thumbnail '<b><% title %></b>'."
         },
         "remove": {
             "title": "Confirm Remove",
-            "content": "Confirm remove media '<b><% title %></b>'."
+            "content": "Confirm remove image '<b><% title %></b>'."
         }
     }  
 }

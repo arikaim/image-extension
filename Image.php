@@ -24,28 +24,29 @@ class Image extends Extension
     public function install()
     {
         // Control Panel
-        $this->addApiRoute('POST','/api/image/admin/upload','ImageControlPanel','upload','session');        
-        $this->addApiRoute('PUT','/api/image/admin/update','ImageControlPanel','update','session');  
+        $this->addApiRoute('POST','/api/image/admin/upload','ImageControlPanel','upload','session');    
+        $this->addApiRoute('POST','/api/image/admin/import','ImageControlPanel','import','session');              
         $this->addApiRoute('DELETE','/api/image/admin/delete/{uuid}','ImageControlPanel','delete','session'); 
-        $this->addApiRoute('PUT','/api/image/admin/status','ImageControlPanel','setStatus','session');         
+        $this->addApiRoute('GET','/api/image/admin/list/[{query}]','ImageControlPanel','getList','session');             
         // thumbnails
-        $this->addApiRoute('POST','/api/image/admin/thumbnail/create','ThumbnailsControlPanel','create','session');        
-        $this->addApiRoute('POST','/api/image/admin/thumbnail/upload','ThumbnailsControlPanel','upload','session');     
+        $this->addApiRoute('POST','/api/image/admin/thumbnail/create','ThumbnailsControlPanel','create','session');              
         $this->addApiRoute('DELETE','/api/image/admin/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
-        // Api 
+        // api 
         $this->addApiRoute('GET','/api/image/view/{slug}','ImageApi','view',null);    
-        $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}/{uuid}','ImageApi','viewThumbnail',null);  
-
-        // Create db tables
+        $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);  
+        // create db tables
         $this->createDbTable('ImageSchema');   
         $this->createDbTable('ImageRelationsSchema');                    
         $this->createDbTable('ImageThumbnailsSchema');         
         // Relation map 
         $this->addRelationMap('image','Image');
-        
-        
-        // Options       
-        $this->createOption('media.comments',true);
+        // protected storage folder
+        $this->createStorageFolder('images',false);
+        // public storage folder
+        $this->createStorageFolder('images',true);
+        $this->createStorageFolder('images/thumbnails',true);
+          // Services
+          $this->registerService('Image');
     }       
 
     /**

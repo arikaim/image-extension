@@ -11,32 +11,29 @@ namespace Arikaim\Extensions\Image\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-use Arikaim\Extensions\Image\Models\ImageThumbnails;
-
 use Arikaim\Core\Utils\File;
-use Arikaim\Core\Utils\Path;
-use Arikaim\Core\Arikaim;
+use Arikaim\Extensions\Image\Models\ImageThumbnails;
+use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
-use Arikaim\Core\Db\Traits\Slug;
 use Arikaim\Core\Db\Traits\UserRelation;
-use Arikaim\Core\Db\Traits\Status;
 use Arikaim\Core\Db\Traits\DateCreated;
 use Arikaim\Core\Db\Traits\FileTypeTrait;
 
 /**
- * Media db model class
+ * Image db model class
  */
-class Media extends Model  
+class Image extends Model  
 {
+    const IMAGES_STORAGE_PATH = 'images' . DIRECTORY_SEPARATOR;
+    const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
+
     use Uuid,     
-        Find,
-        Slug,
+        Find, 
         DateCreated,  
-        UserRelation,   
-        FileTypeTrait,
-        Status;
+        UserRelation, 
+        FileTypeTrait;
     
     /**
      * Table name
@@ -59,15 +56,10 @@ class Media extends Model
      * @var array
      */
     protected $fillable = [
-        'title',
-        'private',
-        'status',     
-        'slig',
+        'private', 
         'file_size',
         'mime_type',
-        'file_name',
-        'title',
-        'slug',     
+        'file_name', 
         'url',
         'width',
         'height',      
@@ -82,29 +74,99 @@ class Media extends Model
     public $timestamps = false;
    
     /**
+     * Create thumbnail model
+     *   
+     * @param integer $width
+     * @param integer $height
+     * @return Model|null
+    */
+    public function createThumbnail(int $width, int $height)
+    {
+        return ImageThumbnails::createThumbnail($width,$height,$this->image_id);      
+    }
+
+    /**
+     * storaget_path attribute GET
+     *
+     * @return string
+     */
+    public function getStoragePathAttribute()
+    {
+        return $this->getStoragePath(true,$this->user_id,$this->private);
+    } 
+
+    /**
+     * src attribute
+     *
+     * @return string
+     */
+    public function getSrcAttribute()
+    {
+        if (empty($this->url) == false) {
+            return $this->url;
+        }
+        $path = ($this->private === true) ? ImageLibrary::VIEW_PROTECTED_IMAGE_URL : $this->getStoragePath(true);
+
+        return $path . $this->file_name;
+    }
+
+    /**
+     * Create user images storage folder
+     *
+     * @param int|null $userId
+     * @param bool $privateStorage
+     * @return boolean
+     */
+    public function createUserImagesStoragePath(?int $userId = null, bool $privateStorage = false): bool
+    {
+        $userId = (empty($userId) == true) ? $this->user_id : $userId;
+        $path = $this->getStoragePath(false,$userId,$privateStorage);
+
+        if (File::exists($path) == false) {
+            return File::makeDir($path);
+        }
+
+        return true;
+    }
+
+    /**
      * Get images storage path
      *
-     * @param integer $userId
+     * @param mixed|null $userId
+     * @param boolean $relative
+     * @param bool|null $private
+     * @return string
+     */
+    public function getStoragePath(bool $relative = true, $userId = null, ?bool $private = null): string
+    {
+        $userId = (empty($userId) == true) ? $this->user_id : $userId;
+        $private = (\is_null($private) == true) ? $this->private : $private;
+        
+        return ImageLibrary::getStoragePath($relative,$userId,$private);
+    }
+
+    /**
+     * Get image path
+     *
      * @param boolean $relative
      * @return string
      */
-    public function getStoragePath(int $userId, bool $relative = true): string
+    public function getImagePath(bool $relative = true): string
     {
-        $path = 'images' . DIRECTORY_SEPARATOR . $userId . DIRECTORY_SEPARATOR;
-        $path = (empty($this->private) == true) ? 'public' . DIRECTORY_SEPARATOR . $path : $path;
-
-        return ($relative == true) ? $path : Path::STORAGE_PATH . $path;
+        return $this->getStoragePath($relative) . $this->file_name;
     }
 
     /**
      * Get user images query
      *
      * @param Builder $query
-     * @param int $userId
+     * @param int|null $userId
      * @return Builder
      */
-    public function scopeUserImagesQuery($query, int $userId)
+    public function scopeUserImagesQuery($query, ?int $userId)
     {
+        $userId = (empty($userId) == true) ? $this->user_id : $userId;
+
         return $query->where('user_id','=',$userId);
     }
 
@@ -116,6 +178,18 @@ class Media extends Model
     public function thumbnails()
     {
         return $this->hasMany(ImageThumbnails::class,'image_id');
+    }
+
+    /**
+     * Thumbnail
+     *
+     * @param integer $width
+     * @param integer $height
+     * @return Model|null
+     */
+    public function thumbnail(int $width, int $height)
+    {
+        return $this->thumbnails->where('width','=',$width)->where('height','=',$height)->first();
     }
 
     /**
@@ -142,13 +216,14 @@ class Media extends Model
      * Find image
      *
      * @param string $name
-     * @param integer $userId
+     * @param integer|null $userId
      * @param string|null $excludeId
      * @return Model|null
      */
-    public function findImage(string $name, int $userId = null, ?string $excludeId = null)
+    public function findImage(string $name, ?int $userId = null, ?string $excludeId = null)
     {
-        $userId = (empty($userId) == true) ? Arikaim::get('access')->getid() : $userId;
+        $userId = (empty($userId) == true) ? $this->user_id : $userId;
+
         // by id, uuid
         $query = $this->where(function($query) use ($name,$excludeId) {
             $query->where('uuid','=',$name);
@@ -181,11 +256,11 @@ class Media extends Model
      * Check if image file exists
      *
      * @param string $title
-     * @param int $userid
+     * @param int|int $userid
      * @param string|null $excludeId
      * @return boolean
      */
-    public function hasImage(string $title, int $userId, ?string $excludeId = null): bool
+    public function hasImage(string $title, ?int $userId = null, ?string $excludeId = null): bool
     {
         return (bool)\is_object($this->findImage($title,$userId,$excludeId));
     }
@@ -193,73 +268,39 @@ class Media extends Model
     /**
      * Delete image and relations 
      *
-     * @param string $name
-     * @param int $userId
+     * @param string|null $name
+     * @param int|null $userId
      * @return boolean
      */
-    public function deleteImage(string $name, int $userId)
+    public function deleteImage(?string $name = null, ?int $userId = null): bool
     {
-        $model = $this->findImage($name,$userId);
+        $model = (empty($name) == true) ? $this : $this->findImage($name,$userId);
         if (\is_null($model) == true) {
             return false;
         }
 
-        // Delete thumbnail
-        $this->thumbnails()->delete();
+        $this->thumbnails()->deleteThumbnail();
+        // Delete relations
 
-        
+        $this->deleteImageFile($model);
 
-        return $model->delete();
+        return (bool)$model->delete();        
     } 
 
     /**
-     * Get media page url
+     * Delete image file 
      *
-     * @param boolean $full
-     * @param string|null $customPath 
-     * @return string
-     */
-    public function getViewUrl($customPath = null)
-    {
-        $path = (empty($customPath) == true) ? '/api/media/view/' : $customPath;
-
-        return $path . $this->slug;
-    }
-
-    /**
-     * Create media files assets folder
-     *
+     * @param Model|null $model
      * @return boolean
-     */
-    public function createUploadPath($userPath)
+    */
+    public function deleteImageFile($model = null): bool
     {
-        $path = $this->getMediaFilesPath($userPath);
-        
-        return (File::exists($path) == false) ? File::makeDir($path) : true;       
-    }
+        $model = (\is_null($model) == true) ? $this : $model;
+        if (empty($model->file_name) == true) {
+            return false;
+        }
+        $path = $model->getStoragePath(false,null,$model->private) . $model->file_name;
 
-    /**
-     * Get media files path
-     *
-     * @param boolean $relative
-     * @return string
-     */
-    public function getMediaFilesPath($userPath, $relative = false)
-    {
-        $path = $userPath . 'media' . DIRECTORY_SEPARATOR;
-
-        return ($relative == true) ? $path : Path::STORAGE_PATH . $path;
-    }
-
-    /**
-     * Get media file path
-     *
-     * @param string $userPath
-     * @param boolean $relative
-     * @return string
-     */
-    public function getMediaFilePath($userPath, $relative = false)
-    {
-        return $this->getMediaFilesPath($userPath,$relative) . $this->file;
-    }
+        return (File::exists($path) == true) ? File::delete($path) : true;         
+    }     
 }

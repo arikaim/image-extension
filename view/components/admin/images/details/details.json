@@ -1,0 +1,9 @@
+{
+    "labels": {
+        "id": "Id",
+        "size": "Size",
+        "owner": "Owner",
+        "type": "Type",
+        "file_size": "File Size"
+    }
+}

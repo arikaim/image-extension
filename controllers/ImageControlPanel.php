@@ -11,8 +11,7 @@ namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
-use Arikaim\Extensions\Media\Classes\Import;
-use Arikaim\Core\Controllers\Traits\Status;
+use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Controllers\Traits\FileUpload;
 
 /**
@@ -20,8 +19,7 @@ use Arikaim\Core\Controllers\Traits\FileUpload;
 */
 class ImageControlPanel extends ControlPanelApiController
 {
-    use 
-        Status,
+    use    
         FileUpload;
 
     /**
@@ -35,15 +33,22 @@ class ImageControlPanel extends ControlPanelApiController
     }
 
     /**
-     * Constructor
-     * 
-     * @param Container
-     */
-    public function __construct($container = null) 
-    {
-        parent::__construct($container);
-        $this->setModelClass('Image');
-        $this->setExtensionName('image');
+     * Import image
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+    */
+    public function importController($request, $response, $data) 
+    {          
+        $this->onDataValid(function($data) {
+            $private = $data->getBool('private',false);      
+            $url = $data->get('url',null);
+            $model = Model::Image('image');     
+            
+        });
+        $data->validate();   
     }
 
     /**
@@ -57,96 +62,60 @@ class ImageControlPanel extends ControlPanelApiController
     public function uploadController($request, $response, $data) 
     {          
         $this->onDataValid(function($data) use ($request) { 
-            $uuid = $data->get('uuid');          
-            $model = Model::Media('media');                      
-            if ($model->hasMedia($data['title']) == true) {
-                $this->error("errros.exists");
-                return;
-            }
-           
-            $model->initUuid();
-            if (empty($uuid) == false) {
-                $model = $model->findById($uuid);
-                if (\is_object($model) == false) {
-                    $this->error('errors.id');
-                    return;
-                }  
-            }
-            if ($model->createUploadPath() === false) {
-                $this->error("errros.path");
-                return;
-            }
-            $destinationPath = $model->getMediaFilesPath(true);
- 
+            $private = $data->getBool('private',false);          
+            $model = Model::Image('image');                      
+            
+            $model->createUserImagesStoragePath($this->getUserId(),$private);
+
+            $destinationPath = $model->getStoragePath(true,$this->getUserId(),$private);
             $files = $this->uploadFiles($request,$destinationPath);
+
             // process uploaded files
+            $result = false;
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
 
-                $data['file'] = $item['name'];
-                $fileName = $destinationPath . $data['file'];
+                $data['file_name'] = $item['name'];
+                $fileName = $destinationPath . $data['file_name'];
                 $data['file_size'] = $this->get('storage')->getSize($fileName);
-                $data['mime_type'] = $this->get('storage')->getMimetype($fileName);                  
-            }
-          
-            if (empty($data['file']) == true) {
-                $this->error('errors.upload');
-                return;
-            }  
-           
-            if (empty($uuid) == false) {           
-                // update  
-                $result = $model->update($data->toArray());
-            } else {
-                // create
+                $data['mime_type'] = $this->get('storage')->getMimetype($fileName);    
                 $data['user_id'] = $this->getUserId();
-                $data['uuid'] = $model->uuid;              
-                $model = $model->create($data->toArray());
-                $result = \is_object($model);
-                $uuid = $model->uuid;
+                $data['private'] = ($private == true);
+
+                $size = $this->get('image')->getSize(Path::STORAGE_PATH . $destinationPath . $data['file_name']);
+                if (\is_array($size) == true) {
+                    $data['width'] = $size['width']; 
+                    $data['height'] = $size['height'];
+                }
+              
+                if ($model->hasImage($data['file_name'],$this->getUserId()) == true) {
+                    // update
+                    $model = $model->findImage($data['file_name'],$this->getUserId());
+                    $result = ($model->update($data->toArray()) !== false);
+                    $image = $model;
+                } else {
+                    // create
+                    $image = $model->create($data->toArray());
+                    $result = (\is_object($image) == true);
+                }
+
+                if (\is_object($image) == true) {
+                    $this->get('image.library')->createThumbnail($image,64,64);
+                }
             }
-            
-            $this->setResponse($result,function() use($data,$uuid) {                  
+        
+            $this->setResponse($result,function() use($image) {                  
                 $this
                     ->message('upload')
-                    ->field('uuid',$uuid)
-                    ->field('file',$data['file']);                                  
+                    ->field('uuid',$image->uuid)
+                    ->field('file',$image->file_name);                                  
             },'errors.upload');   
-
         });
-        $data
-            ->addRule('text:min=2','title')
-            ->validate();   
+        $data->validate();   
     }
 
     /**
-     * Update image
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-    */
-    public function updateController($request, $response, $data) 
-    {    
-        $this->onDataValid(function($data) { 
-            $model = Model::Media('media')->findById($data['uuid']);
-            $data['featured'] = $data->get('featured',0);
-            $result = ($model->hasMedia($data['title'],$data['uuid']) == true) ? false : $model->update($data->toArray());
-        
-            $this->setResponse($result,function() use($model) {                  
-                $this
-                    ->message('update')
-                    ->field('uuid',$model->uuid);                  
-            },'errors.add');
-        });        
-        $data
-            ->addRule('text:min=2','title')
-            ->validate();   
-    }
-
-    /**
-     * Delete media
+     * Delete image
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
@@ -156,8 +125,13 @@ class ImageControlPanel extends ControlPanelApiController
     public function deleteController($request, $response, $data)
     { 
         $this->onDataValid(function($data) { 
-            $model = Model::Media('media')->findById($data['uuid']);  
-            $result = $model->deleteMedia();
+            $model = Model::Image('image')->findById($data['uuid']); 
+            if (\is_object($model) == false) {
+                $this->error('errors.id');
+                return false;
+            } 
+
+            $result = $model->deleteImage();
 
             $this->setResponse($result,function() use($model) {                  
                 $this
@@ -169,27 +143,44 @@ class ImageControlPanel extends ControlPanelApiController
     }
 
     /**
-     * Set media featured
+     * Get images list
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function setFeaturedController($request, $response, $data)
+    public function getList($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $model = Model::Media('media')->findById($data['uuid']);  
-            $featured = $data->get('featured','toggle');
-            $result = ($featured == 'toggle') ? $model->toggle('featured') : $model->update(['featured' => $featured]);           
-             
-            $this->setResponse($result,function() use($model) {                  
-                $this
-                    ->message('featured')
-                    ->field('uuid',$model->uuid)
-                    ->field('featured',$model->featured);     
-            },'errors.featured');
-        });       
+        $this->requireControlPanelPermission();
+
+        $this->onDataValid(function($data) {          
+            $search = $data->get('query','');
+            $dataField = $data->get('data_field','uuid');
+            $size = $data->get('size',15);
+            
+            $model = Model::Image('image');
+            $model = $model->where('file_name','like','%' . $search . '%')->take($size)->get();
+          
+            $this->setResponse(\is_object($model),function() use($model,$dataField) {     
+                $items = [];
+                foreach ($model as $item) {
+                    $thumbnail = $item->thumbnail(64,64);
+                    $imageUrl = (\is_object($thumbnail) == true) ? $this->getPageUrl($thumbnail->src) : null;
+
+                    $items[] = [
+                        'name'  => $item['file_name'],
+                        'image' => $imageUrl,
+                        'value' => $item[$dataField]
+                    ];
+                }
+                $this                    
+                    ->field('success',true)
+                    ->field('results',$items);  
+            },'errors.list');
+        });
         $data->validate();
+
+        return $this->getResponse(true); 
     }
 }

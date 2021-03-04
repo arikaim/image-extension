@@ -1,19 +1,14 @@
 {% set status_filter = searchValue('status','images') %}
 <div class="ui segment">
-    <div class="ui stackable grid">
-        <div class="ui seven wide column left aligned">
+    <div class="ui stackable three column grid">
+        <div class="column left aligned">
             {{ component('components:search.form',{ namespace: 'images' }) }}
-        </div>
-        <div class="ui seven wide column left aligned">
-            <i class="icon filter"></i>
-            {{  component('components:status.dropdown',{ 
-                    status: status_filter,
-                    class: 'status-filter clearable selection',                       
-                    all: false 
-                }) 
-            }} 
-        </div>
-        <div class="two wide right aligned column">       
+        </div>      
+        <div class="column">
+
+            {{ imageSrc() }}
+        </div> 
+        <div class="right aligned column">       
             {{ component('components:paginator.dropdown',{ namespace: 'images' }) }}
         </div>                 
     </div>
@@ -23,12 +18,13 @@
         <thead class="table-head">
             <tr>              
                 <th class="one wide collapsing left aligned">{{ columns.action }}</th>
-                <th class="one wide">{{ columns.created }}</th>
-                <th class="collapsing one wide">{{ columns.status }}</th>
-                <th class="collapsing center aligned">{{ columns.thumbnail }}</th>    
-                <th class="two wide">{{ columns.name }}</th>                                         
+                <th class="one wide">{{ columns.created }}</th>              
+                <th class="collapsing center aligned">{{ columns.thumbnail }}</th>   
+                <th class="two wide center aligned">{{ columns.size }}</th> 
+                <th>{{ columns.name }}</th>                                         
                 <th class="one wide">{{ columns.user }}</th>
-                <th class="one wide">{{ columns.type }}</th>                           
+                <th class="one wide">{{ columns.type }}</th>
+                <th class="one wide">{{ columns.file_size }}</th>                                   
             </tr>
         </thead>
         <tbody id="image_rows" component="image::admin.images.view.rows" namespace="images">

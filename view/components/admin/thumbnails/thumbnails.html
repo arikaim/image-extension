@@ -1,15 +1,18 @@
-<div class="mt-1">   
-{% set params = { uuid: uuid } %}
-{% set items = [ 
-    { title: labels.view, component: 'media::admin.media.edit.thumbnails.view', icon: 'list', params: params, active: true },
-    { title: labels.upload, component: 'media::admin.media.edit.thumbnails.upload', icon: 'upload', params: params },
-] %}
-
-{{  component('components:tabs.vertical',{ 
-        items: items, 
-        menu: { id: 'thumbnails_menu' }, 
-        item_class: 'thumbnails-tab-item',
-        content: { id: 'thumbnails_content', component: 'media::admin.media.edit.thumbnails.view',params: params } 
-    })
-}}
+{% set image = createModel('Image','image').findById(uuid) %}
+<div class="ui segment">
+    <div class="ui grid">
+        <div class="ui five wide column">
+            <div class="flex">
+                <div class="font-bold p-2">
+                    {{ labels.image }}
+                </div>
+                {{ component('image::admin.dropdown',{ selected: image.id, id: 'select_image', class: 'fluid' }) }}
+            </div>        
+        </div> 
+    </div>   
+</div>
+<div class="mt-2" id="image_details_content">
+    {% if image is not empty %}
+        {{ component('image::admin.thumbnails.details',{ image: image }) }} 
+    {% endif %}
 </div>

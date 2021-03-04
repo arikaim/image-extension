@@ -18,84 +18,49 @@
     <tr id="{{ item.uuid }}">             
         <td>            
             <div class="ui buttons">                     
-                <button class="ui icon mini basic button edit-button" uuid="{{ item.uuid }}">
-                    <i class="icon edit"></i>
-                </button>
-                {% if item.isDeleted() == false %}
-                <a href="{{ url('game/' ~ item.slug,true) }}" class="ui icon mini basic button" target="_{{ item.title }}">
-                    <i class="external alternate icon"></i>
-                </a>   
-                {% else %}   
-                <button class="ui icon mini basic button restore-button" uuid="{{ item.uuid }}" title="{{ labels.restore }}">
-                    <i class="icon edit olive trash restore alternate"></i>
-                </button>  
-                {% endif %}                                         
-                <button class="ui icon mini basic button delete-button" uuid="{{ item.uuid }}" data-title="{{ item.title }}">
+                <button class="ui icon mini basic button thumbnails-button" uuid="{{ item.uuid }}" title="{{ labels.thumbnails }}">
+                    <i class="icon images"></i>
+                </button>     
+                <button class="ui icon mini basic button image-relations-button" uuid="{{ item.uuid }}" title="{{ labels.relations }}">
+                    <i class="icon blue project diagram"></i>
+                </button>                                                    
+                <button class="ui icon mini basic button delete-button" uuid="{{ item.uuid }}" data-title="{{ item.file_name }}">
                     <i class="icon trash orange"></i>
                 </button>  
             </div>          
         </td>  
         <td>
             {{ item.date_created|dateFormat }}
-        </td>
-        <td>
-            {% if item.isDeleted() == false %}
-                {{ component('components:status.dropdown',{ status: item.status, uuid: item.uuid, skip: [2,3,4,5] }) }}
+        </td>       
+        <td class="center aligned">
+            {% set thumbnail = item.thumbnail(64,64) %}
+            {% if thumbnail is not empty %}
+                <img src="{{ url(thumbnail.src) }}" class="ui image rouded">
             {% else %}
-                <div class="ui basic label horizontal orange">
-                    {{ labels.deleted }}
+                <div class="ui image grounded">
+                    <i class="icon image"></i>
                 </div>
             {% endif %}
         </td>
         <td class="center aligned">
-            {% set thumbnail = item.thumbnailSmall() %}
-            {% if thumbnail is not empty %}
-                <img src="{{ thumbnail.url }}" class="ui image rouded">
-            {% endif %}
+            {{ item.width }} x {{ item.height }}
         </td>
-        <td>           
-            {{ item.title }}
-        </td>                            
-        <td>                             
-            {% for category in item.categories %}            
-                <div class="ui mini left pointign basic label">
-                    {{ category.getTitle()|string }}
+        <td>    
+            {% if item.private == true %}
+                <div class="ui basic  icon label" title="{{ labels.protected }}">
+                    <i class="icon orange lock"></i>
                 </div>
-            {% endfor %}
-        </td>
-        <td> 
-            {{  component('tags::tags.relations',{ 
-                    relation_id: item.id, 
-                    class: 'basic mini left pointing',
-                    limit: 5,
-                    show_error: false 
-                }) 
-            }}          
-        </td>
-        <td>        
-            {% if item.provider is empty %}
-                {% if item.isImage() == true %}
-                    <i class="icon image blue" title="{{ labels.image }}"></i>
-                {% elseif item.isVideo() == true %}
-                    <i class="icon film blue" title="{{ labels.video }}"></i>                  
-                {% endif %}             
-                <i class="icon folder outline blue pr-2"></i>../{{ item.file }} 
-                <div class="ui basic horizontal right floated mini label">
-                    {{ item.file_size|fileSize }}
-                </div>    
             {% else %}
-            <div class="ui basic horizontal mini label">
-                {{ item.provider }}
-            </div>   
-            {{ item.video_id }}      
-            <div class="ui basic horizontal mini label">
-                {{ labels.duration }}
-                {{ item.duration_time }}     
-            </div>                      
-            {% endif %}
-        </td>
+                <div class="ui basic icon label" title="{{ labels.public }}">
+                    <i class="icon green unlock"></i>                  
+                </div>
+            {% endif %}       
+            {{ item.file_name }}
+        </td>                            
         <td>{{ item.user.user_name }}</td>               
-        <td>{{ item.mime_type }}</td>                 
-        <td>{{ item.views }}</td>         
+        <td>{{ item.mime_type }}</td>  
+        <td>
+            {{ item.file_size|fileSize }}
+        </td>                       
     </tr>
 {% endfor %}

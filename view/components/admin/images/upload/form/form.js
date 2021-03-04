@@ -2,22 +2,34 @@
 
 arikaim.component.onLoaded(function() {
     arikaim.ui.form.addRules("#upload_form");
+    $('.private-image').checkbox({
+        onChecked: function() {
+            $(this).val(1);
+        },
+        onUnchecked: function() {
+            $(this).val(false);
+        }
+    });
+
+    var checked = $('.private-image').checkbox('is checked');
+    $('#private').val(checked);
 
     var fileUpload = new FileUpload('#upload_form',{
-        url: '/api/media/admin/upload',
+        url: '/api/image/admin/upload',
         maxFiles: 1,
         allowMultiple: false,
-        acceptedFileTypes: [],
+        acceptedFileTypes: [],      
         formFields: {            
-            uuid: '#uuid',          
-            title: '#title'           
+            private: '#private'                            
         },
-        onSuccess: function(result) {
+        onSuccess: function(result) {      
             return arikaim.page.loadContent({
-                id: 'media_content',
+                id: 'image_content',
                 params: { uuid: result.uuid },
-                component: 'media::admin.media.edit'
+                component: 'image::admin.images.view'
             });
         }
     });
+
+    
 });

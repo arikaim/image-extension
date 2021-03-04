@@ -1,8 +1,6 @@
 {
     "include": {
-        "js": [
-            "system:admin.jobs",
-            "system:options"
+        "js": [         
         ]
     },
     "access": {

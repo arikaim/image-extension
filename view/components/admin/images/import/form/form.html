@@ -1,0 +1,20 @@
+<form class="ui equal width form" id="import_image_form">    
+    {% if url is not empty %}
+    <div class="field">
+        <input type="hidden" name="url" id="url" value="{{ url }}">
+        <img class="ui rounded image medium bordered" src="{{ url }}">
+        <div class="mt-4">
+            <div class="ui basic label">
+                {{ url }}
+            </div>
+        </div>      
+    </div>
+    {% endif %}
+    <div class="field">
+        <div class="ui toggle checkbox private-image">
+            <input type="checkbox" name="private" id="private" class="hidden">
+            <label>{{ fields.protected.label }}</label>
+        </div>      
+    </div>         
+    {{ component('components:form.footer',{ button_title: buttons.import }) }}   
+</form>

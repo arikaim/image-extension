@@ -1,9 +1,6 @@
 {
-    "labels": {       
-        "upload": "Upload",
-        "thumbnails": "Thumbnails",
-        "path": "path",
-        "url": "Url",
-        "view": "View"
-    }
+    "title": "Thumbnails",
+    "labels": {   
+        "image": "Image"
+    }   
 }

@@ -7,7 +7,9 @@
         "action": "Action",  
         "user": "User",     
         "status": "Status",
-        "name": "Name",
+        "name": "File Name",
+        "file_size": "File Size",
+        "size": "Size",
         "thumbnail": "Thumbnail",
         "type": "Type",
         "created": "Date"

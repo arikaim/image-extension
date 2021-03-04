@@ -1,0 +1,26 @@
+{% if uuid is not empty %}
+    {% set item = createModel('ImageThumbnails','image').findById(uuid) %}
+{% endif %}
+<div class="ui card " id="row_{{ item.uuid }}">  
+    <div class="content">  
+        <div class="ui mini header">
+            <i class="icon blue file image outline"></i>
+            {{ item.file_name }}             
+        </div>
+    </div>
+    <div class="p-auto text-center pb-4">
+        <img width="{{ item.width}}px" height="{{ item.height}}px" src="{{ url(item.src) }}">
+    </div>    
+    <div class="extra content">
+        <span class="ui basic label">                    
+            {{ item.width }} x {{ item.height }}
+        </span>
+        <span class="ui basic label">                  
+            {{ item.mime_type }}
+        </span>  
+        <button class="ui basic icon labeled mini right floated button delete-thumbnail" uuid="{{ item.uuid }}" data-title="{{ item.file_name }}">
+            <i class="icon orange trash"></i>
+            {{ labels.delete }}
+        </button>
+    </div> 
+</div>

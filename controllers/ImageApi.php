@@ -13,7 +13,6 @@ use Arikaim\Core\Controllers\ApiController;
 use Arikaim\Core\Db\Model;
 
 use Arikaim\Core\Controllers\Traits\FileDownload;
-use Arikaim\Core\Controllers\Traits\SoftDelete;
 
 /**
  * Image api controller
@@ -21,20 +20,7 @@ use Arikaim\Core\Controllers\Traits\SoftDelete;
 class ImageApi extends ApiController
 {
     use 
-        FileDownload,
-        SoftDelete;
-            
-    /**
-     * Constructor
-     * 
-     * @param Container
-     */
-    public function __construct($container = null) 
-    {
-        parent::__construct($container);
-        $this->setModelClass('Image');
-        $this->setExtensionName('image');
-    }
+        FileDownload;
 
     /**
      * Init controller
@@ -43,35 +29,11 @@ class ImageApi extends ApiController
      */
     public function init()
     {
-        $this->loadMessages('media>messages');
+        $this->loadMessages('image::messages');
     }
 
     /**
-     * View thumbnail
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-    */
-    public function viewThumbnailFile($request, $response, $data) 
-    {  
-    }
-
-    /**
-     * Create thumbnail
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-    */
-    public function createThumbnailController($request, $response, $data) 
-    {  
-    }
-
-    /**
-     * View media file
+     * View protected image
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
@@ -81,19 +43,14 @@ class ImageApi extends ApiController
     public function view($request, $response, $data) 
     {            
         $slug = $data->get('slug',null);
-        $model = Model::Media('media')->findBySlug($slug);
+        $image = Model::Media('media')->findBySlug($slug);
      
         // not valid slug
-        if (\is_object($model) == false) {
-            $this->error('Not valid slug');
+        if (\is_object($image) == false) {
+            $this->error('Not valid image slug');
             return false;
         }
-
-        $userDetails = Model::UserDetails('users')->findOrCreate($model->user_id);      
-        $userStoragePath = $userDetails->getUserStoragePath(true);
-
-        $mediaFile = $model->getMediaFilePath($userStoragePath,true);
-        
-        return $this->downloadFile($response,$mediaFile);
+  
+        return $this->viewImage($response,$image->src);
     }  
 }
