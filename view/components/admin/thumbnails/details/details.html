@@ -26,12 +26,18 @@
         {{ component('image::admin.images.details',{ image: image }) }}
     </div>
     <div class="twelve wide column">
-        <div class="ui header">
-            <i class="icon blue image"></i>
-            {{ labels.create }}
-        </div>
-        <div>                
-            {{ component('image::admin.thumbnails.create',{ uuid: image.uuid }) }}                               
+        <div class="ui divided grid">
+            <div class="six wide column column">
+                <div class="ui header">
+                    <i class="icon blue image"></i>
+                    {{ labels.create }}
+                </div>
+                <div class="w-full">                
+                    {{ component('image::admin.thumbnails.create',{ uuid: image.uuid, class: 'fluid' }) }}                               
+                </div>               
+            </div>
+            <div class="ten wide column" id="thumbnails_info">
+            </div>
         </div>
         <div class="ui horizontal header divider left aligned">
             <i class="icon blue images"></i>

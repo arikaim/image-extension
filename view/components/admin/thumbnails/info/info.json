@@ -1,0 +1,11 @@
+{
+    "title": "Details",
+    "labels": {
+        "id": "Id",
+        "size": "Size",
+        "file": "File Name",
+        "type": "Type",
+        "back": "Back",
+        "code": "Code"     
+    }
+}

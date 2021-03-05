@@ -10,31 +10,18 @@ function ImagesView() {
     var self = this;
    
     this.init = function() {
-        paginator.init('images_rows',"image::admin.images.view.rows",'images'); 
+        paginator.init('image_rows',"image::admin.images.view.rows",'images'); 
 
         search.init({
-            id: 'images_rows',
-            component: 'image::admin.media.view.rows',
+            id: 'image_rows',
+            component: 'image::admin.images.view.rows',
             event: 'image.search.load'
-        },'image')  
+        },'images')  
         
-        $('.status-filter').dropdown({          
-            onChange: function(value) {      
-                var searchData = {
-                    search: {
-                        status: value,                       
-                    }          
-                }              
-                search.setSearch(searchData,'images',function(result) {                  
-                    self.loadList();
-                });               
-            }
-        });
-
         arikaim.events.on('image.search.load',function(result) {      
             paginator.reload();
             self.initRows();    
-        },'mediaSearch');
+        },'imageSearch');
 
         this.loadMessages('image::admin.messages');
     };

@@ -35,6 +35,7 @@ class ImageThumbnailsSchema extends Schema
         $table->id();
         $table->prototype('uuid');        
         $table->relation('image_id','image');
+        $table->string('folder')->nullable(true);
         $table->string('mime_type')->nullable(true);
         $table->string('file_name')->nullable(true);       
         $table->string('url')->nullable(true);       

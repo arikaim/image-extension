@@ -41,6 +41,7 @@ class ImageThumbnails extends Model
      */
     protected $fillable = [        
         'file_name',
+        'folder',
         'image_id',            
         'mime_type',     
         'url',
@@ -64,8 +65,7 @@ class ImageThumbnails extends Model
      */
     public function deleteThumbnail(?string $name = null): bool
     {
-        $name  = $name ?? $this->id;
-        $model = $this->findById($name);
+        $model = (empty($name) == false) ? $this->findById($name) : $this;
         if (\is_object($model) == false) {
             $model = $this->where('file_name','=',$name)->first();
             if (\is_object($model) == false) {
@@ -91,11 +91,11 @@ class ImageThumbnails extends Model
         return $this->belongsTo(Image::class,'image_id');
     }
 
-     /**
+    /**
      * src attribute
      *
      * @return string
-     */
+    */
     public function getSrcAttribute()
     {
         if (empty($this->url) == false) {

@@ -13,8 +13,7 @@ arikaim.component.onLoaded(function() {
                 component: 'image::admin.images.import.form',
                 params: { url: url }
             });    
-        },function(image) {
-            console.log('err');
+        },function(image) {         
         });
-    });
+    });  
 });

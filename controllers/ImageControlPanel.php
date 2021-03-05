@@ -11,7 +11,7 @@ namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
-use Arikaim\Core\Utils\Path;
+use Arikaim\Core\Http\Url;
 use Arikaim\Core\Controllers\Traits\FileUpload;
 
 /**
@@ -45,8 +45,25 @@ class ImageControlPanel extends ControlPanelApiController
         $this->onDataValid(function($data) {
             $private = $data->getBool('private',false);      
             $url = $data->get('url',null);
+            $fileName = $data->getString('file_name',null);
+
             $model = Model::Image('image');     
-            
+            if ($private == true) {                
+                $model->createPrivateStoragePath($this->getUserId());
+            }
+
+            $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName;
+        
+            // import from url and save
+            $image = $this->get('image.library')->import($url,$fileName,$this->getUserId(),$private);     
+
+            $this->setResponse(\is_object($image),function() use($image) {                  
+                $this
+                    ->message('import')
+                    ->field('uuid',$image->uuid)
+                    ->field('file',$image->file_name);                                  
+            },'errors.import');   
+
         });
         $data->validate();   
     }
@@ -64,47 +81,21 @@ class ImageControlPanel extends ControlPanelApiController
         $this->onDataValid(function($data) use ($request) { 
             $private = $data->getBool('private',false);          
             $model = Model::Image('image');                      
+            if ($private == true) {                
+                $model->createPrivateStoragePath($this->getUserId());
+            }
             
-            $model->createUserImagesStoragePath($this->getUserId(),$private);
-
             $destinationPath = $model->getStoragePath(true,$this->getUserId(),$private);
             $files = $this->uploadFiles($request,$destinationPath);
 
-            // process uploaded files
-            $result = false;
+            // process uploaded files        
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
 
-                $data['file_name'] = $item['name'];
-                $fileName = $destinationPath . $data['file_name'];
-                $data['file_size'] = $this->get('storage')->getSize($fileName);
-                $data['mime_type'] = $this->get('storage')->getMimetype($fileName);    
-                $data['user_id'] = $this->getUserId();
-                $data['private'] = ($private == true);
-
-                $size = $this->get('image')->getSize(Path::STORAGE_PATH . $destinationPath . $data['file_name']);
-                if (\is_array($size) == true) {
-                    $data['width'] = $size['width']; 
-                    $data['height'] = $size['height'];
-                }
-              
-                if ($model->hasImage($data['file_name'],$this->getUserId()) == true) {
-                    // update
-                    $model = $model->findImage($data['file_name'],$this->getUserId());
-                    $result = ($model->update($data->toArray()) !== false);
-                    $image = $model;
-                } else {
-                    // create
-                    $image = $model->create($data->toArray());
-                    $result = (\is_object($image) == true);
-                }
-
-                if (\is_object($image) == true) {
-                    $this->get('image.library')->createThumbnail($image,64,64);
-                }
+                $image = $this->get('image.library')->save($item['name'],$this->getUserId(),$private);               
             }
         
-            $this->setResponse($result,function() use($image) {                  
+            $this->setResponse(\is_object($image),function() use($image) {                  
                 $this
                     ->message('upload')
                     ->field('uuid',$image->uuid)

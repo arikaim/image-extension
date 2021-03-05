@@ -1,19 +1,12 @@
-{% set media = createModel('Image','image').where('id','>',0) %}
-{% set status_filter = searchValue('status','image') %}
-{% if status_filter is not empty %}
-    {% set media = media.where('status','=',status_filter) %}
-{% endif %}
-{{ createSearch('title','media','ilike:%{value}%','and') }}
-{% set media = applyOrderBy(media,'media') %}
-{% set media = applySearch(media,'media') %}
-{% set items = paginate(media,'media')  %}
-
+{% set image = createModel('Image','image').where('id','>',0) %}
+{{ createSearch('file_name','images','ilike:{value}%') }}
+{% set image = applySearch(image,'images') %}
+{% set items = paginate(image,'images')  %}
 {% if items.getItems()|length == 0 %}
     <tr>
         <td colspan="9">{{ labels.empty }}</td>
     </tr>
 {% endif %}
-
 {% for item in items.getItems() %}  
     <tr id="{{ item.uuid }}">             
         <td>            

@@ -27,7 +27,7 @@ class Image extends Extension
         $this->addApiRoute('POST','/api/image/admin/upload','ImageControlPanel','upload','session');    
         $this->addApiRoute('POST','/api/image/admin/import','ImageControlPanel','import','session');              
         $this->addApiRoute('DELETE','/api/image/admin/delete/{uuid}','ImageControlPanel','delete','session'); 
-        $this->addApiRoute('GET','/api/image/admin/list/[{query}]','ImageControlPanel','getList','session');             
+        $this->addApiRoute('GET','/api/image/admin/list/{data_field}/[{query}]','ImageControlPanel','getList','session');             
         // thumbnails
         $this->addApiRoute('POST','/api/image/admin/thumbnail/create','ThumbnailsControlPanel','create','session');              
         $this->addApiRoute('DELETE','/api/image/admin/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 

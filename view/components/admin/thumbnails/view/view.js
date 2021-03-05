@@ -14,6 +14,16 @@ function ThumbnailsView() {
     };
 
     this.initRows = function() {
+        arikaim.ui.button('.thumbnail-info',function(element) {
+            var uuid = $(element).attr('uuid');
+
+            return arikaim.page.loadContent({
+                id: 'thumbnails_info',
+                component: 'image::admin.thumbnails.info',             
+                params: { uuid: uuid }
+            });  
+        });
+       
         arikaim.ui.button('.delete-thumbnail',function(element) {
             var uuid = $(element).attr('uuid');
             var title = $(element).attr('data-title');

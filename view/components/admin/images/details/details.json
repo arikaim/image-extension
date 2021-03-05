@@ -4,6 +4,7 @@
         "size": "Size",
         "owner": "Owner",
         "type": "Type",
+        "code": "Code",
         "file_size": "File Size"
     }
 }

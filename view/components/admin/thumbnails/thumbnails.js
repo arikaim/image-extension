@@ -23,8 +23,6 @@ function ThumbnailsControlPanel() {
                 id: 'image_details_content',
                 component: 'image::admin.thumbnails.details',             
                 params: { uuid: selected }
-            },function(result) {
-               // thumbnailsView.initRows();
             });  
         });
     }

@@ -1,4 +1,3 @@
-{# id: 'settings_button', title: labels.settings.content, component: 'image::admin.settings', icon: 'cogs' #}
 {%  set items = [ 
         { id: 'image_view_button', title: labels.view, component: 'image::admin.images', icon: 'list', active: true }                    
     ] 
@@ -6,7 +5,7 @@
 
 {{  component('components:tabs',{ 
         items: items,
-        menu: { component: 'system:admin.extensions.menu.actions', extension: 'image' },
+        menu: { extension: 'image' },
         content: { component: 'image::admin.images' } 
     })
 }}

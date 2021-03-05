@@ -1,10 +1,13 @@
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
+    {% if hide_protected != true %}
     <div class="field">
+        <label>{{ fields.protected.label }}</label>
         <div class="ui toggle checkbox private-image">
-            <input type="checkbox" name="private" id="private" class="hidden">
-            <label>{{ fields.protected.label }}</label>
+            <input type="checkbox" name="private" id="private" class="hidden" {{ (protected == true) ? 'checked' : '' }}>
+            <label>{{ fields.protected.placeholder }}</label>
         </div>      
     </div>
+    {% endif %}
     <div class="field required">                    
         <input name="file" id="file" type="file">                                          
     </div>        

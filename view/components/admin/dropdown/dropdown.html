@@ -8,13 +8,14 @@
 {% endif %}
 {% set icon = icon|default('dropdown') %}
 {% set selected_text = (selected is empty) ? labels.select : selected.file_name %}
-<div class="ui search image-dropdown dropdown selection  {{ class }}" id="{{ id }}">
-    <input name="{{ name }}" type="hidden" value="{{ selected.uuid }}">   
+{% set data_field = data_field|default('uuid') %}
+<div class="ui search image-dropdown dropdown selection {{ class }}" id="{{ id }}" data-field="{{ data_field }}">
+    <input name="{{ name }}" type="hidden" value="{{ selected[data_field] }}">   
     <i class="icon {{ icon }}"></i>
     <div class="text">{{ selected_text }}</div>
     <div class="menu">
         {% for item in items %}           
-            <div class="item" data-value="{{ item.uuid }}">                        
+            <div class="item" data-value="{{ item[data_field] }}">                        
                 <img class="ui avatar image" src="{{ url(item.thumbnail(64,64).src) }}">               
                 {{ item.file_name }}
             </div>

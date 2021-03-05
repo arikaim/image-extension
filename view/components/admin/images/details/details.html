@@ -37,7 +37,13 @@
                 <td>
                     {{ image.user.user_name_or_email }}
                 </td>
-            </tr>
+            </tr>           
         </tbody>
     </table>
+    <div>       
+        {% component 'components:code' %}  
+        {%- set language = 'p-2 html' -%}                              
+        <img src="{{ url(image.src) }}"/>
+        {% endcomponent %}     
+    </div>
 </div>

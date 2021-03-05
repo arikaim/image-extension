@@ -14,22 +14,29 @@ arikaim.component.onLoaded(function() {
     var checked = $('.private-image').checkbox('is checked');
     $('#private').val(checked);
 
-    var fileUpload = new FileUpload('#upload_form',{
-        url: '/api/image/admin/upload',
-        maxFiles: 1,
-        allowMultiple: false,
-        acceptedFileTypes: [],      
-        formFields: {            
-            private: '#private'                            
-        },
-        onSuccess: function(result) {      
-            return arikaim.page.loadContent({
-                id: 'image_content',
-                params: { uuid: result.uuid },
-                component: 'image::admin.images.view'
-            });
-        }
-    });
-
+    arikaim.component.loadLibrary('filepond:preview',function(result) {
     
+        $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+        $.fn.filepond.setDefaults({
+            allowImagePreview: true,
+            imagePreviewHeight: 128
+        });
+
+        var fileUpload = new FileUpload('#upload_form',{
+            url: '/api/image/admin/upload',
+            maxFiles: 1,
+            allowMultiple: false,
+            acceptedFileTypes: [],      
+            formFields: {            
+                private: '#private'                            
+            },
+            onSuccess: function(result) {      
+                return arikaim.page.loadContent({
+                    id: 'image_content',
+                    params: { uuid: result.uuid },
+                    component: 'image::admin.images.view'
+                });
+            }
+        });
+    });
 });

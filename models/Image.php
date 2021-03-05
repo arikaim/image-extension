@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Model;
 
 use Arikaim\Core\Utils\File;
 use Arikaim\Extensions\Image\Models\ImageThumbnails;
+use Arikaim\Extensions\Image\Models\ImageRelations;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 use Arikaim\Core\Db\Traits\Uuid;
@@ -82,7 +83,9 @@ class Image extends Model
     */
     public function createThumbnail(int $width, int $height)
     {
-        return ImageThumbnails::createThumbnail($width,$height,$this->image_id);      
+        $thumbails = new ImageThumbnails(); 
+        
+        return $thumbails->createThumbnail($width,$height,$this->image_id);      
     }
 
     /**
@@ -113,14 +116,13 @@ class Image extends Model
     /**
      * Create user images storage folder
      *
-     * @param int|null $userId
-     * @param bool $privateStorage
+     * @param int|null $userId    
      * @return boolean
      */
-    public function createUserImagesStoragePath(?int $userId = null, bool $privateStorage = false): bool
+    public function createPrivateStoragePath(?int $userId = null): bool
     {
-        $userId = (empty($userId) == true) ? $this->user_id : $userId;
-        $path = $this->getStoragePath(false,$userId,$privateStorage);
+        $userId = $userId ?? $this->user_id;
+        $path = $this->getStoragePath(false,$userId,true);
 
         if (File::exists($path) == false) {
             return File::makeDir($path);
@@ -178,6 +180,16 @@ class Image extends Model
     public function thumbnails()
     {
         return $this->hasMany(ImageThumbnails::class,'image_id');
+    }
+
+    /**
+     * Image relations
+     *
+     * @return Relation|null
+     */
+    public function relations()
+    {
+        return $this->hasMany(ImageRelations::class,'image_id');
     }
 
     /**
@@ -278,11 +290,16 @@ class Image extends Model
         if (\is_null($model) == true) {
             return false;
         }
+        // delete thumbnails
+        foreach ($this->thumbnails()->get() as $item) {
+            $item->deleteThumbnail();
+        };
 
-        $this->thumbnails()->deleteThumbnail();
-        // Delete relations
+        // delete relations
+        $this->relations()->delete();
 
-        $this->deleteImageFile($model);
+        // delete image file
+        $this->deleteImageFile($model->file_name,$model->private);
 
         return (bool)$model->delete();        
     } 
@@ -290,16 +307,14 @@ class Image extends Model
     /**
      * Delete image file 
      *
-     * @param Model|null $model
+     * @param string $fileName
+     * @param boolean|null $private
      * @return boolean
-    */
-    public function deleteImageFile($model = null): bool
+     */
+    public function deleteImageFile(string $fileName, ?bool $private): bool
     {
-        $model = (\is_null($model) == true) ? $this : $model;
-        if (empty($model->file_name) == true) {
-            return false;
-        }
-        $path = $model->getStoragePath(false,null,$model->private) . $model->file_name;
+        $private = $private ?? false;
+        $path = $this->getStoragePath(false,null,$private) . $fileName;
 
         return (File::exists($path) == true) ? File::delete($path) : true;         
     }     

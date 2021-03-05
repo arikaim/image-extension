@@ -1,10 +1,12 @@
 'use strict';
 
 arikaim.component.onLoaded(function() {
+    var dataField = $('.image-dropdown').attr('data-field');
+
     $('.image-dropdown').dropdown({
         apiSettings: {     
             on: 'now',      
-            url: arikaim.getBaseUrl() + '/api/image/admin/list/{query}',   
+            url: arikaim.getBaseUrl() + '/api/image/admin/list/' + dataField + '/{query}',   
             cache: false        
         },
         filterRemoteData: false         

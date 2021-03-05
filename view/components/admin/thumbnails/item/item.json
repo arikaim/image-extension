@@ -5,6 +5,7 @@
         "size": "Size",
         "type": "Mime Type",     
         "delete": "Delete",
+        "details": "Details",
         "width": "Width",
         "height": "Height"        
     }
