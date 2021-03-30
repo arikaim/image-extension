@@ -6,7 +6,7 @@ arikaim.component.onLoaded(function() {
     $('.image-dropdown').dropdown({
         apiSettings: {     
             on: 'now',      
-            url: arikaim.getBaseUrl() + '/api/image/admin/list/' + dataField + '/{query}',   
+            url: arikaim.getBaseUrl() + '/api/admin/image/list/' + dataField + '/{query}',   
             cache: false        
         },
         filterRemoteData: false         

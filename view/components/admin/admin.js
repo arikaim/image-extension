@@ -9,7 +9,7 @@
 function ImageControlPanel() {
     
     this.delete = function(uuid, onSuccess, onError) {
-        return arikaim.delete('/api/image/admin/delete/' + uuid,onSuccess,onError);          
+        return arikaim.delete('/api/admin/image/delete/' + uuid,onSuccess,onError);          
     };
 
     this.init = function() {    

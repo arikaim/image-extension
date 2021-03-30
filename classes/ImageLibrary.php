@@ -16,10 +16,10 @@ use Arikaim\Core\Utils\Path;
  */
 class ImageLibrary
 {
-    const IMAGES_STORAGE_PATH = 'images' . DIRECTORY_SEPARATOR;
+    const IMAGES_STORAGE_PATH      =  Path::STORAGE_PUBLIC_PATH . 'images' . DIRECTORY_SEPARATOR;
     const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
     
-    const THUMBNAILS_STORAGE_PATH = 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_STORAGE_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
+    const THUMBNAILS_STORAGE_PATH     = Self::IMAGES_STORAGE_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
     const THUMBNAILS_FILE_NAME_PREFIX = 'thumbnail-';
 
     /**
@@ -32,9 +32,9 @@ class ImageLibrary
      */
     public static function getStoragePath(bool $relative = true, string $folder = '', bool $private = false): string
     {
-        $path = (empty($private) == true) ? 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_STORAGE_PATH : Self::IMAGES_STORAGE_PATH . $folder . DIRECTORY_SEPARATOR;
+        $path = (empty($private) == true) ? 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_STORAGE_PATH : Self::IMAGES_STORAGE_PATH;
 
-        return ($relative == true) ? $path : Path::STORAGE_PATH . $path;
+        return ($relative == true) ? $path . $folder : Path::STORAGE_PATH . $path . $folder;
     }
 
     /**
@@ -45,7 +45,7 @@ class ImageLibrary
     */
     public static function getThumbnailsStoragePath(bool $relative = true): string
     {
-        return ($relative == true) ? Self::THUMBNAILS_STORAGE_PATH : Path::STORAGE_PATH . Self::THUMBNAILS_STORAGE_PATH;
+        return ($relative == false) ? Self::THUMBNAILS_STORAGE_PATH : 'public/images/thumbnails/';
     }
 
     /**

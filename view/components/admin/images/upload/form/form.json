@@ -4,6 +4,10 @@
             "label": "Protected",               
             "placeholder": "Upload image in protected storage."        
         },
+        "path": {
+            "label": "Destination Path",               
+            "placeholder": "Enter target path"            
+        },  
         "title": {
             "label": "Title",               
             "placeholder": "Enter media title"            

@@ -48,7 +48,7 @@
                     <i class="icon green unlock"></i>                  
                 </div>
             {% endif %}       
-            {{ item.file_name }}
+            {{ item.file_name|relativePath }}
         </td>                            
         <td>{{ item.user.user_name }}</td>               
         <td>{{ item.mime_type }}</td>  

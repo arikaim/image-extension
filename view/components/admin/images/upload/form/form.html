@@ -1,4 +1,15 @@
+{% set target_path = (target_path is empty) ? service('image.library').getDefaultImagesPath() : target_path %}
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
+    <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
+    {% if target_path is not empty %}
+    <div class="field">
+        <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">
+        <label>{{ fields.path.label }}</label>
+        <div class="ui basic label">
+            ..{{ target_path|relativePath }}{{file_name}}
+        </div>
+    </div>
+    {% endif %}
     {% if hide_protected != true %}
     <div class="field">
         <label>{{ fields.protected.label }}</label>

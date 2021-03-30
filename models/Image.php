@@ -12,6 +12,9 @@ namespace Arikaim\Extensions\Image\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Arikaim\Core\Utils\File;
+use Arikaim\Core\Utils\Path;
+use Arikaim\Core\Utils\Utils;
+use Arikaim\Core\Http\Url;
 use Arikaim\Extensions\Image\Models\ImageThumbnails;
 use Arikaim\Extensions\Image\Models\ImageRelations;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
@@ -27,9 +30,6 @@ use Arikaim\Core\Db\Traits\FileTypeTrait;
  */
 class Image extends Model  
 {
-    const IMAGES_STORAGE_PATH = 'images' . DIRECTORY_SEPARATOR;
-    const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
-
     use Uuid,     
         Find, 
         DateCreated,  
@@ -61,6 +61,7 @@ class Image extends Model
         'file_size',
         'mime_type',
         'file_name', 
+        'base_name',
         'url',
         'width',
         'height',      
@@ -89,16 +90,6 @@ class Image extends Model
     }
 
     /**
-     * storaget_path attribute GET
-     *
-     * @return string
-     */
-    public function getStoragePathAttribute()
-    {
-        return $this->getStoragePath(true,$this->user_id,$this->private);
-    } 
-
-    /**
      * src attribute
      *
      * @return string
@@ -108,43 +99,15 @@ class Image extends Model
         if (empty($this->url) == false) {
             return $this->url;
         }
-        $path = ($this->private === true) ? ImageLibrary::VIEW_PROTECTED_IMAGE_URL : $this->getStoragePath(true);
+        if ($this->private === true) {
+            return ImageLibrary::VIEW_PROTECTED_IMAGE_URL . $this->uuid;
+        }        
 
-        return $path . $this->file_name;
-    }
-
-    /**
-     * Create user images storage folder
-     *
-     * @param int|null $userId    
-     * @return boolean
-     */
-    public function createPrivateStoragePath(?int $userId = null): bool
-    {
-        $userId = $userId ?? $this->user_id;
-        $path = $this->getStoragePath(false,$userId,true);
-
-        if (File::exists($path) == false) {
-            return File::makeDir($path);
+        if (\strpos($this->file_name,"storage/public") !== false) {
+            return \str_replace('storage/','',$this->file_name);      
         }
-
-        return true;
-    }
-
-    /**
-     * Get images storage path
-     *
-     * @param mixed|null $userId
-     * @param boolean $relative
-     * @param bool|null $private
-     * @return string
-     */
-    public function getStoragePath(bool $relative = true, $userId = null, ?bool $private = null): string
-    {
-        $userId = (empty($userId) == true) ? $this->user_id : $userId;
-        $private = (\is_null($private) == true) ? $this->private : $private;
         
-        return ImageLibrary::getStoragePath($relative,$userId,$private);
+        return $this->file_name;
     }
 
     /**
@@ -155,7 +118,7 @@ class Image extends Model
      */
     public function getImagePath(bool $relative = true): string
     {
-        return $this->getStoragePath($relative) . $this->file_name;
+        return ($relative == true) ? $this->file_name : APP_PATH . $this->file_name;
     }
 
     /**
@@ -228,29 +191,19 @@ class Image extends Model
      * Find image
      *
      * @param string $name
-     * @param integer|null $userId
      * @param string|null $excludeId
      * @return Model|null
      */
-    public function findImage(string $name, ?int $userId = null, ?string $excludeId = null)
+    public function findImage(string $name, ?string $excludeId = null)
     {
-        $userId = (empty($userId) == true) ? $this->user_id : $userId;
-
         // by id, uuid
         $query = $this->where(function($query) use ($name,$excludeId) {
             $query->where('uuid','=',$name);
             if (empty($excludeId) == false) {
                 $query->where('uuid','<>', $excludeId);
             }
-        })->orWhere(function($query) use ($name,$userId,$excludeId) {
+        })->orWhere(function($query) use ($name,$excludeId) {
             $query->where('file_name','=',$name);
-            $query->where('user_id','=',$userId);
-            if (empty($excludeId) == false) {
-                $query->where('uuid','<>', $excludeId);
-            }
-        })->orWhere(function($query) use ($name,$userId,$excludeId) {
-            $query->where('slug','=',$name);
-            $query->where('user_id','=',$userId);
             if (empty($excludeId) == false) {
                 $query->where('uuid','<>', $excludeId);
             }
@@ -267,26 +220,26 @@ class Image extends Model
     /**
      * Check if image file exists
      *
-     * @param string $title
+     * @param string $name
      * @param int|int $userid
      * @param string|null $excludeId
      * @return boolean
      */
-    public function hasImage(string $title, ?int $userId = null, ?string $excludeId = null): bool
+    public function hasImage(string $name, ?string $excludeId = null): bool
     {
-        return (bool)\is_object($this->findImage($title,$userId,$excludeId));
+        $image = $this->findImage($name,$excludeId);
+        return \is_object($image);
     }
 
     /**
      * Delete image and relations 
      *
-     * @param string|null $name
-     * @param int|null $userId
+     * @param string|null $name     
      * @return boolean
      */
-    public function deleteImage(?string $name = null, ?int $userId = null): bool
+    public function deleteImage(?string $name = null): bool
     {
-        $model = (empty($name) == true) ? $this : $this->findImage($name,$userId);
+        $model = (empty($name) == true) ? $this : $this->findImage($name);
         if (\is_null($model) == true) {
             return false;
         }
@@ -299,7 +252,7 @@ class Image extends Model
         $this->relations()->delete();
 
         // delete image file
-        $this->deleteImageFile($model->file_name,$model->private);
+        $this->deleteImageFile($model->file_name);
 
         return (bool)$model->delete();        
     } 
@@ -307,14 +260,13 @@ class Image extends Model
     /**
      * Delete image file 
      *
-     * @param string $fileName
-     * @param boolean|null $private
+     * @param string $fileName   
      * @return boolean
      */
-    public function deleteImageFile(string $fileName, ?bool $private): bool
+    public function deleteImageFile(?string $fileName = null): bool
     {
-        $private = $private ?? false;
-        $path = $this->getStoragePath(false,null,$private) . $fileName;
+        $fileName = $fileName ?? $this->file_name;
+        $path = APP_PATH . $fileName; 
 
         return (File::exists($path) == true) ? File::delete($path) : true;         
     }     

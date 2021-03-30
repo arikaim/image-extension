@@ -1,4 +1,9 @@
-{    
+{
+    "include": {
+        "js": [
+            "components:upload"                       
+        ]
+    },
     "access": {
         "auth": "session",
         "redirect": "/admin",

@@ -13,6 +13,8 @@ use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
 use Arikaim\Core\Http\Url;
 use Arikaim\Core\Controllers\Traits\FileUpload;
+use Arikaim\Core\Utils\File;
+use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 /**
  * Image contorl panel api controller
@@ -46,12 +48,8 @@ class ImageControlPanel extends ControlPanelApiController
             $private = $data->getBool('private',false);      
             $url = $data->get('url',null);
             $fileName = $data->getString('file_name',null);
-
             $model = Model::Image('image');     
-            if ($private == true) {                
-                $model->createPrivateStoragePath($this->getUserId());
-            }
-
+           
             $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName;
         
             // import from url and save
@@ -79,20 +77,22 @@ class ImageControlPanel extends ControlPanelApiController
     public function uploadController($request, $response, $data) 
     {          
         $this->onDataValid(function($data) use ($request) { 
-            $private = $data->getBool('private',false);          
-            $model = Model::Image('image');                      
-            if ($private == true) {                
-                $model->createPrivateStoragePath($this->getUserId());
-            }
-            
-            $destinationPath = $model->getStoragePath(true,$this->getUserId(),$private);
-            $files = $this->uploadFiles($request,$destinationPath);
-
+            $private = $data->getBool('private',false);   
+            $fileName = $data->get('file_name',null);                                    
+            $destinationPath = $data->get('target_path',ImageLibrary::IMAGES_STORAGE_PATH);
+    
+            if (File::exists($destinationPath) == false) {
+                $this->error('Target path not exists.');
+                return false;
+            };
+            File::setWritable($destinationPath);
+            $files = $this->uploadFiles($request,$destinationPath,false,true,$fileName);
+           
             // process uploaded files        
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
-
-                $image = $this->get('image.library')->save($item['name'],$this->getUserId(),$private);               
+               
+                $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),$private);               
             }
         
             $this->setResponse(\is_object($image),function() use($image) {                  
@@ -151,7 +151,7 @@ class ImageControlPanel extends ControlPanelApiController
             $size = $data->get('size',15);
             
             $model = Model::Image('image');
-            $model = $model->where('file_name','like','%' . $search . '%')->take($size)->get();
+            $model = $model->where('base_name','like','%' . $search . '%')->take($size)->get();
           
             $this->setResponse(\is_object($model),function() use($model,$dataField) {     
                 $items = [];
@@ -160,7 +160,7 @@ class ImageControlPanel extends ControlPanelApiController
                     $imageUrl = (\is_object($thumbnail) == true) ? $this->getPageUrl($thumbnail->src) : null;
 
                     $items[] = [
-                        'name'  => $item['file_name'],
+                        'name'  => $item['base_name'],
                         'image' => $imageUrl,
                         'value' => $item[$dataField]
                     ];

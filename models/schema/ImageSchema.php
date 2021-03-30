@@ -35,8 +35,8 @@ class ImageSchema extends Schema
         $table->id();
         $table->prototype('uuid');  
         $table->userId();
-        $table->string('folder')->nullable(true);
         $table->string('file_name')->nullable(true);
+        $table->string('base_name')->nullable(true);
         $table->string('mime_type')->nullable(true);
         $table->string('file_size')->nullable(true);
         $table->string('url')->nullable(true);
@@ -46,7 +46,7 @@ class ImageSchema extends Schema
         $table->dateCreated();
         // indexes        
         $table->unique(['url','user_id']); 
-        $table->unique(['file_name','user_id']);
+        $table->unique(['file_name']);
         $table->index('mime_type');       
     }
 

@@ -24,15 +24,15 @@ class Image extends Extension
     public function install()
     {
         // Control Panel
-        $this->addApiRoute('POST','/api/image/admin/upload','ImageControlPanel','upload','session');    
-        $this->addApiRoute('POST','/api/image/admin/import','ImageControlPanel','import','session');              
-        $this->addApiRoute('DELETE','/api/image/admin/delete/{uuid}','ImageControlPanel','delete','session'); 
-        $this->addApiRoute('GET','/api/image/admin/list/{data_field}/[{query}]','ImageControlPanel','getList','session');             
+        $this->addApiRoute('POST','/api/admin/image/upload','ImageControlPanel','upload','session');    
+        $this->addApiRoute('POST','/api/admin/image/import','ImageControlPanel','import','session');              
+        $this->addApiRoute('DELETE','/api/admin/image/delete/{uuid}','ImageControlPanel','delete','session'); 
+        $this->addApiRoute('GET','/api/admin/image/list/{data_field}/[{query}]','ImageControlPanel','getList','session');             
         // thumbnails
-        $this->addApiRoute('POST','/api/image/admin/thumbnail/create','ThumbnailsControlPanel','create','session');              
-        $this->addApiRoute('DELETE','/api/image/admin/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
+        $this->addApiRoute('POST','/api/admin/image/thumbnail/create','ThumbnailsControlPanel','create','session');              
+        $this->addApiRoute('DELETE','/api/admin/image/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
         // api 
-        $this->addApiRoute('GET','/api/image/view/{slug}','ImageApi','view',null);    
+        $this->addApiRoute('GET','/api/image/view/{uuid}','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);  
         // create db tables
         $this->createDbTable('ImageSchema');   
@@ -45,8 +45,8 @@ class Image extends Extension
         // public storage folder
         $this->createStorageFolder('images',true);
         $this->createStorageFolder('images/thumbnails',true);
-          // Services
-          $this->registerService('Image');
+        // Services
+        $this->registerService('Image');
     }       
 
     /**

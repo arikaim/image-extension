@@ -15,7 +15,7 @@ arikaim.component.onLoaded(function() {
     $('#private').val(checked);
     
     arikaim.ui.form.onSubmit("#import_image_form",function() {  
-        return arikaim.post('/api/image/admin/import','#import_image_form',function(result) {
+        return arikaim.post('/api/admin/image/import','#import_image_form',function(result) {
             return arikaim.page.loadContent({
                 id: 'image_content',
                 params: { uuid: result.uuid },

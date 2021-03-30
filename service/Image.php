@@ -14,15 +14,15 @@ use Psr\Container\ContainerInterface;
 use Arikaim\Core\Db\Model;
 use Arikaim\Core\Service\Service;
 use Arikaim\Core\Service\ServiceInterface;
-use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Utils\Curl;
 use Arikaim\Core\Utils\File;
+use Arikaim\Core\Utils\Path;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 use Arikaim\Core\System\Error\Traits\TaskErrors;
 
 /**
- * Player service class
+ * Image service class
 */
 class Image extends Service implements ServiceInterface
 {
@@ -37,6 +37,16 @@ class Image extends Service implements ServiceInterface
         $this->includeServices(['image']);
 
         parent::__construct($container);
+    }
+
+    /**
+     * Get default images storage path
+     *
+     * @return string
+     */
+    public function getDefaultImagesPath(): string
+    {
+        return ImageLibrary::IMAGES_STORAGE_PATH;
     }
 
     /**
@@ -62,7 +72,7 @@ class Image extends Service implements ServiceInterface
             return null;
         }   
         
-        $image = $this->getService('image')->resize($model->getImagePath(),$width,$height);
+        $image = $this->getService('image')->resize($model->getImagePath(false),$width,$height);
         if (empty($image) == true) {
             $this->addError('errors.image.resize');
             return null;
@@ -85,34 +95,32 @@ class Image extends Service implements ServiceInterface
      *
      * @param string $fileName
      * @param integer|null $userId
-     * @param bool|null $private
+     * @param bool $private
+     * @param string $folder
      * @return Model|null
      */
-    public function save(string $fileName, ?int $userId, ?bool $private)
+    public function save(string $fileName, ?int $userId, bool $private = false)
     {
+        $relativePath = Path::getRelativePath($fileName);
         $model = Model::Image('image');       
-        if ($private == true && empty($userId) == false) {                
-            $model->createPrivateStoragePath($userId);
-        }        
-        $path = $model->getStoragePath(false,$userId,$private) . $fileName;
-     
         $data = [
-            'file_name'  => $fileName,
-            'file_size'  => File::getSize($path),
-            'mime_type'  => File::getMimetype($path),
+            'file_name'  => $relativePath,
+            'file_size'  => File::getSize($fileName),
+            'mime_type'  => File::getMimetype($fileName),
+            'base_name'  => File::baseName($fileName),
             'user_id'    => $userId,  
-            'private'    => ($private === true) 
+            'private'    => $private
         ];
 
-        $size = $this->getService('image')->getSize($path);
+        $size = $this->getService('image')->getSize($fileName);
         if (\is_array($size) == true) {
             $data['width'] = $size['width']; 
             $data['height'] = $size['height'];
         }
         
-        if ($model->hasImage($fileName,$userId) == true) {
+        if ($model->hasImage($relativePath) == true) {
             // update
-            $model = $model->findImage($fileName,$userId);
+            $model = $model->findImage($relativePath);
             $image = ($model->update($data) !== false) ? $model : null;          
         } else {
             // create
@@ -134,14 +142,12 @@ class Image extends Service implements ServiceInterface
      * @param string $fileName
      * @param integer|null $userId
      * @param bool|null $private
+     * @param string $folder
      * @return Model|null
     */
-    public function import(string $url, string $fileName, ?int $userId, ?bool $private)
-    {
-        $model = Model::Image('image');       
-        $destinationPath = $model->getStoragePath(false,$userId,$private) . $fileName;
-
-        Curl::downloadFile($url,$destinationPath);
+    public function import(string $url, string $fileName, ?int $userId, ?bool $private = false)
+    {         
+        Curl::downloadFile($url,$fileName);
 
         return $this->save($fileName,$userId,$private);
     }          

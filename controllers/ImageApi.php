@@ -42,12 +42,12 @@ class ImageApi extends ApiController
     */
     public function view($request, $response, $data) 
     {            
-        $slug = $data->get('slug',null);
-        $image = Model::Media('media')->findBySlug($slug);
+        $uuid = $data->get('uuid',null);
+        $image = Model::Media('media')->findById($uuid);
      
         // not valid slug
         if (\is_object($image) == false) {
-            $this->error('Not valid image slug');
+            $this->error('Not valid image id.');
             return false;
         }
   
