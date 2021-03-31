@@ -73,7 +73,7 @@ class ImageThumbnails extends Model
             }
         }
         
-        $path = ImageLibrary::getThumbnailsStoragePath(false) . $model->file_name;
+        $path = ImageLibrary::getThumbnailsPath($model->image_id,false) . File::baseName($model->file_name);
         if (File::exists($path) == true) {
             File::delete($path);
         }    
@@ -102,7 +102,7 @@ class ImageThumbnails extends Model
             return $this->url;
         }
        
-        return ImageLibrary::getThumbnailsStoragePath(true) . $this->file_name;
+        return $this->file_name;
     }
 
     /**
@@ -127,7 +127,7 @@ class ImageThumbnails extends Model
      * @param integer|null $imageId
      * @return Builder
      */
-    public function scopeFindThumbnail($query, int $width, int $height, ?int $imageId = null)
+    public function scopeThumbnailQuery($query, int $width, int $height, ?int $imageId = null)
     {
         $imageId = $imageId ?? $this->image_id;
 
@@ -137,48 +137,45 @@ class ImageThumbnails extends Model
     /**
      * Return true if thumbnail exist
      *
-     * @param integer|null $imageId
+     * @param integer|string|null $imageId
      * @param integer $width
      * @param integer $height
      * @return boolean
      */
-    public function hasThumbnail(int $width, int $height, ?int $imageId = null): bool
+    public function hasThumbnail(int $width, int $height, $imageId = null): bool
     {
-        $imageId = $imageId ?? $this->image_id;
-        $query = $this->findThumbnail($width,$height,$imageId)->first();
-
-        return \is_object($query);
+        return \is_object($this->findThumbnail($width,$height,$imageId));
     }
 
     /**
-     * Create thumbnail model
+     * Find thumbnail model
      *
-     * @param integer|null $imageId
+     * @param integer|string|null $imageId
      * @param integer $width
      * @param integer $height
-     * @return Model
+     * @return Model|null
      */
-    public function findOrCreate(int $width, int $height, ?int $imageId = null)
+    public function findThumbnail(int $width, int $height, $imageId = null)
     {
         $imageId = $imageId ?? $this->image_id;
-       
-        $model = $this->findThumbnail($width,$height,$imageId)->first();
-        if (\is_object($model) == true) {
-            return $model;
+        if (\is_string($imageId) == true) {
+            $image = new Image();
+            $image = $image->findByid($imageId);
+            $imageId = $image->id; 
         }
-
-        return $this->createThumbnail($width,$height,$imageId);
+        
+        return $this->thumbnailQuery($width,$height,$imageId)->first();       
     }
 
     /**
-     * Create thumbnail model
+     * Save thumbnail model
      *
-     * @param integer|null $imageId
+     * @param integer|string|null $imageId
      * @param integer $width
      * @param integer $height
      * @return Model|null
     */
-    public function createThumbnail(int $width, int $height, ?int $imageId = null)
+    public function saveThumbnail(int $width, int $height, $imageId = null)
     {
         $imageId = $imageId ?? $this->image_id;
       
@@ -187,13 +184,22 @@ class ImageThumbnails extends Model
         if (\is_object($image) == false) {
             return null;
         }
+        $model = $this->findThumbnail($width,$height,$imageId);
 
-        return $this->create([
+        $fileName = ImageLibrary::createThumbnailFileName($image->file_name,(string)$width,(string)$height);
+        $data = [
             'image_id'  => $imageId,
             'width'     => $width,
             'height'    => $height,
             'mime_type' => $image->mime_type,
-            'file_name' => ImageLibrary::createThumbnailFileName($image->file_name,(string)$width,(string)$height) 
-        ]);
+            'file_name' => ImageLibrary::getThumbnailsPath($imageId) . $fileName
+        ];
+
+        if (\is_object($model) == true) {
+            return (bool)$model->update($data);
+        }
+        $new = $this->create($data);
+
+        return \is_object($new);
     }
 }

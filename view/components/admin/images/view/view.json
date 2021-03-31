@@ -5,7 +5,8 @@
     },
     "columns": {        
         "action": "Action",  
-        "user": "User",     
+        "user": "User",    
+        "options": "Options", 
         "status": "Status",
         "name": "File Name",
         "file_size": "File Size",

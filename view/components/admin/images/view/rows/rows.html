@@ -16,10 +16,12 @@
                 </button>     
                 <button class="ui icon mini basic button image-relations-button" uuid="{{ item.uuid }}" title="{{ labels.relations }}">
                     <i class="icon blue project diagram"></i>
-                </button>                                                    
+                </button>              
+                {% if item.deny_delete != true %}                                      
                 <button class="ui icon mini basic button delete-button" uuid="{{ item.uuid }}" data-title="{{ item.file_name }}">
                     <i class="icon trash orange"></i>
                 </button>  
+                {% endif %}
             </div>          
         </td>  
         <td>
@@ -49,7 +51,12 @@
                 </div>
             {% endif %}       
             {{ item.file_name|relativePath }}
-        </td>                            
+        </td>                        
+        <td>
+            {% if item.deny_delete is not empty %}
+            <div class="ui basic label">{{ labels.delete }}</div>
+            {% endif %}
+        </td>      
         <td>{{ item.user.user_name }}</td>               
         <td>{{ item.mime_type }}</td>  
         <td>

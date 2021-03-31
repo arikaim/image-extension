@@ -13,6 +13,9 @@
             "placeholder": "Enter media title"            
         }      
     },
+    "labels": {
+        "delete": "Deny delete"
+    },
     "buttons": {
         "save": {
             "content": "Upload"

@@ -55,13 +55,14 @@ class ThumbnailsControlPanel extends ControlPanelApiController
             $width = $data->get('width');
             $height = $data->get('height');         
 
-            $thumbnail = $this->get('image.library')->createThumbnail($uuid,$width,$height);
-            if (\is_null($thumbnail) == true) {
+            $result = $this->get('image.library')->createThumbnail($uuid,$width,$height);
+            if ($result == false) {
                 $errors = $this->get('image.library')->getErrors();
                 $this->addErrors($errors);
                 return false;
             }
-           
+            $thumbnail = Model::ImageThumbnails('image')->findThumbnail($width,$height,$uuid);
+
             $this->setResponse(\is_object($thumbnail),function() use($thumbnail) {                  
                 $this
                     ->message('thumbnail.create')

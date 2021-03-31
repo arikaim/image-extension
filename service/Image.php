@@ -46,7 +46,7 @@ class Image extends Service implements ServiceInterface
      */
     public function getDefaultImagesPath(): string
     {
-        return ImageLibrary::IMAGES_STORAGE_PATH;
+        return ImageLibrary::IMAGES_PATH;
     }
 
     /**
@@ -55,39 +55,34 @@ class Image extends Service implements ServiceInterface
      * @param mixed $image
      * @param integer $width
      * @param integer $height
-     * @return Model|null
+     * @return bool
      */
-    public function createThumbnail($image, int $width, int $height)
+    public function createThumbnail($image, int $width, int $height): bool
     {
         $model = (\is_object($image) == true) ? $image : Model::Image('image')->findImage($image);      
         if (\is_object($model) == false) {
             $this->addError('errors.id');
-            return null;
+            return false;
         }  
 
         $thumbnail = Model::ImageThumbnails('image');
-
-        if ($thumbnail->hasThumbnail($width,$height,$model->id) == true) {
-            $this->addError('errors.thumbnail.exist');
-            return null;
-        }   
-        
         $image = $this->getService('image')->resize($model->getImagePath(false),$width,$height);
         if (empty($image) == true) {
             $this->addError('errors.image.resize');
-            return null;
+            return false;
         }   
     
         // save thumb image
         $fileName = ImageLibrary::createThumbnailFileName($model->file_name,$width,$height);
-        $path = ImageLibrary::getThumbnailsStoragePath(false);
+        $path = ImageLibrary::createThumbnailsPath($model->id,false);
+
         $result = $this->getService('image')->save($image,$path,$fileName);
         if ($result === false) {
             $this->addError('errors.thumbnail.create');
-            return null;
+            return false;
         }
 
-        return $thumbnail->findOrCreate($width,$height,$model->id);          
+        return $thumbnail->saveThumbnail($width,$height,$model->id);          
     }
 
     /**
@@ -95,21 +90,21 @@ class Image extends Service implements ServiceInterface
      *
      * @param string $fileName
      * @param integer|null $userId
-     * @param bool $private
-     * @param string $folder
+     * @param bool $options    
      * @return Model|null
      */
-    public function save(string $fileName, ?int $userId, bool $private = false)
+    public function save(string $fileName, ?int $userId, array $options = [])
     {
-        $relativePath = Path::getRelativePath($fileName);
+        $relativePath = Path::getRelativePath($fileName,false);
         $model = Model::Image('image');       
         $data = [
-            'file_name'  => $relativePath,
-            'file_size'  => File::getSize($fileName),
-            'mime_type'  => File::getMimetype($fileName),
-            'base_name'  => File::baseName($fileName),
-            'user_id'    => $userId,  
-            'private'    => $private
+            'file_name'   => $relativePath,
+            'file_size'   => File::getSize($fileName),
+            'mime_type'   => File::getMimetype($fileName),
+            'base_name'   => File::baseName($fileName),
+            'user_id'     => $userId,  
+            'deny_delete' => $options['deny_delete'] ?? null,
+            'private'     => $options['private'] ?? null
         ];
 
         $size = $this->getService('image')->getSize($fileName);
@@ -128,7 +123,7 @@ class Image extends Service implements ServiceInterface
         }
 
         if (\is_object($image) == true) {
-            $this->createThumbnail($image,64,64);
+            $result = $this->createThumbnail($image,64,64);
             return $image;
         }
 
@@ -141,14 +136,13 @@ class Image extends Service implements ServiceInterface
      * @param string $url
      * @param string $fileName
      * @param integer|null $userId
-     * @param bool|null $private
-     * @param string $folder
+     * @param bool|null $options   
      * @return Model|null
     */
-    public function import(string $url, string $fileName, ?int $userId, ?bool $private = false)
+    public function import(string $url, string $fileName, ?int $userId, array $options = [])
     {         
         Curl::downloadFile($url,$fileName);
 
-        return $this->save($fileName,$userId,$private);
+        return $this->save($fileName,$userId,$options);
     }          
 }

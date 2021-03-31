@@ -43,6 +43,7 @@ class ImageSchema extends Schema
         $table->integer('private')->nullable(true); 
         $table->integer('width')->nullable(true); 
         $table->integer('height')->nullable(true); 
+        $table->integer('deny_delete')->nullable(true); 
         $table->dateCreated();
         // indexes        
         $table->unique(['url','user_id']); 

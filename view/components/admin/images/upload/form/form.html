@@ -1,9 +1,10 @@
 {% set target_path = (target_path is empty) ? service('image.library').getDefaultImagesPath() : target_path %}
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
+    <input type="hidden" name="deny_delete" id="deny_delete" value="{{ deny_delete }}">
     {% if target_path is not empty %}
     <div class="field">
-        <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">
+        <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">      
         <label>{{ fields.path.label }}</label>
         <div class="ui basic label">
             ..{{ target_path|relativePath }}{{file_name}}
@@ -21,6 +22,13 @@
     {% endif %}
     <div class="field required">                    
         <input name="file" id="file" type="file">                                          
-    </div>        
+    </div>       
+    {% if deny_delete == true %}
+    <div class="field">
+        <div class="ui basic label">
+            {{ labels.delete }}
+        </div>
+    </div>
+    {% endif %} 
     {{ component('components:form.footer',{ button_title: buttons.save.content }) }}   
 </form>

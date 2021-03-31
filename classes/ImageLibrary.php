@@ -10,31 +10,33 @@
 namespace Arikaim\Extensions\Image\Classes;
 
 use Arikaim\Core\Utils\Path;
+use Arikaim\Core\Utils\File;
 
 /**
  * Image library class
  */
 class ImageLibrary
 {
-    const IMAGES_STORAGE_PATH      =  Path::STORAGE_PUBLIC_PATH . 'images' . DIRECTORY_SEPARATOR;
+    const IMAGES_PATH = 'images' . DIRECTORY_SEPARATOR;
     const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
     
-    const THUMBNAILS_STORAGE_PATH     = Self::IMAGES_STORAGE_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
+    const THUMBNAILS_PATH = 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
     const THUMBNAILS_FILE_NAME_PREFIX = 'thumbnail-';
 
     /**
      * Get images storage path
      *   
      * @param boolean $relative
-     * @param string $folder
      * @param bool $private
      * @return string
      */
-    public static function getStoragePath(bool $relative = true, string $folder = '', bool $private = false): string
+    public static function getImagesPath(bool $relative = true, bool $private = false): string
     {
-        $path = (empty($private) == true) ? 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_STORAGE_PATH : Self::IMAGES_STORAGE_PATH;
+        if ($relative == false) {
+            return Path::STORAGE_PATH . Self::IMAGES_PATH;
+        }
 
-        return ($relative == true) ? $path . $folder : Path::STORAGE_PATH . $path . $folder;
+        return ($private == false) ? 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_PATH : Self::IMAGES_PATH;    
     }
 
     /**
@@ -43,10 +45,31 @@ class ImageLibrary
      * @param boolean $relative    
      * @return string
     */
-    public static function getThumbnailsStoragePath(bool $relative = true): string
+    public static function getThumbnailsPath($imageId, bool $relative = true): string
     {
-        return ($relative == false) ? Self::THUMBNAILS_STORAGE_PATH : 'public/images/thumbnails/';
+        if ($relative == false) {
+            return Path::STORAGE_PATH . Self::THUMBNAILS_PATH . $imageId . DIRECTORY_SEPARATOR;
+        }
+
+        return Self::THUMBNAILS_PATH . $imageId . DIRECTORY_SEPARATOR;
     }
+
+    /**
+     * Create thumbails path for image
+     *
+     * @param string|int $imageId    
+     * @return string
+     */
+    public static function createThumbnailsPath($imageId): string
+    {
+        $path = Self::getThumbnailsPath($imageId,false);
+        if (File::exists($path) == false) {
+            // create
+            File::makeDir($path);
+        }
+      
+        return $path;
+    }   
 
     /**
      * Create thumbnail file name
@@ -60,6 +83,6 @@ class ImageLibrary
     {
         $info = \pathinfo($fileName);
 
-        return ImageLibrary::THUMBNAILS_FILE_NAME_PREFIX . $info['filename'] . '-' . $width . 'x' . $height . '.' . $info['extension'];
+        return Self::THUMBNAILS_FILE_NAME_PREFIX . $info['filename'] . '-' . $width . 'x' . $height . '.' . $info['extension'];
     }
 }

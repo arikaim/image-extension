@@ -65,7 +65,8 @@ class Image extends Model
         'url',
         'width',
         'height',      
-        'user_id'       
+        'user_id',
+        'deny_delete'       
     ];
     
     /**
@@ -118,7 +119,7 @@ class Image extends Model
      */
     public function getImagePath(bool $relative = true): string
     {
-        return ($relative == true) ? $this->file_name : APP_PATH . $this->file_name;
+        return ($relative == true) ? $this->file_name : ROOT_PATH . BASE_PATH . $this->file_name;
     }
 
     /**

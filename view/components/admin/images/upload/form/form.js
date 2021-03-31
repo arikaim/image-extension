@@ -39,6 +39,7 @@ function ImageUpload() {
                 formFields: {            
                     private: '#private',
                     target_path: '#target_path',
+                    deny_delete: '#deny_delete',
                     file_name: '#file_name'                             
                 },
                 onSuccess: function(result) { 

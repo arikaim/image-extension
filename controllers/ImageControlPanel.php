@@ -48,12 +48,14 @@ class ImageControlPanel extends ControlPanelApiController
             $private = $data->getBool('private',false);      
             $url = $data->get('url',null);
             $fileName = $data->getString('file_name',null);
-            $model = Model::Image('image');     
-           
+            $denyDelete = $data->get('deny_delete',null);       
             $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName;
         
             // import from url and save
-            $image = $this->get('image.library')->import($url,$fileName,$this->getUserId(),$private);     
+            $image = $this->get('image.library')->import($url,$fileName,$this->getUserId(),[
+                'private'     => $private,
+                'deny_delete' => $denyDelete
+            ]);     
 
             $this->setResponse(\is_object($image),function() use($image) {                  
                 $this
@@ -78,8 +80,9 @@ class ImageControlPanel extends ControlPanelApiController
     {          
         $this->onDataValid(function($data) use ($request) { 
             $private = $data->getBool('private',false);   
-            $fileName = $data->get('file_name',null);                                    
-            $destinationPath = $data->get('target_path',ImageLibrary::IMAGES_STORAGE_PATH);
+            $fileName = $data->get('file_name',null);           
+            $denyDelete = $data->get('deny_delete',null);                                    
+            $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
     
             if (File::exists($destinationPath) == false) {
                 $this->error('Target path not exists.');
@@ -92,7 +95,10 @@ class ImageControlPanel extends ControlPanelApiController
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
                
-                $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),$private);               
+                $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
+                    'private'     => $private,
+                    'deny_delete' => $denyDelete
+                ]);               
             }
         
             $this->setResponse(\is_object($image),function() use($image) {                  
@@ -121,6 +127,11 @@ class ImageControlPanel extends ControlPanelApiController
                 $this->error('errors.id');
                 return false;
             } 
+
+            if ($model->deny_delete == true) {
+                $this->error("Can't delete, image is protected.");
+                return false;
+            }
 
             $result = $model->deleteImage();
 

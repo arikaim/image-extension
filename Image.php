@@ -10,6 +10,7 @@
 namespace Arikaim\Extensions\Image;
 
 use Arikaim\Core\Extension\Extension;
+use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 /**
  * Image extension
@@ -41,10 +42,10 @@ class Image extends Extension
         // Relation map 
         $this->addRelationMap('image','Image');
         // protected storage folder
-        $this->createStorageFolder('images',false);
+        $this->createStorageFolder(ImageLibrary::IMAGES_PATH,false);
         // public storage folder
-        $this->createStorageFolder('images',true);
-        $this->createStorageFolder('images/thumbnails',true);
+        $this->createStorageFolder(ImageLibrary::IMAGES_PATH,true);
+        $this->createStorageFolder(ImageLibrary::IMAGES_PATH . 'thumbnails',true);
         // Services
         $this->registerService('Image');
     }       

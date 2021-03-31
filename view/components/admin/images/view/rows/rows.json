@@ -2,6 +2,7 @@
     "labels": {
         "empty": "...",
         "image": "Image",
+        "delete": "Delete Protected",
         "protected": "Protected",
         "public": "Public",
         "thumbnails": "Thumbnails",
