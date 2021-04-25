@@ -6,7 +6,7 @@
     "description": "Images media library, create thumbnails, upload or import images.",
     "short-description": "Manage images.",
     "repository": "https://github.com/arikaim/image-extension.git",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "position": "3",
     "require": {
         "extensions": [

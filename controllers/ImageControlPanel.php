@@ -78,10 +78,9 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function uploadController($request, $response, $data) 
     {          
-        $this->onDataValid(function($data) use ($request) { 
-            $private = $data->getBool('private',false);   
+        $this->onDataValid(function($data) use ($request) {  
             $fileName = $data->get('file_name',null);           
-            $denyDelete = $data->get('deny_delete',null);                                    
+            $denyDelete = $data->getString('deny_delete',null);                                    
             $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
     
             if (File::exists($destinationPath) == false) {
@@ -96,7 +95,7 @@ class ImageControlPanel extends ControlPanelApiController
                 if (empty($item['error']) == false) continue;
                
                 $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
-                    'private'     => $private,
+                    'private'     => false,
                     'deny_delete' => $denyDelete
                 ]);               
             }

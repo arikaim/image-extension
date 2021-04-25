@@ -100,15 +100,8 @@ class Image extends Model
         if (empty($this->url) == false) {
             return $this->url;
         }
-        if ($this->private === true) {
-            return ImageLibrary::VIEW_PROTECTED_IMAGE_URL . $this->uuid;
-        }        
-
-        if (\strpos($this->file_name,"storage/public") !== false) {
-            return \str_replace('storage/','',$this->file_name);      
-        }
         
-        return $this->file_name;
+        return ($this->private != 1) ? \str_replace("arikaim/storage/public",'public',$this->file_name) : $this->file_name;     
     }
 
     /**

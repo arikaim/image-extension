@@ -46,7 +46,7 @@ class Image extends Service implements ServiceInterface
      */
     public function getDefaultImagesPath(): string
     {
-        return ImageLibrary::IMAGES_PATH;
+        return ImageLibrary::getImagesPath(false);
     }
 
     /**
