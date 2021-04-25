@@ -1,5 +1,6 @@
 {% component 'components:tabs.vertical.content' %}
 <div class="mt-8">
+    {% if hasModule('image') == true %}
     {{  component('image::admin.images.upload.form',{ 
             hide_protected: hide_protected,
             file_name: file_name,  
@@ -7,5 +8,10 @@
             target_path: target_path 
         }) 
     }}
+    {% else %}
+        <div class="ui warning message">
+            {{ message }}
+        </div>
+    {% endif %}
 </div>    
 {% endcomponent %}
