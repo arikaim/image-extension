@@ -2,12 +2,14 @@
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
     <input type="hidden" name="deny_delete" id="deny_delete" value="{{ deny_delete }}">
+    <input type="hidden" name="relation_id" id="relation_id" value="{{ relation_id }}">
+    <input type="hidden" name="relation_type" id="relation_type" value="{{ relation_type }}">
     {% if target_path is not empty %}
     <div class="field">
         <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">      
         <label>{{ fields.path.label }}</label>
         <div class="ui basic label">
-            ..{{ target_path|relativePath }} {{file_name}}
+            ..{{ target_path|relativePath }} {{ file_name }}
         </div>
     </div>
     {% endif %}    

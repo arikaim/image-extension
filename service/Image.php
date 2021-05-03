@@ -40,6 +40,87 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Save image relation
+     *
+     * @param Model|int $image
+     * @param integer $relationId
+     * @param string $relationType
+     * @return Model|bool
+     */
+    public function saveRelation($image, int $relationId, string $relationType)
+    {
+        $imageId = (\is_object($image) == true) ? $image->id : $image;
+        $model = Model::ImageRelations('image');
+
+        return $model->saveRelation($imageId,$relationType,$relationId);
+    }
+
+    /**
+     * Get image relations
+     *
+     * @param integer $relationId
+     * @param string $relationType
+     * @return Colleciton|null
+     */
+    public function getRelatedImages(int $relationId, string $relationType)
+    {
+        return Model::ImageRelations('image')->getRelationsQuery($relationId,$relationType)->get(); 
+    }
+
+    /**
+     * Get related image
+     *
+     * @param integer $relationId
+     * @param string $relationType
+     * @return object|null
+     */
+    public function getRelatedImage(int $relationId, string $relationType)
+    {
+        $model = Model::ImageRelations('image')->getRelationsQuery($relationId,$relationType)->first(); 
+
+        return (\is_object($model) == true) ? $model->image : null;
+    }
+
+    /**
+     * Get image thumbnail
+     *
+     * @param integer $relationId
+     * @param string $relationType
+     * @param integer|null $width
+     * @param integer|null $height
+     * @return Model|null
+     */
+    public function getThumbnail(int $relationId, string $relationType, ?int $width, ?int $height)
+    {
+        $model = $this->getRelatedImage($relationId,$relationType);
+        if (\is_object($model) == false) {
+            return null;
+        }
+
+        if (empty($width) == true || empty($height) == true) {
+            return $model->thumbnailSmall();
+        }  
+        
+        $thumbnail = $model->thumbnail($width,$height);
+
+        return (empty($thumbnail) == true) ? $model->thumbnailSmall() : $thumbnail;
+    }
+
+    /**
+     * Return true if relation exists
+     *
+     * @param integer $relationId
+     * @param string $relationType
+     * @return bool
+     */
+    public function hasRelatedImage(int $relationId, string $relationType): bool
+    {
+        $model = $this->getRelatedImage($relationId,$relationType);
+        
+        return \is_object($model);
+    }
+
+    /**
      * Get default images storage path
      *
      * @return string
@@ -123,7 +204,7 @@ class Image extends Service implements ServiceInterface
         }
 
         if (\is_object($image) == true) {
-            $result = $this->createThumbnail($image,64,64);
+            $this->createThumbnail($image,64,64);
             return $image;
         }
 

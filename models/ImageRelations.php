@@ -73,4 +73,14 @@ class ImageRelations extends Model
      * @var string
      */
     protected $relationColumnName = 'image_id';
+
+    /**
+     * Image relations
+     *
+     * @return Relation|null
+     */
+    public function image()
+    {
+        return $this->belongsTo(Image::class,'image_id');
+    }
 }

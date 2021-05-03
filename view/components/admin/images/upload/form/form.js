@@ -40,7 +40,9 @@ function ImageUpload() {
                     private: '#private',
                     target_path: '#target_path',
                     deny_delete: '#deny_delete',
-                    file_name: '#file_name'                             
+                    file_name: '#file_name',
+                    relation_id: '#relation_id',
+                    relation_type: '#relation_type'                             
                 },
                 onSuccess: function(result) { 
                     callFunction(self.onSuccess,result);               

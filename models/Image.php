@@ -242,12 +242,16 @@ class Image extends Model
             $item->deleteThumbnail();
         };
 
+        // delete thumbnail path
+        $thumbnailPath = ImageLibrary::getThumbnailsPath($model->id,false);
+        File::deleteDirectory($thumbnailPath);
+       
         // delete relations
         $this->relations()->delete();
 
         // delete image file
-        $this->deleteImageFile($model->file_name);
-
+        $model->deleteImageFile();
+     
         return (bool)$model->delete();        
     } 
 
@@ -260,7 +264,7 @@ class Image extends Model
     public function deleteImageFile(?string $fileName = null): bool
     {
         $fileName = $fileName ?? $this->file_name;
-        $path = APP_PATH . $fileName; 
+        $path = ROOT_PATH . BASE_PATH . $fileName; 
 
         return (File::exists($path) == true) ? File::delete($path) : true;         
     }     

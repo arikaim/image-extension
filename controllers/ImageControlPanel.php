@@ -47,20 +47,43 @@ class ImageControlPanel extends ControlPanelApiController
         $this->onDataValid(function($data) {
             $private = $data->getBool('private',false);      
             $url = $data->get('url',null);
+            $thumbnailWidth = $data->get('thumbnail_width',null);
+            $thumbnailHeight = $data->get('thumbnail_height',null);
+            $relationId = $data->get('relation_id',null);
+            $relationType = $data->get('relation_type',null);
+
             $fileName = $data->getString('file_name',null);
+            $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
             $denyDelete = $data->get('deny_delete',null);       
-            $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName;
+            $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
         
             // import from url and save
-            $image = $this->get('image.library')->import($url,$fileName,$this->getUserId(),[
+            $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
                 'private'     => $private,
                 'deny_delete' => $denyDelete
             ]);     
 
-            $this->setResponse(\is_object($image),function() use($image) {                  
+            if (empty($thumbnailWidth) == false && empty($thumbnailHeight) == false) {
+                // create thumbnail
+                $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
+            }
+            
+            if (empty($relationId) == false  && empty($relationType) == false) {
+                // add relation
+                $this->get('image.library')->saveRelation($image,$relationId,$relationType);
+            }
+
+            $this->setResponse(\is_object($image),function() use($image,$url,$data,$relationId,$relationType) {  
+                // fire event 
+                $params = \array_merge($image->toArray(),$data->toArray());
+                $this->get('event')->dispatch('image.import',$params);
+                                
                 $this
                     ->message('import')
                     ->field('uuid',$image->uuid)
+                    ->field('url',$url)
+                    ->field('relation_id',$relationId)
+                    ->field('relation_type',$relationType)
                     ->field('file',$image->file_name);                                  
             },'errors.import');   
 
@@ -100,7 +123,11 @@ class ImageControlPanel extends ControlPanelApiController
                 ]);               
             }
         
-            $this->setResponse(\is_object($image),function() use($image) {                  
+            $this->setResponse(\is_object($image),function() use($image,$data) {   
+                // fire event 
+                $params = \array_merge($image->toArray(),$data->toArray());
+                $this->get('event')->dispatch('image.upload',$params);
+
                 $this
                     ->message('upload')
                     ->field('uuid',$image->uuid)

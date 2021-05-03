@@ -13,7 +13,14 @@ arikaim.component.onLoaded(function() {
                 component: 'image::admin.images.import.form',
                 params: { url: url }
             });    
-        },function(image) {         
         });
     });  
+
+    arikaim.events.on('image.import',function(params) {   
+        return arikaim.page.loadContent({
+            id: 'image_content',
+            params: { uuid: params.uuid },
+            component: 'image::admin.images.view'
+        });
+    });
 });
