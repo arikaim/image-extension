@@ -84,14 +84,18 @@ class Image extends Service implements ServiceInterface
     /**
      * Get image thumbnail
      *
-     * @param integer $relationId
+     * @param integer|null $relationId
      * @param string $relationType
      * @param integer|null $width
      * @param integer|null $height
      * @return Model|null
      */
-    public function getThumbnail(int $relationId, string $relationType, ?int $width, ?int $height)
+    public function getThumbnail(?int $relationId, string $relationType, ?int $width, ?int $height)
     {
+        if (empty($relationId) == true) {
+            return null;
+        }
+
         $model = $this->getRelatedImage($relationId,$relationType);
         if (\is_object($model) == false) {
             return null;
