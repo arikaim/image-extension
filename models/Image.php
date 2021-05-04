@@ -244,7 +244,7 @@ class Image extends Model
 
         // delete thumbnail path
         $thumbnailPath = ImageLibrary::getThumbnailsPath($model->id,false);
-        File::deleteDirectory($thumbnailPath);
+        File::deleteDirectory($thumbnailPath,false);
        
         // delete relations
         $this->relations()->delete();
