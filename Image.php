@@ -38,7 +38,9 @@ class Image extends Extension
         // create db tables
         $this->createDbTable('ImageSchema');   
         $this->createDbTable('ImageRelationsSchema');                    
-        $this->createDbTable('ImageThumbnailsSchema');         
+        $this->createDbTable('ImageThumbnailsSchema');   
+        // Console Commands
+        $this->registerConsoleCommand('DeleteImages');          
         // Relation map 
         $this->addRelationMap('image','Image');
         // protected storage folder
