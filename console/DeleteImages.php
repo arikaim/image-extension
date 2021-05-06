@@ -38,11 +38,6 @@ class DeleteImages extends ConsoleCommand
     {       
         $this->showTitle();
 
-        $feed = $input->getArgument('feed');
-        if (empty($feed) == false) {
-            $this->writeFieldLn('Feed',$feed);
-        }
-        
         $images = Model::Image('image')->all();       
       
         foreach($images as $image) {
