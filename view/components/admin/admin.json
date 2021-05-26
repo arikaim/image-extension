@@ -1,6 +1,7 @@
 {
     "labels": {
-        "view": "View",            
+        "view": "View",   
+        "qrcode": "QR Code",         
         "settings": "Settings"                       
     }  
 }

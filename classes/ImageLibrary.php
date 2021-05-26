@@ -27,11 +27,14 @@ class ImageLibrary
      * Get images storage path
      *   
      * @param boolean $relative
+     * @param string|null $path
      * @return string
      */
-    public static function getImagesPath(bool $relative = true): string
+    public static function getImagesPath(bool $relative = true, ?string $path = null): string
     {
-        return ($relative == false) ? Path::STORAGE_PUBLIC_PATH . Self::IMAGES_PATH : Self::IMAGES_PATH;    
+        $imagesPath = ($relative == false) ? Path::STORAGE_PUBLIC_PATH . Self::IMAGES_PATH : Self::IMAGES_PATH;  
+        
+        return (empty($path) == true) ? $imagesPath : $imagesPath . $path . DIRECTORY_SEPARATOR;
     }
 
     /**

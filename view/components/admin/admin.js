@@ -15,7 +15,6 @@ function ImageControlPanel() {
     this.import = function(formId, onSuccess, onError) {
         return arikaim.post('/api/admin/image/import',formId,onSuccess,onError);          
     };
-
 };
 
 var imageControlPanel = new ImageControlPanel();

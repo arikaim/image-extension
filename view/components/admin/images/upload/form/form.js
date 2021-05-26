@@ -45,6 +45,7 @@ function ImageUpload() {
                     relation_type: '#relation_type'                             
                 },
                 onSuccess: function(result) { 
+                    arikaim.events.emit('image.upload',result);   
                     callFunction(self.onSuccess,result);               
                 }
             });        

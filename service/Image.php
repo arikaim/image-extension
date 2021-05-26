@@ -132,11 +132,13 @@ class Image extends Service implements ServiceInterface
     /**
      * Get default images storage path
      *
+     * @param boolean $relative
+     * @param string|null $path
      * @return string
      */
-    public function getDefaultImagesPath(): string
+    public function getDefaultImagesPath(bool $relative = false, ?string $path = null): string
     {
-        return ImageLibrary::getImagesPath(false);
+        return ImageLibrary::getImagesPath($relative,$path);
     }
 
     /**

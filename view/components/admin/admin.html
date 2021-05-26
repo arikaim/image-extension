@@ -3,6 +3,16 @@
     ] 
 %}
 
+{% if hasModule('qrcode') == true %}
+    {%  set items = items|merge([{ 
+            id: 'qrcode_button', 
+            title: labels.qrcode, 
+            component: 'image::admin.qrcode', 
+            icon: 'qrcode'       
+        }]) 
+    %}
+{% endif %}
+
 {{  component('components:tabs',{ 
         items: items,
         menu: { extension: 'image' },

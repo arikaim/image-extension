@@ -12,9 +12,6 @@ namespace Arikaim\Extensions\Image\Models;
 use Illuminate\Database\Eloquent\Model;
 
 use Arikaim\Core\Utils\File;
-use Arikaim\Core\Utils\Path;
-use Arikaim\Core\Utils\Utils;
-use Arikaim\Core\Http\Url;
 use Arikaim\Extensions\Image\Models\ImageThumbnails;
 use Arikaim\Extensions\Image\Models\ImageRelations;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;

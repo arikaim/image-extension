@@ -35,6 +35,9 @@ class Image extends Extension
         // api 
         $this->addApiRoute('GET','/api/image/view/{uuid}','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);  
+        // qrcode (rquires qrcode module)
+        $this->addApiRoute('POST','/api/admin/image/qrcode/generate','ImageControlPanel','generateQrCode','session');  
+
         // create db tables
         $this->createDbTable('ImageSchema');   
         $this->createDbTable('ImageRelationsSchema');                    

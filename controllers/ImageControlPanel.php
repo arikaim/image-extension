@@ -68,7 +68,7 @@ class ImageControlPanel extends ControlPanelApiController
                 $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
             }
             
-            if (empty($relationId) == false  && empty($relationType) == false) {
+            if (empty($relationId) == false && empty($relationType) == false) {
                 // add relation
                 $this->get('image.library')->saveRelation($image,$relationId,$relationType);
             }
@@ -105,7 +105,12 @@ class ImageControlPanel extends ControlPanelApiController
             $fileName = $data->get('file_name',null);           
             $denyDelete = $data->getString('deny_delete',null);                                    
             $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
-    
+            $relationId = $data->get('relation_id',null);
+            $relationType = $data->get('relation_type',null);
+            $thumbnailWidth = $data->get('thumbnail_width',null);
+            $thumbnailHeight = $data->get('thumbnail_height',null);
+
+
             if (File::exists($destinationPath) == false) {
                 $this->error('Target path not exists.');
                 return false;
@@ -123,6 +128,16 @@ class ImageControlPanel extends ControlPanelApiController
                 ]);               
             }
         
+            if (empty($relationId) == false && empty($relationType) == false) {
+                // add relation
+                $this->get('image.library')->saveRelation($image,$relationId,$relationType);
+            }
+
+            if (empty($thumbnailWidth) == false && empty($thumbnailHeight) == false) {
+                // create thumbnail
+                $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
+            }
+            
             $this->setResponse(\is_object($image),function() use($image,$data) {   
                 // fire event 
                 $params = \array_merge($image->toArray(),$data->toArray());
@@ -210,5 +225,30 @@ class ImageControlPanel extends ControlPanelApiController
         $data->validate();
 
         return $this->getResponse(true); 
+    }
+
+    /**
+     * Generate QR code
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+    */
+    public function generateQrCodeController($request, $response, $data)
+    {
+        $this->onDataValid(function($data) { 
+            $qrCodeData = $data->get('data','Test');
+
+            $iamge = $this->get('qrcode')->render($qrCodeData);
+
+            $this->setResponse(!empty($iamge),function() use($iamge) {                  
+                $this
+                    ->message('qrcode')
+                    ->field('image',$iamge);                          
+            },'errors.qrcode');
+
+        });
+        $data->validate();
     }
 }

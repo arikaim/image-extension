@@ -1,0 +1,14 @@
+{
+    "title": "QR Code Generator",
+    "fields": {
+        "data": {
+            "label": "Data"
+        }
+    },
+    "labels": {
+        "image": "Image"
+    },
+    "buttons": {
+        "generate": "Generate Qr Code"
+    }
+}
