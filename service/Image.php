@@ -58,12 +58,15 @@ class Image extends Service implements ServiceInterface
     /**
      * Get image relations
      *
-     * @param integer $relationId
-     * @param string $relationType
+     * @param integer|null $relationId
+     * @param string|null $relationType
      * @return Colleciton|null
      */
-    public function getRelatedImages(int $relationId, string $relationType)
+    public function getRelatedImages(?int $relationId, ?string $relationType)
     {
+        if (empty($relationId) == true || empty($relationType) == true) {
+            return null;
+        }
         return Model::ImageRelations('image')->getRelationsQuery($relationId,$relationType)->get(); 
     }
 
