@@ -1,12 +1,14 @@
 <div class="mt-8">
     {% if hasModule('image') == true %}
-    {{  component('image::admin.images.upload.form',{ 
-            hide_protected: hide_protected,
-            file_name: file_name,  
-            deny_delete: deny_delete,
-            target_path: target_path 
-        }) 
-    }}
+        {{  component('image::upload.form',{ 
+                hide_protected: hide_protected,
+                file_name: file_name,  
+                button_class: button_class,
+                button_title: button_title,
+                deny_delete: deny_delete,
+                target_path: target_path 
+            }) 
+        }}
     {% else %}
         <div class="ui warning message">
             {{ message }}

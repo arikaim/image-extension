@@ -48,7 +48,12 @@ function ImageUpload() {
                     arikaim.events.emit('image.upload',result);   
                     callFunction(self.onSuccess,result);               
                 }
-            });        
+            });     
+            
+            arikaim.ui.button('.upload-button',function(element) {               
+                return $('#file').filepond('processFiles')
+            });
+
         });
     };
 };

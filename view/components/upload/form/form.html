@@ -23,7 +23,7 @@
         </div>
     </div>
     {% endif %} 
-    <a class="ui green button submit-button {{ button_class }}">
-        {{ buttons.save.content|button_title }}
+    <a class="ui green button {{ button_class|default('submit-button') }}">
+        {{ button_title|default(buttons.save.content) }}
     </a>
 </form>
