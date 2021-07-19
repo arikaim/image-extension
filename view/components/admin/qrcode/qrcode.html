@@ -10,6 +10,9 @@
                 {{ component('components:form.footer',{ button_title: buttons.gererate }) }}   
             </form>
         </div>
+        <div class="mt-4 p-2">
+        {{ component('components:segment-title',{ title: labels.decode, icon: 'code' }) }}
+        </div>
     </div>
     <div class="ten wide column" id="qr_code_content">
         {{ component('components:segment-title',{ title: labels.image, icon: 'image' }) }}

@@ -6,7 +6,8 @@
         }
     },
     "labels": {
-        "image": "Image"
+        "image": "Image",
+        "decode": "Decode Qr Code Image"
     },
     "buttons": {
         "generate": "Generate Qr Code"
