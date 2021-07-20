@@ -12,15 +12,15 @@ namespace Arikaim\Extensions\Image\Controllers;
 use Arikaim\Core\Controllers\ApiController;
 use Arikaim\Core\Db\Model;
 
-use Arikaim\Core\Controllers\Traits\FileDownload;
+use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 
 /**
  * Image api controller
 */
 class ImageApi extends ApiController
 {
-    use 
-        FileDownload;
+    use       
+        ImageUpload;
 
     /**
      * Init controller

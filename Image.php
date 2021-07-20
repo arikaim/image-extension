@@ -33,6 +33,7 @@ class Image extends Extension
         $this->addApiRoute('POST','/api/admin/image/thumbnail/create','ThumbnailsControlPanel','create','session');              
         $this->addApiRoute('DELETE','/api/admin/image/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
         // api 
+        $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');    
         $this->addApiRoute('GET','/api/image/view/{uuid}','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);  
         // qrcode (rquires qrcode module)

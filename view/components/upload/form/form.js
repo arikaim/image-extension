@@ -32,13 +32,14 @@ function ImageUpload() {
             }); 
 
             var fileUpload = new FileUpload('#upload_form',{
-                url: '/api/admin/image/upload',
+                url: '/api/image/upload',
                 maxFiles: 1,
                 allowMultiple: false,
                 acceptedFileTypes: [],      
                 formFields: {            
                     private: '#private',
                     target_path: '#target_path',
+                    create_target_path: '#create_target_path',
                     deny_delete: '#deny_delete',
                     file_name: '#file_name',
                     relation_id: '#relation_id',
