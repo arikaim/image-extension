@@ -32,7 +32,8 @@ trait ImageUpload
     {          
         $this->onDataValid(function($data) use ($request) {  
             $fileName = $data->get('file_name',null);           
-            $denyDelete = $data->getString('deny_delete',null);                                    
+            $denyDelete = $data->getString('deny_delete',null);   
+            $private = $data->getBool('private_image',false);                                     
             $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
             $createDestinationPath = $data->getBool('create_target_path',false);
             $relationId = $data->get('relation_id',null);
@@ -58,7 +59,7 @@ trait ImageUpload
                 if (empty($item['error']) == false) continue;
                
                 $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
-                    'private'     => false,
+                    'private'     => $private,
                     'deny_delete' => $denyDelete
                 ]);               
             }

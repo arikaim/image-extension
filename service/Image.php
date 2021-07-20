@@ -40,6 +40,17 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Get view url
+     *
+     * @param string $path
+     * @return string
+     */
+    public function getViewUrl(string $path): string
+    {
+        return ImageLibrary::getViewUrl($path);
+    }
+
+    /**
      * Save image relation
      *
      * @param Model|int $image

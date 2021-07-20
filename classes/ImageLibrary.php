@@ -11,6 +11,7 @@ namespace Arikaim\Extensions\Image\Classes;
 
 use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Utils\File;
+use Arikaim\Core\Http\Url;
 
 /**
  * Image library class
@@ -22,6 +23,17 @@ class ImageLibrary
     
     const THUMBNAILS_PATH = 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
     const THUMBNAILS_FILE_NAME_PREFIX = 'thumbnail-';
+
+    /**
+     * Get view protected image url
+     *
+     * @param string $path
+     * @return string
+     */
+    public static function getViewUrl(string $path): string
+    {
+        return Url::BASE_URL . Self::VIEW_PROTECTED_IMAGE_URL . $path;
+    }
 
     /**
      * Get images storage path

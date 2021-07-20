@@ -43,7 +43,7 @@ class ImageApi extends ApiController
     public function view($request, $response, $data) 
     {            
         $uuid = $data->get('uuid',null);
-        $image = Model::Media('media')->findById($uuid);
+        $image = Model::Image('image')->findById($uuid);
      
         // not valid slug
         if (\is_object($image) == false) {

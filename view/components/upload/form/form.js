@@ -37,7 +37,7 @@ function ImageUpload() {
                 allowMultiple: false,
                 acceptedFileTypes: [],      
                 formFields: {            
-                    private: '#private',
+                    private_image: '#private_image',
                     target_path: '#target_path',
                     create_target_path: '#create_target_path',
                     deny_delete: '#deny_delete',
