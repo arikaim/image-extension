@@ -6,9 +6,9 @@
     <input type="hidden" name="relation_type" id="relation_type" value="{{ relation_type }}">
     <input type="hidden" name="create_target_path" id="create_target_path" value="{{ create_target_path }}">
     <input type="hidden" name="private_image" id="private_image" value="{{ private_image }}">
+    <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">    
     {% if target_path is not empty and hide_path != true %}
     <div class="field">
-        <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">      
         <label>{{ fields.path.label }}</label>
         <div class="ui basic label">
             ..{{ target_path|relativePath }} {{ file_name }}
