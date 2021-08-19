@@ -1,4 +1,5 @@
 {% set target_path = (target_path is empty) ? service('image.library').getDefaultImagesPath() : target_path %}
+{% set accept = accept|default('*') %}
 <form class="ui form {{ class }}" id="upload_form" enctype="multipart/form-data">  
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
     <input type="hidden" name="deny_delete" id="deny_delete" value="{{ deny_delete }}">
@@ -18,7 +19,7 @@
     </div>
     {% endif %}    
     <div class="field required">                    
-        <input name="file" id="file" type="file">                                          
+        <input name="file" id="file" type="file" accepted-file-types="{{ accept }}">                                          
     </div>       
     {% if deny_delete == true %}
     <div class="field">
@@ -28,11 +29,11 @@
     </div>
     {% endif %} 
     {% if resize_width is not empty and resize_height is not empty %}
-    <div>
-        {{ labels.resize }}
-        <div class="ui basic label">{{ resize_width }}px</div> x
-        <div class="ui basic label">{{ resize_height }}px</div>
-    </div>
+        <div class="p-1 my-2">
+            {{ labels.resize }}
+            <div class="ui basic label">{{ resize_width }}px</div> x
+            <div class="ui basic label">{{ resize_height }}px</div>
+        </div>
     {% endif %} 
     <a class="ui green button {{ button_class|default('submit-button') }}">
         {{ button_title|default(buttons.save.content) }}
