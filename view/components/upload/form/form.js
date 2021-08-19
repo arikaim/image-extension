@@ -43,7 +43,9 @@ function ImageUpload() {
                     deny_delete: '#deny_delete',
                     file_name: '#file_name',
                     relation_id: '#relation_id',
-                    relation_type: '#relation_type'                             
+                    relation_type: '#relation_type',
+                    resize_width: '#resize_width',
+                    resize_height: '#resize_height'                             
                 },
                 onSuccess: function(result) { 
                     arikaim.events.emit('image.upload',result);   

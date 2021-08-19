@@ -10,7 +10,8 @@
         }      
     },
     "labels": {
-        "delete": "Deny delete"
+        "delete": "Deny delete",
+        "resize": "Resize"
     },
     "buttons": {
         "save": {

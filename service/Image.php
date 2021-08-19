@@ -105,7 +105,7 @@ class Image extends Service implements ServiceInterface
      * @param string $relationType
      * @param integer|null $width
      * @param integer|null $height
-     * @param bool $create  Create if not exist
+     * @param bool $create Create if not exist
      * @return Model|null
      */
     public function getThumbnail(?int $relationId, string $relationType, ?int $width, ?int $height, bool $create = true)
@@ -193,6 +193,29 @@ class Image extends Service implements ServiceInterface
 
         return $thumbnail->saveThumbnail($width,$height,$model->id);          
     }
+
+    /**
+     * Resize and save image
+     *
+     * @param string $fileName
+     * @param integer|null $userId
+     * @param integer|null $width
+     * @param integer|null $height
+     * @param array $options
+     * @return Model|null
+     */
+    public function resizeAndSave(string $fileName, ?int $userId, ?int $width = null, ?int $height = null, array $options = [])
+    {
+        if (empty($width) == false && empty($height) == false) {
+            $image = $this->getService('image')->resize($fileName,$width,$height);
+            $result = $this->getService('image')->save($image,$fileName,'');
+            if ($result === false) {
+                return null;
+            }
+        }
+
+        return $this->save($fileName,$userId,$options);
+    } 
 
     /**
      * Save image

@@ -40,6 +40,8 @@ trait ImageUpload
             $relationType = $data->get('relation_type',null);
             $thumbnailWidth = $data->get('thumbnail_width',null);
             $thumbnailHeight = $data->get('thumbnail_height',null);
+            $resizeWidth = $data->get('resize_width',null);
+            $resizeHeight = $data->get('resize_height',null);
 
             if (File::exists($destinationPath) == false && $createDestinationPath == true) {
                 File::makeDir($destinationPath);
@@ -58,7 +60,9 @@ trait ImageUpload
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
                
-                $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
+                $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$this->getUserId(),
+                    $resizeWidth,
+                    $resizeHeight,[
                     'private'     => $private,
                     'deny_delete' => $denyDelete
                 ]);               

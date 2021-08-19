@@ -50,7 +50,6 @@ class ImageControlPanel extends ControlPanelApiController
             $thumbnailHeight = $data->get('thumbnail_height',null);
             $relationId = $data->get('relation_id',null);
             $relationType = $data->get('relation_type',null);
-
             $fileName = $data->getString('file_name',null);
             $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
             $denyDelete = $data->get('deny_delete',null);       

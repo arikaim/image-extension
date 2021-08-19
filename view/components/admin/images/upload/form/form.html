@@ -5,7 +5,9 @@
     <input type="hidden" name="relation_id" id="relation_id" value="{{ relation_id }}">
     <input type="hidden" name="relation_type" id="relation_type" value="{{ relation_type }}">
     <input type="hidden" name="create_target_path" id="create_target_path" value="{{ create_target_path }}">
-    <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">      
+    <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}"> 
+    <input type="hidden" name="resize_width" id="resize_width" value="{{ resize_width }}">  
+    <input type="hidden" name="resize_height" id="resize_height" value="{{ resize_height }}">       
     {% if target_path is not empty %}
     <div class="field">        
         <label>{{ fields.path.label }}</label>
@@ -22,6 +24,13 @@
         <div class="ui basic label">
             {{ labels.delete }}
         </div>
+    </div>  
+    {% endif %}
+    {% if resize_width is not empty and resize_height is not empty %}
+    <div>
+        {{ labels.resize }}
+        <div class="ui basic label">{{ resize_width }}px</div> x
+        <div class="ui basic label">{{ resize_height }}px</div>
     </div>
     {% endif %} 
     {{ component('components:form.footer',{ button_title: buttons.save.content }) }}   
