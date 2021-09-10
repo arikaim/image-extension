@@ -60,12 +60,19 @@ trait ImageUpload
             foreach ($files as $item) {               
                 if (empty($item['error']) == false) continue;
                
-                $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$this->getUserId(),
+                if (empty($resizeWidth) == false && empty($resizeHeight) == false) {
+                    $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$this->getUserId(),
                     $resizeWidth,
                     $resizeHeight,[
-                    'private'     => $private,
-                    'deny_delete' => $denyDelete
-                ]);               
+                        'private'     => $private,
+                        'deny_delete' => $denyDelete
+                    ]);  
+                } else {
+                    $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
+                        'private'     => $private,
+                        'deny_delete' => $denyDelete
+                    ]); 
+                }                             
             }
         
             if (empty($relationId) == false && empty($relationType) == false) {
