@@ -1,5 +1,6 @@
 {% component 'components:tabs.vertical.content' %}
 <div class="mt-8" id="import_image_content">
+    {% if demo_mode != true %}
     <div class="ui equal width form">      
         <div class="field required">      
             <label>{{ fields.url.label }}</label>              
@@ -9,5 +10,10 @@
             {{ labels.load }}
         </button>             
     </div>   
+    {% else %}
+    <div class="ui waring message">
+        {{ labels.disabled }}
+    </div>
+    {% endif %}
 </div>    
 {% endcomponent %}
