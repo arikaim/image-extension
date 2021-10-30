@@ -1,0 +1,24 @@
+{%  set params = { 
+        relation_id: relation_id, 
+        relation_type: relation_type
+    } 
+%}
+
+{%  set items = [ 
+        { title: labels.view, component: 'image::admin.library.relations', icon: 'list', active: true, params },
+        { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },   
+        { title: labels.library, component: 'image::admin.library.view', icon: 'images', params },        
+    ] 
+%}
+
+{{  component('components:tabs.vertical',{ 
+        items: items, 
+        menu: { id: 'images_library_menu' }, 
+        item_class: 'images-library-tab-item',
+        content: { 
+            id: 'images_library_content',
+            component: 'image::admin.library.relations',
+            params: params 
+        } 
+    })
+}}

@@ -1,0 +1,16 @@
+{% set items = service('image.library').getRelatedImages(relation_id,relation_type) %}
+{% if items|length == 0 %}
+    <div class="ui message">
+        {{ labels.empty }}
+    </div>
+{% else %}
+    {% for item in items %}
+        {{  component('image::admin.library.card',{ 
+                image: item.image, 
+                relation_id: relation_id,
+                delete_button: true,
+                relation_type: relation_type 
+            }) 
+        }}   
+    {% endfor %}    
+{% endif %} 

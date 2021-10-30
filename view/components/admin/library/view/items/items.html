@@ -1,0 +1,17 @@
+{% set image = createModel('Image','image').where('id','>',0) %}
+{% set items = paginate(image,'images.library')  %}
+{% if items.getItems()|length == 0 %}
+    <div class="ui message">
+        {{ labels.empty }}
+    </div>
+{% else %}
+    {% for item in items.getItems() %}
+        {{  component('image::admin.library.card',{ 
+                image: item, 
+                relation_id: relation_id,              
+                add_button: true,
+                relation_type: relation_type 
+            }) 
+        }}   
+    {% endfor %}    
+{% endif %} 

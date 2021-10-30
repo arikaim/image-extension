@@ -1,0 +1,12 @@
+{% component 'components:tabs.vertical.content' %}        
+    {{  component('image::upload',{ 
+            class: 'border border-solid rounded border-gray-300 p-2',
+            button_class: 'upload-button mini',
+            relation_id: relation_id,
+            relation_type: relation_type,
+            hide_path: true,
+            hide_title: true,
+            private_image: false  
+        }) 
+    }}    
+{% endcomponent %}

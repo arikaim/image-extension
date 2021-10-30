@@ -1,0 +1,23 @@
+<div class="ui card">
+    <div class="w-full h-full library-image">
+        <div class="ui bottom dimmer">
+            <div class="content left aligned">
+                {% if delete_button is not empty %}
+                    <button class="ui basic icon mini inverted button delete-image-relation" title="{{ delete_button.title|default(labels.delete) }}">
+                        <i class="icon orange trash"></i>
+                    </button>
+                {% endif %}
+                {% if add_button is not empty %}
+                    <button class="ui basic icon button mini inverted add-image-relation" title="{{ add_button.title|default(labels.add) }}">
+                        <i class="icon green plus"></i>
+                    </button>
+                {% endif %}     
+                <button class="ui basic icon button inverted mini image-details" title="{{ details_button.title|default(labels.details) }}">
+                    <i class="icon info"></i>
+                    {{ labels.details }}
+                </button>      
+            </div>
+        </div>
+        <img class="w-full h-full" src="{{ url(image.src) }}">   
+    </div>
+</div>    
