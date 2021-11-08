@@ -1,18 +1,29 @@
-<div class="ui card">
+<div class="ui card" id="row_{{ relation_uuid|default(image.uuid) }}">
     <div class="w-full h-full library-image">
         <div class="ui bottom dimmer">
             <div class="content left aligned">
                 {% if delete_button is not empty %}
-                    <button class="ui basic icon mini inverted button delete-image-relation" title="{{ delete_button.title|default(labels.delete) }}">
+                    <button 
+                        class="ui basic icon mini inverted button remove-image-relation" 
+                        title="{{ delete_button.title|default(labels.delete) }}"
+                        uuid="{{ relation_uuid }}">
                         <i class="icon orange trash"></i>
                     </button>
                 {% endif %}
                 {% if add_button is not empty %}
-                    <button class="ui basic icon button mini inverted add-image-relation" title="{{ add_button.title|default(labels.add) }}">
+                    <button 
+                        class="ui basic icon button mini inverted add-image-relation" 
+                        title="{{ add_button.title|default(labels.add) }}"
+                        relation-type="{{ relation_type }}"
+                        relation-id="{{ relation_id }}"
+                        image-id="{{ image.id }}">
                         <i class="icon green plus"></i>
                     </button>
                 {% endif %}     
-                <button class="ui basic icon button inverted mini image-details" title="{{ details_button.title|default(labels.details) }}">
+                <button 
+                    class="ui basic icon button inverted mini image-details" 
+                    title="{{ details_button.title|default(labels.details) }}"
+                    uuid="{{ image.uuid }}">
                     <i class="icon info"></i>
                     {{ labels.details }}
                 </button>      

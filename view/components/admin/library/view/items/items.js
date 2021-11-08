@@ -1,7 +1,7 @@
 'use strict';
 
 arikaim.component.onLoaded(function() {   
-    safeCall('imagesLibraryRelations',function(obj) {
+    safeCall('imagesLibrary',function(obj) {
         obj.initRows();
     },true);  
     

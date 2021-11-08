@@ -3,7 +3,19 @@
 function ImagesLibraryRelatins() {
     var self = this;
    
-    this.init = function() {        
+    this.init = function() {     
+        this.loadMessages('image::admin.messages');   
+    };
+
+    this.loadItems = function(relationId, relationType) {
+        return arikaim.page.loadContent({
+            id: 'images_library_relations_items',
+            component: 'image::admin.library.relations.items',
+            params: { 
+                relation_id: relationId,
+                relation_type: relationType
+            }
+        });    
     };
 
     this.initRows = function() {  
@@ -19,17 +31,15 @@ function ImagesLibraryRelatins() {
             });   
         });
        
-        arikaim.ui.button('.delete-image-relation',function(element) {
+        arikaim.ui.button('.remove-image-relation',function(element) {
             var uuid = $(element).attr('uuid');
-            var title = $(element).attr('data-title');
-            var message = arikaim.ui.template.render(self.getMessage('remove.content'),{ title: title });
-
+        
             modal.confirmDelete({ 
                 title: self.getMessage('remove.title'),
-                description: message
+                description: self.getMessage('remove.content') 
             },function() {
-                imageControlPanel.delete(uuid,function(result) {
-                    arikaim.ui.table.removeRow('#' + uuid);     
+                relations.delete('ImageRelations','image',uuid,function(result) {
+                    arikaim.ui.table.removeRow('#row_' + uuid);  
                 });
             });
         });       

@@ -4,75 +4,28 @@ function ImagesLibrary() {
     var self = this;
    
     this.init = function() {
-        paginator.init('image_rows',"image::admin.images.view.rows",'images'); 
-
-        search.init({
-            id: 'image_rows',
-            component: 'image::admin.images.view.rows',
-            event: 'image.search.load'
-        },'images')  
-        
-        arikaim.events.on('image.search.load',function(result) {      
-            paginator.reload();
-            self.initRows();    
-        },'imageSearch');
+        paginator.init('image_library_rows',"image::admin.library.view.items",'images.library'); 
 
         this.loadMessages('image::admin.messages');
     };
 
-    this.loadList = function() {        
-        arikaim.page.loadContent({
-            id: 'image_rows',         
-            component: 'image::admin.images.view.rows'
-        },function(result) {
-            self.initRows();  
-            paginator.reload(); 
-        });
-    };
-
     this.initRows = function() {
-        $('.status-dropdown').dropdown({
-            onChange: function(value) {               
-                var uuid = $(this).attr('uuid');
-                imageControlPanel.setStatus(uuid,value);
-            }
-        });    
-
-        arikaim.ui.button('.image-relations-button',function(element) {
-            var uuid = $(element).attr('uuid');
-            arikaim.ui.setActiveTab('#image_relations','.image-tab-item');
-
-            return arikaim.page.loadContent({
-                id: 'image_content',
-                component: 'image::admin.images.relations',
-                params: { uuid: uuid }
-            });     
-        });
-
-        arikaim.ui.button('.delete-button',function(element) {
-            var uuid = $(element).attr('uuid');
-            var title = $(element).attr('data-title');
-            var message = arikaim.ui.template.render(self.getMessage('remove.content'),{ title: title });
-
-            modal.confirmDelete({ 
-                title: self.getMessage('remove.title'),
-                description: message
-            },function() {
-                imageControlPanel.delete(uuid,function(result) {
-                    arikaim.ui.table.removeRow('#' + uuid);     
-                });
-            });
-        });
-
-        arikaim.ui.button('.thumbnails-button',function(element) {
-            var uuid = $(element).attr('uuid');    
-            arikaim.ui.setActiveTab('#thumbnails_image','.image-tab-item');
-            
-            arikaim.page.loadContent({
-                id: 'image_content',
-                component: 'image::admin.thumbnails',
-                params: { uuid: uuid }
-            });          
+        arikaim.ui.button('.add-image-relation',function(element) {
+            var relationType = $(element).attr('relation-type');
+            var relationId = $(element).attr('relation-id');
+            var imageId = $(element).attr('image-id');
+           
+            relations.add('ImageRelations','image',imageId,relationType,relationId,function(result) {            
+                arikaim.ui.setActiveTab('#images_library_relations_tab','.images-library-tab-item');               
+                return arikaim.page.loadContent({
+                    id: 'images_library_content',
+                    component: 'image::admin.library.relations',
+                    params: { 
+                        relation_id: relationId,
+                        relation_type: relationType
+                    }
+                });  
+            });            
         });
     };
 };

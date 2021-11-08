@@ -2,12 +2,12 @@
 <div class="ui segment">
     <div class="ui stackable three column grid">
         <div class="column left aligned">
-            {{ component('components:search.form',{ namespace: 'images' }) }}
+            {{ component('semantic~search.form',{ namespace: 'images' }) }}
         </div>      
         <div class="column">         
         </div> 
         <div class="right aligned column">       
-            {{ component('components:paginator.dropdown',{ namespace: 'images' }) }}
+            {{ component('semantic~paginator.dropdown',{ namespace: 'images' }) }}
         </div>                 
     </div>
 </div>
@@ -31,6 +31,6 @@
         </tbody>
     </table> 
     <div id="paginator">      
-        {{ component("components:paginator",{ namespace: 'images' }) }}
+        {{ component("semantic~paginator",{ namespace: 'images' }) }}
     </div>
 </div>

@@ -1,8 +1,7 @@
 {
     "include": {
         "js": [
-            "semantic~search",
-            "system:order"            
+            "system:admin.orm.relations"
         ]
     },
     "access": {

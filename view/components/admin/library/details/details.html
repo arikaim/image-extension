@@ -1,5 +1,8 @@
-{{ component('semantic~segment-title',{ title: title }) }}
-<div class="w-full h-full">
-    
+{% set image = createModel('Image','image').findById(uuid) %}
+<div class="pl-4 w-full h-full border-0 border-l border-solid border-gray-300">
+    {{ component('semantic~segment-title',{ icon: 'info', title: title, close_button: true }) }}
+    <div>
+        <img class="pt-2 w-full h-full rounded-lg" src="{{ url(image.src) }}">
+        {{ component('image::admin.images.details',{ image: image }) }}
+    </div>
 </div>
-

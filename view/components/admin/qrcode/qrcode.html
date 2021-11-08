@@ -1,21 +1,21 @@
 <div class="ui divided grid">
     <div class="six wide column">
-        {{ component('components:segment-title',{ title: title, icon: 'plus' }) }}
+        {{ component('semantic~segment-title',{ title: title, icon: 'plus' }) }}
         <div class="mt-4 p-2">
             <form class="ui form" id="qr_code_form">
                 <div class="field">
                     <label>{{ fields.data.label }}</label>
                     <textarea rule="empty" name="data" id="data" rows="5" cols="5">{{ data }}</textarea>
                 </div>
-                {{ component('components:form.footer',{ button_title: buttons.gererate }) }}   
+                {{ component('semantic~form.footer',{ button_title: buttons.gererate }) }}   
             </form>
         </div>
         <div class="mt-4 p-2">
-        {{ component('components:segment-title',{ title: labels.decode, icon: 'code' }) }}
+        {{ component('semantic~segment-title',{ title: labels.decode, icon: 'code' }) }}
         </div>
     </div>
     <div class="ten wide column" id="qr_code_content">
-        {{ component('components:segment-title',{ title: labels.image, icon: 'image' }) }}
+        {{ component('semantic~segment-title',{ title: labels.image, icon: 'image' }) }}
         <div class="mt-4 p-2">
             <img width="240px" height="240px" id="qrcode_image"/>
         </div>
