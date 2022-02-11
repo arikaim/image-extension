@@ -13,5 +13,7 @@ Arikaim CMS image extension
 #### Installation
 
 ```sh
+
 composer require arikaim/image-extension
+
 ```

@@ -7,5 +7,6 @@ arikaim.component.onLoaded(function() {
             params: { uuid: result.uuid },
             component: 'image::admin.images.view'
         });
+        arikaim.ui.setActiveTab('#view_images','.image-tab-item');
     };
 });

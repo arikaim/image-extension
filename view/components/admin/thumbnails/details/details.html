@@ -1,10 +1,12 @@
 {% if uuid is not empty %}
     {% set image = createModel('Image','image').findById(uuid) %}
 {% endif %}
-<div class="ui divided grid">
+<div class="ui grid">
     <div class="four wide column">    
-        <div class="mt-2 content-center text-center w-full m-auto">           
-            <img class="ui fluid image rounded bordered" src="{{ url(image.src,true) }}">
+        <div class="ui segment">
+            <div class="content-center text-center w-full m-auto">           
+                <img class="ui fluid image rounded" src="{{ url(image.src,true) }}">
+            </div>
         </div>
         <div class="mt-2 center-align">  
             <div class="ui labels">               
@@ -17,7 +19,7 @@
                     {{ labels.public }}
                 </div>
             {% endif %}
-                <div class="ui basic label">               
+                <div class="ui basic fluid label">               
                     <i class="icon folder blue outline"></i>                
                     {{ image.storage_path }} {{ image.file_name }}
                 </div>
@@ -26,20 +28,22 @@
         {{ component('image::admin.images.details',{ image: image }) }}
     </div>
     <div class="twelve wide column">
-        <div class="ui divided grid">
+        <div class="ui grid">
             <div class="six wide column column">
-                <div class="ui header">
-                    <i class="icon blue image"></i>
-                    {{ labels.create }}
-                </div>
-                <div class="w-full">                
-                    {{ component('image::admin.thumbnails.create',{ uuid: image.uuid, class: 'fluid' }) }}                               
-                </div>               
+                <div class="ui segment">
+                    <div class="ui mini header">
+                        <i class="icon blue image"></i>
+                        {{ labels.create }}
+                    </div>
+                    <div>                
+                        {{ component('image::admin.thumbnails.create',{ uuid: image.uuid, class: 'fluid' }) }}                               
+                    </div>    
+                </div>                          
             </div>
             <div class="ten wide column" id="thumbnails_info">
             </div>
         </div>
-        <div class="ui horizontal header divider left aligned">
+        <div class="ui horizontal mini header divider left aligned">
             <i class="icon blue images"></i>
             {{ title }}
         </div>
