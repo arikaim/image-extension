@@ -14,6 +14,7 @@ use Arikaim\Core\Db\Model;
 use Arikaim\Core\Http\Url;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
+use Arikaim\Core\Controllers\Traits\Status;
 
 /**
  * Image contorl panel api controller
@@ -21,7 +22,8 @@ use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 class ImageControlPanel extends ControlPanelApiController
 {
     use    
-        ImageUpload;
+        ImageUpload,
+        Status;
 
     /**
      * Init controller
@@ -31,6 +33,8 @@ class ImageControlPanel extends ControlPanelApiController
     public function init()
     {
         $this->loadMessages('image::admin.messages');
+        $this->setExtensionName('image');
+        $this->setModelClass('Image');
     }
 
     /**
@@ -176,7 +180,6 @@ class ImageControlPanel extends ControlPanelApiController
     {
         $this->onDataValid(function($data) { 
             $qrCodeData = $data->get('data','Test');
-
             $iamge = $this->get('qrcode')->render($qrCodeData);
 
             $this->setResponse(!empty($iamge),function() use($iamge) {                  

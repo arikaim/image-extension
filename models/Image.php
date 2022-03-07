@@ -18,6 +18,7 @@ use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
+use Arikaim\Core\Db\Traits\Status;
 use Arikaim\Core\Db\Traits\UserRelation;
 use Arikaim\Core\Db\Traits\DateCreated;
 use Arikaim\Core\Db\Traits\FileTypeTrait;
@@ -29,6 +30,7 @@ class Image extends Model
 {
     use Uuid,     
         Find, 
+        Status,
         DateCreated,  
         UserRelation, 
         FileTypeTrait;

@@ -35,6 +35,7 @@ class ImageSchema extends Schema
         $table->id();
         $table->prototype('uuid');  
         $table->userId();
+        $table->status();
         $table->string('file_name')->nullable(true);
         $table->string('base_name')->nullable(true);
         $table->string('mime_type')->nullable(true);
@@ -58,16 +59,9 @@ class ImageSchema extends Schema
      * @return void
      */
     public function update($table) 
-    {              
-    }
-
-    /**
-     * Insert or update rows in table
-     *
-     * @param Seed $seed
-     * @return void
-     */
-    public function seeds($seed)
-    {   
+    {  
+        if ($this->hasColumn('status') == false) {
+            $table->status();
+        }           
     }
 }

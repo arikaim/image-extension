@@ -30,7 +30,7 @@
         <td class="center aligned">
             {% set thumbnail = item.thumbnail(64,64) %}
             {% if thumbnail is not empty %}
-                <img src="{{ url(thumbnail.src) }}" class="ui image rouded">
+                <img src="{{ url(thumbnail.src) }}" class="ui image rouded center aligned">
             {% else %}
                 <div class="ui image grounded">
                     <i class="icon image"></i>
@@ -44,7 +44,10 @@
                 ..
             {% endif %}
         </td>
-        <td>    
+        <td title="{{ item.file_name }}">  
+            {% if item.deny_delete is not empty %}
+                <div class="ui basic label">{{ labels.delete }}</div>
+            {% endif %}  
             {% if item.private == true %}
                 <div class="ui basic  icon label" title="{{ labels.protected }}">
                     <i class="icon orange lock"></i>
@@ -54,13 +57,16 @@
                     <i class="icon green unlock"></i>                  
                 </div>
             {% endif %}       
-            {{ item.file_name|relativePath }}
-        </td>                        
+            {{ item.file_name|baseName }}
+        </td>       
         <td>
-            {% if item.deny_delete is not empty %}
-            <div class="ui basic label">{{ labels.delete }}</div>
-            {% endif %}
-        </td>      
+            {{  component('semantic~status.dropdown',{ 
+                    status: item.status, 
+                    uuid: item.uuid, 
+                    skip: [2,3,4,5] 
+                }) 
+            }} 
+        </td>                            
         <td>{{ item.user.user_name }}</td>               
         <td>{{ item.mime_type }}</td>  
         <td>

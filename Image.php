@@ -29,13 +29,16 @@ class Image extends Extension
         $this->addApiRoute('POST','/api/admin/image/import','ImageControlPanel','import','session');              
         $this->addApiRoute('DELETE','/api/admin/image/delete/{uuid}','ImageControlPanel','delete','session'); 
         $this->addApiRoute('GET','/api/admin/image/list/{data_field}/[{query}]','ImageControlPanel','getList','session');             
+        $this->addApiRoute('PUT','/api/admin/image/status','ImageControlPanel','setStatus','session'); 
         // thumbnails
         $this->addApiRoute('POST','/api/admin/image/thumbnail/create','ThumbnailsControlPanel','create','session');              
         $this->addApiRoute('DELETE','/api/admin/image/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
         // api 
-        $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');    
+        $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');  
+        $this->addApiRoute('PUT','/api/image/status','ImageApi','setStatus',['session','token']);    
         $this->addApiRoute('GET','/api/image/view/{uuid}','ImageApi','view',null);    
-        $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);  
+        $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);
+        $this->addApiRoute('DELETE','/api/image/delete/{uuid}','ImageApi','delete','session');   
         // qrcode (rquires qrcode module)
         $this->addApiRoute('POST','/api/admin/image/qrcode/generate','ImageControlPanel','generateQrCode','session');  
 
