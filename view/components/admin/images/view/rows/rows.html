@@ -38,7 +38,11 @@
             {% endif %}
         </td>
         <td class="center aligned">
-            {{ item.width }} x {{ item.height }}
+            {% if item.width is not empty and item.height is not empty %}
+                {{ item.width }} x {{ item.height }}
+            {% else %}
+                ..
+            {% endif %}
         </td>
         <td>    
             {% if item.private == true %}

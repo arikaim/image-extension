@@ -6,7 +6,7 @@
     <input type="hidden" name="relation_id" id="relation_id" value="{{ relation_id }}">
     <input type="hidden" name="relation_type" id="relation_type" value="{{ relation_type }}">
     <input type="hidden" name="create_target_path" id="create_target_path" value="{{ create_target_path }}">
-    <input type="hidden" name="private_image" id="private_image" value="{{ private_image }}">
+    <input type="hidden" name="private_image" id="private_image" value="{{ private_image|default(0) }}">
     <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">    
     <input type="hidden" name="resize_width" id="resize_width" value="{{ resize_width }}">  
     <input type="hidden" name="resize_height" id="resize_height" value="{{ resize_height }}">  
@@ -21,14 +21,14 @@
     <div class="field required">                    
         <input name="file" id="file" type="file" accepted-file-types="{{ accept }}">                                          
     </div>       
-    {% if deny_delete == true %}
+    {% if deny_delete == true and hide_labels != true %}
     <div class="field">
         <div class="ui basic label">
             {{ labels.delete }}
         </div>
     </div>
     {% endif %} 
-    {% if resize_width is not empty and resize_height is not empty %}
+    {% if resize_width is not empty and resize_height is not empty and hide_labels != true%}
         <div class="p-1 my-2">
             {{ labels.resize }}
             <div class="ui basic label">{{ resize_width }}px</div> x
