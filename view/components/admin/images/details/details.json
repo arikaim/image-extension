@@ -3,6 +3,7 @@
         "id": "Id",
         "size": "Size",
         "owner": "Owner",
+        "status": "Status",
         "type": "Type",
         "code": "Code",
         "file_size": "File Size"

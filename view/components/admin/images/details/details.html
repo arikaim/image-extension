@@ -9,6 +9,12 @@
                 <td>{{ image.uuid }}</td>
             </tr>
             <tr>
+                <td class="right aligned">{{ labels.status }}</td>
+                <td>
+                    {{ component('semantic~status.label',{ status: image.status }) }}
+                </td>
+            </tr>
+            <tr>
                 <td class="right aligned">{{ labels.type }}</td>
                 <td>
                     {{ image.mime_type }}
@@ -17,7 +23,11 @@
             <tr>
                 <td class="right aligned">{{ labels.size }}</td>
                 <td>
-                    {{ image.width }} x {{ image.height }}
+                    {% if image.width is empty and image.height is empty %}
+                        N/A
+                    {% else %}
+                        {{ image.width }} x {{ image.height }}
+                    {% endif %}
                 </td>
             </tr>
             <tr>

@@ -13,6 +13,8 @@ use Arikaim\Core\Controllers\ApiController;
 use Arikaim\Core\Db\Model;
 
 use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
+use Arikaim\Extensions\Image\Controllers\Traits\ViewSvg;
+use Arikaim\Core\Controllers\Traits\FileDownload;
 
 /**
  * Image api controller
@@ -20,7 +22,9 @@ use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 class ImageApi extends ApiController
 {
     use       
-        ImageUpload;
+        ImageUpload,
+        ViewSvg,
+        FileDownload;
 
     /**
      * Init controller
@@ -51,7 +55,13 @@ class ImageApi extends ApiController
             return false;
         }
   
-        return $this->viewImage($response,$image->src);
+        if ($image->status == $image->DISABLED()) {
+            return $this->viewSvg($request,$response,$data);
+        }
+
+        $mimeType = ($image->mime_type == 'image/svg') ? 'image/svg+xml' : null;
+
+        return $this->viewImage($response,$image->src,'storage',$mimeType);
     } 
     
     /**
@@ -65,15 +75,15 @@ class ImageApi extends ApiController
     public function viewThumbnail($request, $response, $data) 
     {            
         $uuid = $data->get('uuid',null);
-        $image = Model::ImageThumbnails('image')->findById($uuid);
+        $thumbnail = Model::ImageThumbnails('image')->findById($uuid);
      
-        // not valid image uuid or id 
-        if (\is_object($image) == false) {
+        // not valid image thumbnail uuid or id 
+        if (\is_object($thumbnail) == false) {
             $this->error('Not valid image thumbnail id.');
             return false;
         }
   
-        return $this->viewImage($response,$image->src);
+        return $this->viewImage($response,$thumbnail->src);
     } 
 
     /**
@@ -101,7 +111,7 @@ class ImageApi extends ApiController
        
         $result = $image->setStatus($status);
 
-        $this->setResponse($result,function() use($image) {                  
+        $this->setResponse($result,function() use($image,$status) {                  
             $this
                 ->message('status')
                 ->field('uuid',$image->uuid) 
