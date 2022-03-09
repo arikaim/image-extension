@@ -85,7 +85,7 @@ trait ImageUpload
                 $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
             }
             
-            $this->setResponse(\is_object($image),function() use($image,$data) {   
+            $this->setResponse(\is_object($image),function() use($image,$data, $private) {   
                 // fire event 
                 $params = \array_merge($image->toArray(),$data->toArray());
                 $this->get('event')->dispatch('image.upload',$params);
@@ -93,6 +93,8 @@ trait ImageUpload
                 $this
                     ->message('upload')
                     ->field('uuid',$image->uuid)
+                    ->field('id',$image->id)
+                    ->field('private',$private)
                     ->field('file',$image->file_name);                                  
             },'errors.upload');   
         });
