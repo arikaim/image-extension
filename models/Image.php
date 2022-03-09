@@ -16,6 +16,7 @@ use Arikaim\Extensions\Image\Models\ImageThumbnails;
 use Arikaim\Extensions\Image\Models\ImageRelations;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
+use Arikaim\Core\Utils\Path;
 use Arikaim\Core\Db\Traits\Uuid;
 use Arikaim\Core\Db\Traits\Find;
 use Arikaim\Core\Db\Traits\Status;
@@ -100,7 +101,11 @@ class Image extends Model
             return $this->url;
         }
         
-        return ($this->private != 1) ? \str_replace("arikaim/storage/public",'public',$this->file_name) : $this->file_name;     
+        if ($this->private == 1) {
+            return '/api/image/view/' . $this->uuid;
+        }
+
+        return \str_replace("arikaim/storage/public",'public',$this->file_name); 
     }
 
     /**
@@ -111,6 +116,10 @@ class Image extends Model
      */
     public function getImagePath(bool $relative = true): string
     {
+        if ($this->private == 1) {
+            return ($relative == true) ? Path::getRelativePath($this->file_name) : $this->file_name;
+        }
+
         return ($relative == true) ? $this->file_name : ROOT_PATH . BASE_PATH . $this->file_name;
     }
 

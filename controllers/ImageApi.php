@@ -12,6 +12,7 @@ namespace Arikaim\Extensions\Image\Controllers;
 use Arikaim\Core\Controllers\ApiController;
 use Arikaim\Core\Db\Model;
 
+use Arikaim\Core\Utils\File;
 use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 use Arikaim\Extensions\Image\Controllers\Traits\ViewSvg;
 use Arikaim\Core\Controllers\Traits\FileDownload;
@@ -60,8 +61,14 @@ class ImageApi extends ApiController
         }
 
         $mimeType = ($image->mime_type == 'image/svg') ? 'image/svg+xml' : null;
+        $mimeType = $mimeType ?? File::getMimetype($image->file_name);
 
-        return $this->viewImage($response,$image->src,'storage',$mimeType);
+        if (File::exists($image->file_name) == true) {
+            $data = File::read($image->file_name);
+            return $this->viewImageHeaders($response,$mimeType,$data);
+        }
+        
+        return $this->viewImage($response,$image->file_name,'storage',$mimeType);
     } 
     
     /**

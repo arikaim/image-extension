@@ -204,7 +204,13 @@ class Image extends Service implements ServiceInterface
      * @param array $options
      * @return Model|null
      */
-    public function resizeAndSave(string $fileName, ?int $userId, ?int $width = null, ?int $height = null, array $options = [])
+    public function resizeAndSave(
+        string $fileName, 
+        ?int $userId, 
+        ?int $width = null, 
+        ?int $height = null, 
+        array $options = [],
+        bool $protected = false)
     {
         if (empty($width) == false && empty($height) == false) {
             $image = $this->getService('image')->resize($fileName,$width,$height);
@@ -214,7 +220,7 @@ class Image extends Service implements ServiceInterface
             }
         }
 
-        return $this->save($fileName,$userId,$options);
+        return $this->save($fileName,$userId,$options,$protected);
     } 
 
     /**
@@ -225,12 +231,12 @@ class Image extends Service implements ServiceInterface
      * @param bool $options    
      * @return Model|null
      */
-    public function save(string $fileName, ?int $userId, array $options = [])
+    public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false)
     {
-        $relativePath = Path::getRelativePath($fileName,false);
+        $path = ($protected == false) ? Path::getRelativePath($fileName,false) : $fileName;
         $model = Model::Image('image');       
         $data = [
-            'file_name'   => $relativePath,
+            'file_name'   => $path,
             'file_size'   => File::getSize($fileName),
             'mime_type'   => File::getMimetype($fileName),
             'base_name'   => File::baseName($fileName),
@@ -245,9 +251,9 @@ class Image extends Service implements ServiceInterface
             $data['height'] = $size['height'];
         }
         
-        if ($model->hasImage($relativePath) == true) {
+        if ($model->hasImage($path) == true) {
             // update
-            $model = $model->findImage($relativePath);
+            $model = $model->findImage($path);
             $image = ($model->update($data) !== false) ? $model : null;          
         } else {
             // create
@@ -271,10 +277,10 @@ class Image extends Service implements ServiceInterface
      * @param bool|null $options   
      * @return Model|null
     */
-    public function import(string $url, string $fileName, ?int $userId, array $options = [])
+    public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false)
     {         
         Curl::downloadFile($url,$fileName);
 
-        return $this->save($fileName,$userId,$options);
+        return $this->save($fileName,$userId,$options,$protected);
     }          
 }

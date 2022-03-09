@@ -66,12 +66,12 @@ trait ImageUpload
                     $resizeHeight,[
                         'private'     => $private,
                         'deny_delete' => $denyDelete
-                    ]);  
+                    ],$private);  
                 } else {
                     $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
                         'private'     => $private,
                         'deny_delete' => $denyDelete
-                    ]); 
+                    ],$private); 
                 }                             
             }
         
