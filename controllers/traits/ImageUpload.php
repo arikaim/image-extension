@@ -94,6 +94,7 @@ trait ImageUpload
                     ->message('upload')
                     ->field('uuid',$image->uuid)
                     ->field('id',$image->id)
+                    ->field('image_src',$image->src)
                     ->field('private',$private)
                     ->field('file',$image->file_name);                                  
             },'errors.upload');   
