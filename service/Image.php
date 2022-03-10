@@ -40,6 +40,23 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Delete image
+     *
+     * @param string|int $uuid
+     * @return bool
+     */
+    public function delete($uuid): bool
+    {       
+        $image = Model::Image('image')->findById($uuid);
+        if (\is_object($image) == false) {
+            return false;
+        }
+        $result = $image->deleteImage();
+
+        return ($result !== false);
+    }
+
+    /**
      * Get view url
      *
      * @param string $path
