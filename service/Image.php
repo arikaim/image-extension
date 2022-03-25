@@ -18,7 +18,7 @@ use Arikaim\Core\Utils\Curl;
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
-
+use Arikaim\Core\Arikaim;
 use Arikaim\Core\System\Error\Traits\TaskErrors;
 
 /**
@@ -54,6 +54,32 @@ class Image extends Service implements ServiceInterface
         $result = $image->deleteImage();
 
         return ($result !== false);
+    }
+
+    /**
+     * Get encoded image
+     *
+     * @param mixed $uuid
+     * @return string|null
+     */
+    public function getEncodedImage($uuid): ?string
+    {
+        $image = Model::Image('image')->findById($uuid);    
+        if (\is_object($image) == false) {
+            return null;
+        }
+        
+        if (File::exists($image->file_name) == true) {           
+            $data = File::read($image->file_name);
+            return \base64_encode($data);
+        }
+        
+        if (Arikaim::storage()->has($image->file_name,'storage') == true) {
+            $data = Arikaim::storage()->read($image->file_name);
+            return \base64_encode($data);
+        }
+
+        return null;
     }
 
     /**
