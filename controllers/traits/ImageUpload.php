@@ -12,6 +12,7 @@ namespace Arikaim\Extensions\Image\Controllers\Traits;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Controllers\Traits\FileUpload;
+use Arikaim\Core\Utils\Slug;
 
 /**
  * Image upload trait

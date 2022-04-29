@@ -28,11 +28,10 @@
         </div>
     </div>
     {% endif %} 
-    {% if resize_width is not empty and resize_height is not empty and hide_labels != true%}
-        <div class="p-1 my-2">
-            {{ labels.resize }}
-            <div class="ui basic label">{{ resize_width }}px</div> x
-            <div class="ui basic label">{{ resize_height }}px</div>
+    {% if resize_width is not empty and resize_height is not empty and hide_labels != true %}
+        <div class="p-1 my-2">         
+            <div class="ui basic mini label">{{ resize_width }}px</div> x
+            <div class="ui basic mini label">{{ resize_height }}px</div>
         </div>
     {% endif %} 
     <a class="ui green button {{ button_class|default('submit-button') }}">
