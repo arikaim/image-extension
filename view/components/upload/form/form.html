@@ -10,6 +10,7 @@
     <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">    
     <input type="hidden" name="resize_width" id="resize_width" value="{{ resize_width }}">  
     <input type="hidden" name="resize_height" id="resize_height" value="{{ resize_height }}">  
+    <input type="hidden" name="max_file_size" id="max_file_size" value="{{ max_file_size }}">  
     {% if target_path is not empty and hide_path != true %}
     <div class="field">
         <label>{{ fields.path.label }}</label>

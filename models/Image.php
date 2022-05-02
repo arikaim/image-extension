@@ -62,6 +62,7 @@ class Image extends Model
         'mime_type',
         'file_name', 
         'base_name',
+        'category_id',
         'url',
         'width',
         'height',      
@@ -76,6 +77,16 @@ class Image extends Model
      */
     public $timestamps = false;
    
+    /**
+     * Category relation
+     *
+     * @return Relation|null
+     */
+    public function category()
+    {
+        return $this->belongsTo('Arikaim\\Extensions\\Category\\Models\\Category','category_id');
+    }
+
     /**
      * Create thumbnail model
      *   
@@ -128,13 +139,20 @@ class Image extends Model
      *
      * @param Builder $query
      * @param int|null $userId
+     * @param int|null $categoryId
      * @return Builder
      */
-    public function scopeUserImagesQuery($query, ?int $userId)
+    public function scopeUserImagesQuery($query, ?int $userId, ?int $categoryId = null)
     {
         $userId = (empty($userId) == true) ? $this->user_id : $userId;
+        if (empty($categoryId) == false) {
+            $query = $query->where('category_id','=',$categoryId);
+        }
+        if (empty($userId) == false) {
+            $query = $query->where('user_id','=',$userId);
+        }
 
-        return $query->where('user_id','=',$userId);
+        return $query;
     }
 
     /**

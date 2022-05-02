@@ -2,6 +2,7 @@
     "labels": {
         "empty": "...",
         "image": "Image",
+        "edit": "Edit",
         "delete": "Delete Protected",
         "protected": "Protected",
         "public": "Public",

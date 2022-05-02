@@ -180,14 +180,42 @@ class ImageControlPanel extends ControlPanelApiController
     {
         $this->onDataValid(function($data) { 
             $qrCodeData = $data->get('data','Test');
-            $iamge = $this->get('qrcode')->render($qrCodeData);
+            $image = $this->get('qrcode')->render($qrCodeData);
 
-            $this->setResponse(!empty($iamge),function() use($iamge) {                  
+            $this->setResponse(!empty($image),function() use($image) {                  
                 $this
                     ->message('qrcode')
-                    ->field('image',$iamge);                          
+                    ->field('image',$image);                          
             },'errors.qrcode');
 
+        });
+        $data->validate();
+    }
+
+    /**
+     * Update image
+     *
+     * @param \Psr\Http\Message\ServerRequestInterface $request
+     * @param \Psr\Http\Message\ResponseInterface $response
+     * @param Validator $data
+     * @return Psr\Http\Message\ResponseInterface
+    */
+    public function updateController($request, $response, $data)
+    {
+        $this->onDataValid(function($data) { 
+            $uuid = $data->get('uuid',null);
+            $model = Model::Image('image')->findById($uuid);
+            if (\is_object($model) == false) {
+                $this->error("Not valid image id.");
+                return false;
+            }
+
+            $result = $model->update($data->toArray());
+            $this->setResponse(($result !== false),function() use($uuid) {                  
+                $this
+                    ->message('update')
+                    ->field('uuid',$uuid);                          
+            },'errors.update');
         });
         $data->validate();
     }

@@ -24,8 +24,15 @@ function ImageUpload() {
         var checked = $('.private-image').checkbox('is checked');
         $('#private').val(checked);
 
-        arikaim.component.loadLibrary('filepond:preview',function(result) {      
-            $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+        arikaim.component.loadLibrary('filepond:preview',function(result) {    
+            if (isEmpty(FilePondPluginImagePreview) == false) {
+                $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+            }
+
+            if (isEmpty(FilePondPluginFileValidateSize) == false) {
+                $.fn.filepond.registerPlugin(FilePondPluginFileValidateSize);
+            }
+           
             $.fn.filepond.setDefaults({
                 allowImagePreview: true,
                 imagePreviewHeight: 128
@@ -35,6 +42,7 @@ function ImageUpload() {
                 url: '/api/admin/image/upload',
                 maxFiles: 1,
                 allowMultiple: false,
+                maxFileSize: '100KB',
                 acceptedFileTypes: [],      
                 formFields: {            
                     private: '#private',

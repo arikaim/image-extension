@@ -12,9 +12,17 @@ function ImageUpload() {
 
     this.init = function() {
         arikaim.ui.form.addRules("#upload_form");
-    
+        var maxFileSize = $('#max_file_size').val();
+
         arikaim.component.loadLibrary('filepond:preview',function(result) {      
-            $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+            if (isEmpty(FilePondPluginImagePreview) == false) {
+                $.fn.filepond.registerPlugin(FilePondPluginImagePreview);
+            }
+
+            if (isEmpty(FilePondPluginFileValidateSize) == false) {
+                $.fn.filepond.registerPlugin(FilePondPluginFileValidateSize);
+            }
+
             $.fn.filepond.setDefaults({
                 allowImagePreview: true,
                 imagePreviewHeight: 128
@@ -24,7 +32,8 @@ function ImageUpload() {
                 url: '/api/image/upload',
                 maxFiles: 1,
                 allowMultiple: false,
-                acceptedFileTypes: [],      
+                acceptedFileTypes: [],  
+                maxFileSize: (isEmpty(maxFileSize) == true) ? null : maxFileSize,
                 formFields: {            
                     private_image: '#private_image',
                     target_path: '#target_path',
@@ -34,7 +43,8 @@ function ImageUpload() {
                     relation_id: '#relation_id',
                     relation_type: '#relation_type',
                     resize_width: '#resize_width',
-                    resize_height: '#resize_height'                             
+                    resize_height: '#resize_height',
+                    max_file_size: '#max_file_size'                             
                 },
                 onSuccess: function(result) { 
                     arikaim.events.emit('image.upload',result);   
@@ -45,7 +55,6 @@ function ImageUpload() {
             arikaim.ui.button('.upload-button',function(element) {               
                 return $('#file').filepond('processFiles')
             });
-
         });
     };
 };

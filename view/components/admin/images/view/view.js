@@ -12,11 +12,23 @@ function ImagesView() {
     this.init = function() {
         paginator.init('image_rows',"image::admin.images.view.rows",'images'); 
 
+        $('.users-dropdown').on('change',function() {
+            var selected = $(this).dropdown('get value');
+                    
+            search.setSearch({
+                search: {
+                    user_id: selected,                       
+                }          
+            },'images',function(result) {                  
+                self.loadList();
+            });    
+        });
+        
         search.init({
             id: 'image_rows',
             component: 'image::admin.images.view.rows',
             event: 'image.search.load'
-        },'images')  
+        },'images');
         
         arikaim.events.on('image.search.load',function(result) {      
             paginator.reload();
@@ -74,9 +86,20 @@ function ImagesView() {
             var uuid = $(element).attr('uuid');    
             arikaim.ui.setActiveTab('#thumbnails_image','.image-tab-item');
             
-            arikaim.page.loadContent({
+            return arikaim.page.loadContent({
                 id: 'image_content',
                 component: 'image::admin.thumbnails',
+                params: { uuid: uuid }
+            });          
+        });
+
+        arikaim.ui.button('.edit-button',function(element) {
+            var uuid = $(element).attr('uuid');    
+            arikaim.ui.setActiveTab('#edit_image','.image-tab-item');
+            
+            return arikaim.page.loadContent({
+                id: 'image_content',
+                component: 'image::admin.images.edit',
                 params: { uuid: uuid }
             });          
         });

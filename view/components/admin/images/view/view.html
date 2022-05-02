@@ -2,9 +2,12 @@
 <div class="ui segment">
     <div class="ui stackable three column grid">
         <div class="column left aligned">
-            {{ component('semantic~search.form',{ namespace: 'images' }) }}
+            {{ component('users::admin.users.dropdown',{ class: 'clearable', data_field: 'id' }) }}
+
+            
         </div>      
-        <div class="column">         
+        <div class="column">   
+            {{ component('semantic~search.form',{ namespace: 'images' }) }}      
         </div> 
         <div class="right aligned column">                  
             {{ component('semantic~paginator.dropdown',{ namespace: 'images' }) }}
@@ -15,15 +18,14 @@
     <table class="ui compact stackable selectable borderless basic table">
         <thead class="table-head">
             <tr>              
-                <th class="two wide collapsing left aligned">{{ columns.action }}</th>
-                <th class="two wide">{{ columns.created }}</th>              
+                <th class="one wide collapsing left aligned">{{ columns.action }}</th>
+                <th class="two wide">{{ columns.status }}</th>         
+                <th class="two wide collapsing">{{ columns.created }}</th>              
                 <th class="collapsing center aligned">{{ columns.thumbnail }}</th>   
-                <th class="two wide center aligned">{{ columns.size }}</th> 
+                <th class="one wide center aligned">{{ columns.size }}</th> 
                 <th>{{ columns.name }}</th>      
-                <th class="two wide">{{ columns.status }}</th>                                 
-                <th class="two wide">{{ columns.user }}</th>
-                <th class="one wide">{{ columns.type }}</th>
-                <th class="one wide">{{ columns.file_size }}</th>                                   
+                <th class="three wide">{{ columns.category }}</th>    
+                <th class="two wide">{{ columns.user }}</th>                   
             </tr>
         </thead>
         <tbody id="image_rows" component="image::admin.images.view.rows" namespace="images">
