@@ -12,7 +12,7 @@
         <div class="two fields">
             <div class="field">      
                 <label>{{ fields.category.label }}</label>     
-                {{ component('category::dropdown',{ name: 'category_id' }) }}                                             
+                {{ component('category::dropdown',{ name: 'category_id', selected: image.category_id }) }}                                             
             </div>  
         </div>   
         {{ component('semantic~form.footer') }}             
