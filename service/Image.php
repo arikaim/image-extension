@@ -285,6 +285,7 @@ class Image extends Service implements ServiceInterface
             'base_name'   => File::baseName($fileName),
             'user_id'     => $userId,  
             'deny_delete' => $options['deny_delete'] ?? null,
+            'category_id' => $options['category_id'] ?? null,
             'private'     => $options['private'] ?? null
         ];
 

@@ -43,6 +43,7 @@ trait ImageUpload
             $thumbnailHeight = $data->get('thumbnail_height',null);
             $resizeWidth = $data->get('resize_width',null);
             $resizeHeight = $data->get('resize_height',null);
+            $categoryId = $data->get('category_id',null);
 
             if (File::exists($destinationPath) == false && $createDestinationPath == true) {
                 File::makeDir($destinationPath);
@@ -66,11 +67,13 @@ trait ImageUpload
                     $resizeWidth,
                     $resizeHeight,[
                         'private'     => $private,
+                        'category_id' => (empty($categoryId) == true) ? null : $categoryId,
                         'deny_delete' => $denyDelete
                     ],$private);  
                 } else {
                     $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
                         'private'     => $private,
+                        'category_id' => (empty($categoryId) == true) ? null : $categoryId,
                         'deny_delete' => $denyDelete
                     ],$private); 
                 }                             
@@ -90,7 +93,6 @@ trait ImageUpload
                 // fire event 
                 $params = \array_merge($image->toArray(),$data->toArray());
                 $this->get('event')->dispatch('image.upload',$params);
-
                 $this
                     ->message('upload')
                     ->field('uuid',$image->uuid)

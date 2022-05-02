@@ -44,6 +44,7 @@ function ImageUpload() {
                     relation_type: '#relation_type',
                     resize_width: '#resize_width',
                     resize_height: '#resize_height',
+                    category_id: '#category_id',
                     max_file_size: '#max_file_size'                             
                 },
                 onSuccess: function(result) { 
