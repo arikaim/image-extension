@@ -17,7 +17,7 @@
         {% for item in items %}           
             <div class="item" data-value="{{ item[data_field] }}">                        
                 <img class="ui avatar image" src="{{ url(item.thumbnail(64,64).src) }}">               
-                {{ item.file_name }}
+                {{ item.base_name }}
             </div>
         {% endfor %}
     </div>

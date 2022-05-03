@@ -61,19 +61,17 @@ class ImageApi extends ApiController
         }
 
         $mimeType = ($image->mime_type == 'image/svg') ? 'image/svg+xml' : null;
-       
-        if (File::exists($image->file_name) == true) {
-            $mimeType = $mimeType ?? File::getMimetype($image->file_name);
-            $data = File::read($image->file_name);
-            return $this->viewImageHeaders($response,$mimeType,$data);
-        }
         
-        if ($this->get('storage')->has($image->file_name,'storage') == false) {
-            // image file not found
-            return $this->viewSvg($request,$response,$data);
+        if ($this->get('storage')->has($image->file_name,'storage') == true) {
+            return $this->viewImage($response,$image->file_name,'storage',$mimeType);
         }
 
-        return $this->viewImage($response,$image->file_name,'storage',$mimeType);
+        if (File::exists($image->file_name) == true) {
+            $mimeType = $mimeType ?? File::getMimetype($image->file_name);
+            return $this->viewImage($response,$image->file_name,null,$mimeType);
+        }
+
+        return $this->viewSvg($request,$response,$data);
     } 
     
     /**
