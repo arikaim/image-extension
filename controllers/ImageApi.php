@@ -138,7 +138,7 @@ class ImageApi extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function delete($request, $response, $data) 
+    public function deleteController($request, $response, $data) 
     {   
         $uuid = $data->get('uuid',null);
         $image = Model::Image('image')->findById($uuid);
