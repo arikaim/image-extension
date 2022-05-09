@@ -33,15 +33,10 @@ function ImagesLibraryRelatins() {
        
         arikaim.ui.button('.remove-image-relation',function(element) {
             var uuid = $(element).attr('uuid');
-        
-            modal.confirmDelete({ 
-                title: self.getMessage('remove.title'),
-                description: self.getMessage('remove.content') 
-            },function() {
-                relations.delete('ImageRelations','image',uuid,function(result) {
-                    arikaim.ui.table.removeRow('#row_' + uuid);  
-                });
-            });
+            
+            relations.delete('ImageRelations','image',uuid,function(result) {
+                arikaim.ui.table.removeRow('#row_' + uuid);  
+            });           
         });       
     };
 };

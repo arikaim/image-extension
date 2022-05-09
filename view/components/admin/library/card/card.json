@@ -1,6 +1,7 @@
 {
     "labels": {
         "delete": "Delete",
+        "add": "Add Image",
         "details": "Details",
         "size": "File Size"
     }

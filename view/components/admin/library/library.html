@@ -4,15 +4,12 @@
     } 
 %}
 
-{%  set items = [ 
-        { id:'images_library_relations_tab', title: labels.view, component: 'image::admin.library.relations', icon: 'list', active: true, params },
-        { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },   
-        { title: labels.library, component: 'image::admin.library.view', icon: 'images', params },        
-    ] 
-%}
-
 {{  component('semantic~tabs.vertical',{ 
-        items: items, 
+        items: [ 
+            { id:'images_library_relations_tab', title: labels.view, component: 'image::admin.library.relations', icon: 'list', active: true, params },
+            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },   
+            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params },        
+        ], 
         menu: { id: 'images_library_menu' }, 
         item_class: 'images-library-tab-item',
         content: { 

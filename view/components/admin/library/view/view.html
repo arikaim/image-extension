@@ -1,11 +1,15 @@
-<div class="h-full">
-    <div class="ui segment">
-        <div class="ui ten cards">
-            {{  component('image::admin.library.view.items',{ 
-                    relation_id: relation_id,                   
-                    relation_type: relation_type
-                }) 
-            }}      
-        </div>              
-    </div>
+<div class="ui segment h-full">
+    <div class="flex flex-row items-start">
+        <div class="flex-grow w-3/4">
+            <div class="ui ten cards">
+                {{  component('image::admin.library.view.items',{ 
+                        relation_id: relation_id,                   
+                        relation_type: relation_type
+                    }) 
+                }}      
+            </div>  
+        </div>
+        <div class="w-1/4 hidden ml-2" id="image_details">
+        </div>     
+    </div>         
 </div>

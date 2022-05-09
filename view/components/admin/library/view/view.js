@@ -10,6 +10,18 @@ function ImagesLibrary() {
     };
 
     this.initRows = function() {
+
+        arikaim.ui.button('.image-details',function(element) {
+            $('#image_details').fadeIn(500);
+            var uuid = $(element).attr('uuid');
+
+            arikaim.page.loadContent({
+                id: 'image_details',
+                component: 'image::admin.library.details',
+                params: { uuid: uuid }
+            });   
+        });
+
         arikaim.ui.button('.add-image-relation',function(element) {
             var relationType = $(element).attr('relation-type');
             var relationId = $(element).attr('relation-id');
