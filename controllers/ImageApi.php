@@ -49,10 +49,9 @@ class ImageApi extends ApiController
     {            
         $uuid = $data->get('uuid',null);
         $image = Model::Image('image')->findById($uuid);
-     
         // not valid image uuid or id 
-        if (\is_object($image) == false) {
-            $this->error('Not valid image id.');
+        if ($image == null) {
+            $this->error('errors.id','Not valid image id.');
             return false;
         }
   
@@ -86,10 +85,9 @@ class ImageApi extends ApiController
     {            
         $uuid = $data->get('uuid',null);
         $thumbnail = Model::ImageThumbnails('image')->findById($uuid);
-     
         // not valid image thumbnail uuid or id 
-        if (\is_object($thumbnail) == false) {
-            $this->error('Not valid image thumbnail id.');
+        if ($thumbnail == null) {
+            $this->error('errors.id','Not valid image thumbnail id.');
             return false;
         }
   
@@ -109,10 +107,9 @@ class ImageApi extends ApiController
         $uuid = $data->get('uuid',null);
         $status = $data->getInt('status',0);
         $image = Model::Image('image')->findById($uuid);
-     
         // not valid image id
-        if (\is_object($image) == false) {
-            $this->error('Not valid image id.');
+        if ($image == null) {
+            $this->error('errors.id','Not valid image id.');
             return false;
         }
 
@@ -142,9 +139,8 @@ class ImageApi extends ApiController
     {   
         $uuid = $data->get('uuid',null);
         $image = Model::Image('image')->findById($uuid);
-     
         // not valid image id
-        if (\is_object($image) == false) {
+        if ($image == null) {
             $this->error('Not valid image id.');
             return false;
         }

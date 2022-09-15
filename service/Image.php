@@ -48,7 +48,7 @@ class Image extends Service implements ServiceInterface
     public function delete($uuid): bool
     {       
         $image = Model::Image('image')->findById($uuid);
-        if (\is_object($image) == false) {
+        if ($image == null) {
             return false;
         }
         $result = $image->deleteImage();
@@ -65,7 +65,7 @@ class Image extends Service implements ServiceInterface
     public function getEncodedImage($uuid): ?string
     {
         $image = Model::Image('image')->findById($uuid);    
-        if (\is_object($image) == false) {
+        if ($image == null) {
             return null;
         }
         
@@ -131,14 +131,14 @@ class Image extends Service implements ServiceInterface
      * @param string|int $relationType
      * @return object|null
      */
-    public function getRelatedImage(?int $relationId, ?string $relationType)
+    public function getRelatedImage(?int $relationId, ?string $relationType): ?object
     {
         if (empty($relationId) == true || empty($relationType) == true) {
             return null;
         }
         $model = Model::ImageRelations('image')->getRelationsQuery($relationId,$relationType)->first(); 
 
-        return (\is_object($model) == true) ? $model->image : null;
+        return ($model == null) ? null : $model->image;
     }
 
     /**
@@ -161,7 +161,7 @@ class Image extends Service implements ServiceInterface
         }
 
         $image = $this->getRelatedImage($relationId,$relationType);
-        if (\is_object($image) == false) {
+        if ($image == null) {
             return null;
         }
 
@@ -184,9 +184,7 @@ class Image extends Service implements ServiceInterface
      */
     public function hasRelatedImage(int $relationId, string $relationType): bool
     {
-        $model = $this->getRelatedImage($relationId,$relationType);
-        
-        return \is_object($model);
+        return ($this->getRelatedImage($relationId,$relationType) !== null);      
     }
 
     /**
@@ -274,8 +272,10 @@ class Image extends Service implements ServiceInterface
      * @param bool $options    
      * @return Model|null
      */
-    public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false)
+    public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {
+        $edit = $options['edit'] ?? false;
+
         $path = ($protected == false) ? Path::getRelativePath($fileName,false) : $fileName;
         $model = Model::Image('image');       
         $data = [
@@ -295,12 +295,16 @@ class Image extends Service implements ServiceInterface
             $data['height'] = $size['height'];
         }
         
-        if ($model->hasImage($path) == true) {
+        if ($model->hasImage($path) == true && $edit == true) {
             // update
             $model = $model->findImage($path);
             $image = ($model->update($data) !== false) ? $model : null;          
         } else {
             // create
+            if ($model->hasImage($path) == true) {              
+                // new file name
+                $data['file_name'] = File::createUniqueFileName($path);
+            }
             $image = $model->create($data);         
         }
 
