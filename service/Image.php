@@ -278,10 +278,8 @@ class Image extends Service implements ServiceInterface
         $model = Model::Image('image');   
 
         $imageId = $options['image_id'] ?? null;
-        if (empty($imageId) == false) {
-            $image = $model->findById($imageId);
-        }
-
+        $image = (empty($imageId) == false) ? $model->findById($imageId) : null;
+        
         $data = [
             'file_name'   => $path,
             'file_size'   => File::getSize($fileName),
