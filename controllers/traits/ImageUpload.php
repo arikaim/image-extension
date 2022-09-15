@@ -45,7 +45,7 @@ trait ImageUpload
         $resizeWidth = $data->get('resize_width',null);
         $resizeHeight = $data->get('resize_height',null);
         $categoryId = $data->get('category_id',null);
-        $edit = $data->get('edit',false);   
+        $imageId = $data->get('image_id',null);   
 
         if (File::exists($destinationPath) == false && $createDestinationPath == true) {
             File::makeDir($destinationPath);
@@ -70,14 +70,15 @@ trait ImageUpload
                 $resizeHeight,[
                     'private'     => $private,
                     'category_id' => (empty($categoryId) == true) ? null : $categoryId,
-                    'deny_delete' => $denyDelete
+                    'deny_delete' => $denyDelete,
+                    'image_id'    => $imageId
                 ],$private);  
             } else {
                 $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
                     'private'     => $private,
                     'category_id' => (empty($categoryId) == true) ? null : $categoryId,
                     'deny_delete' => $denyDelete,
-                    'edit'        => $edit
+                    'image_id'    => $imageId
                 ],$private); 
             }                             
         }

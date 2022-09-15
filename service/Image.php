@@ -274,10 +274,14 @@ class Image extends Service implements ServiceInterface
      */
     public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {
-        $edit = $options['edit'] ?? false;
-
         $path = ($protected == false) ? Path::getRelativePath($fileName,false) : $fileName;
-        $model = Model::Image('image');       
+        $model = Model::Image('image');   
+
+        $imageId = $options['image_id'] ?? null;
+        if (empty($imageId) == false) {
+            $image = $model->findById($imageId);
+        }
+
         $data = [
             'file_name'   => $path,
             'file_size'   => File::getSize($fileName),
@@ -295,16 +299,19 @@ class Image extends Service implements ServiceInterface
             $data['height'] = $size['height'];
         }
         
-        if ($model->hasImage($path) == true && $edit == true) {
+        if ($image !== null) {
+            // edit existing image id
+            $image->update($data);
+            $this->createThumbnail($image,64,64);
+            return $image;
+        }
+
+        if ($model->hasImage($path) == true) {
             // update
             $model = $model->findImage($path);
             $image = ($model->update($data) !== false) ? $model : null;          
         } else {
             // create
-            if ($model->hasImage($path) == true) {              
-                // new file name
-                $data['file_name'] = File::createUniqueFileName($path);
-            }
             $image = $model->create($data);         
         }
 

@@ -11,7 +11,9 @@
     <input type="hidden" name="resize_width" id="resize_width" value="{{ resize_width }}">  
     <input type="hidden" name="resize_height" id="resize_height" value="{{ resize_height }}">  
     <input type="hidden" name="max_file_size" id="max_file_size" value="{{ max_file_size }}"> 
-    <input type="hidden" name="category_id" id="category_id" value="{{ category_id }}">  
+    <input type="hidden" name="category_id" id="category_id" value="{{ category_id }}"> 
+    <input type="hidden" name="image_id" id="image_id" value="{{ image_id }}"> 
+    
     {% if target_path is not empty and hide_path != true %}
     <div class="field">
         <label>{{ fields.path.label }}</label>
