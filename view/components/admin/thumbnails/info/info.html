@@ -17,7 +17,10 @@
                 <tbody>
                     <tr>
                         <td class="right aligned">{{ labels.id }}</td>
-                        <td>{{ image.uuid }}</td>
+                        <td>
+                            <div class="ui basic label">{{ image.id }}</div>
+                            {{ image.uuid }}
+                        </td>
                     </tr>
                     <tr>
                         <td class="right aligned">{{ labels.type }}</td>
