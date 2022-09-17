@@ -5,7 +5,8 @@
         {% else %}
             <i class="icon image big"></i>
         {% endif %}
-    </div>                     
+    </div>           
+    {% if image.src is not empty %}           
     <div class="px-1">
         <div class="font-bold">{{ labels.file }}</div>
         {{ image.base_name }}
@@ -17,4 +18,5 @@
             {{ image.uuid }}
         </div>       
     </div>
+    {% endif %}
 </div>
