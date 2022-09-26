@@ -1,5 +1,5 @@
-<div class="flex flex-row items-start {{ class|default('p-2') }}">                 
-    <div class="px-2">   
+<div class="flex flex-row items-start {{ class }}">                 
+    <div>   
         {% if image.src is not empty %} 
             <img class="ui image {{ image_class|default('small rounded bordered') }}" src="{{ url(image.src) }}"/>
         {% else %}

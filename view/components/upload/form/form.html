@@ -38,7 +38,7 @@
             <div class="ui basic mini label">{{ resize_height }}px</div>
         </div>
     {% endif %} 
-    <a class="ui green button {{ button_class|default('submit-button') }}">
+    <a class="upload-image-button {{ button_class|default('ui green button') }}">
         {{ button_title|default(buttons.save.content) }}
     </a>
 </form>

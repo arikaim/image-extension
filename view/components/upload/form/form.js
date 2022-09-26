@@ -54,7 +54,7 @@ function ImageUpload() {
                 }
             });     
             
-            arikaim.ui.button('.upload-button',function(element) {               
+            arikaim.ui.button('.upload-image-button',function(element) {               
                 return $('#file').filepond('processFiles')
             });
         });
