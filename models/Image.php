@@ -44,14 +44,6 @@ class Image extends Model
     protected $table = 'image';
 
     /**
-     * Append custom attributes
-     *
-     * @var array
-     */
-    protected $appends = [           
-    ];
-
-    /**
      * Fillable attributes
      *
      * @var array
@@ -182,7 +174,7 @@ class Image extends Model
      * @param integer $height
      * @return Model|null
      */
-    public function thumbnail(int $width, int $height)
+    public function thumbnail(int $width, int $height): ?object
     {
         return $this->thumbnails->where('width','=',$width)->where('height','=',$height)->first();
     }
@@ -192,7 +184,7 @@ class Image extends Model
      *
      * @return Model|null
      */
-    public function thumbnailSmall()
+    public function thumbnailSmall(): ?object
     {
         return $this->thumbnails()->orderBy('width','asc')->first();
     }
@@ -202,7 +194,7 @@ class Image extends Model
      *
      * @return Model|null
      */
-    public function thumbnailLarge()
+    public function thumbnailLarge(): ?object
     {
         return $this->thumbnails()->orderBy('width','desc')->first();
     }
@@ -214,7 +206,7 @@ class Image extends Model
      * @param string|null $excludeId
      * @return Model|null
      */
-    public function findImage(string $name, ?string $excludeId = null)
+    public function findImage(string $name, ?string $excludeId = null): ?object
     {
         // by id, uuid
         $query = $this->where(function($query) use ($name,$excludeId) {
@@ -229,6 +221,11 @@ class Image extends Model
             }
         })->orWhere(function($query) use ($name,$excludeId) {
             $query->where('url','=',$name);
+            if (empty($excludeId) == false) {
+                $query->where('uuid','<>', $excludeId);
+            }
+        })->orWhere(function($query) use ($name,$excludeId) {
+            $query->where('base_name','=',$name);
             if (empty($excludeId) == false) {
                 $query->where('uuid','<>', $excludeId);
             }

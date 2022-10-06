@@ -40,6 +40,18 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Find image
+     *
+     * @param string $name
+     * @param string|null $excludeId
+     * @return Model|null
+     */
+    public function findImage(string $name, ?string $excludeId = null): ?object
+    {
+        return Model::Image('image')->findImage($name,$excludeId);
+    }
+
+    /**
      * Delete image
      *
      * @param string|int $uuid
