@@ -70,6 +70,13 @@ class ImageApi extends ApiController
             return $this->viewImage($response,$image->file_name,null,$mimeType);
         }
 
+        // get full path 
+        $imageFile = $this->get('storage')->getFullPath($image->file_name);
+        if (File::exists($imageFile) == true) {
+            $mimeType = $mimeType ?? File::getMimetype($imageFile);
+            return $this->viewImage($response,$imageFile,null,$mimeType);
+        }
+
         return $this->viewSvg($request,$response,$data);
     } 
     
