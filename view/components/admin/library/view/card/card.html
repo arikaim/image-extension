@@ -1,23 +1,28 @@
 <div class="ui card" id="row_{{ relation_uuid|default(image.uuid) }}">
     <div class="w-full h-full library-image">
         <div class="ui bottom dimmer">
-            <div class="ui buttons">
-                {% if delete_button is not empty %}
+            <div class="ui buttons">               
+                {% if type == 'main' %}
+                <button 
+                    class="ui basic button mini inverted use-image" 
+                    title="{{ use_button.title|default(labels.use) }}"                   
+                    image-id="{{ image.id }}">
+                    {{ labels.use }}
+                </button>
+                {% else %}
+                    <button 
+                        class="ui basic button mini inverted add-image-relation" 
+                        title="{{ add_button.title|default(labels.add) }}"
+                        relation-type="{{ relation_type }}"
+                        relation-id="{{ relation_id }}"
+                        image-id="{{ image.id }}">
+                        {{ labels.use }}
+                    </button>
                     <button 
                         class="ui basic icon mini inverted button remove-image-relation" 
                         title="{{ delete_button.title|default(labels.delete) }}"
                         uuid="{{ relation_uuid }}">
                         <i class="icon orange trash"></i>
-                    </button>
-                {% endif %}
-                {% if add_button is not empty %}
-                    <button 
-                        class="ui basic icon button mini inverted add-image-relation" 
-                        title="{{ add_button.title|default(labels.add) }}"
-                        relation-type="{{ relation_type }}"
-                        relation-id="{{ relation_id }}"
-                        image-id="{{ image.id }}">
-                        <i class="icon green plus"></i>
                     </button>
                 {% endif %}     
                 <button 

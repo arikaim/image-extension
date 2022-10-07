@@ -1,21 +1,33 @@
 {%  set params = { 
-        relation_id: relation_id, 
-        relation_type: relation_type
+        relation_id: relation_id,      
+        relation_type: relation_type,
+        type: type
     } 
 %}
-
-{{  component('semantic~tabs.vertical',{ 
-        items: [ 
-            { id:'images_library_relations_tab', title: labels.view, component: 'image::admin.library.relations', icon: 'list', active: true, params },
-            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },   
-            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params },        
-        ], 
-        menu: { id: 'images_library_menu' }, 
-        item_class: 'images-library-tab-item',
-        content: { 
-            id: 'images_library_content',
-            component: 'image::admin.library.relations',
-            params: params 
-        } 
-    })
-}}
+{% if type == 'main' %}
+    {% set items = [  
+            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
+            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
+        ]
+    %}
+{% else %}
+    {% set items = [  
+            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
+            { id:'images_library_relations_tab', title: labels.relations, component: 'image::admin.library.relations', icon: 'project diagram', params },
+            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
+        ]
+    %}
+{% endif %}
+<div class="ui segment">
+    {{  component('semantic~tabs.vertical',{ 
+            items: items, 
+            menu: { id: 'images_library_menu' }, 
+            item_class: 'images-library-tab-item',
+            content: { 
+                id: 'images_library_content',
+                component: 'image::admin.library.view',
+                params: params 
+            } 
+        })
+    }}
+</div>

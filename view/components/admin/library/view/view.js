@@ -22,6 +22,14 @@ function ImagesLibrary() {
             });   
         });
 
+        arikaim.ui.button('.use-image',function(element) {
+            var imageId = $(element).attr('image-id');
+            
+            arikaim.events.emit('image.library.main.use',{
+                image_id: imageId
+            });
+        });
+
         arikaim.ui.button('.add-image-relation',function(element) {
             var relationType = $(element).attr('relation-type');
             var relationId = $(element).attr('relation-id');

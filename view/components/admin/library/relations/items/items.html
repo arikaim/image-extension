@@ -5,7 +5,7 @@
     </div>
 {% else %}
     {% for item in items %}   
-        {{  component('image::admin.library.card',{ 
+        {{  component('image::admin.library.relations.card',{ 
                 image: item.image, 
                 relation_uuid: item.uuid,
                 relation_id: relation_id,
