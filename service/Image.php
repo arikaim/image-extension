@@ -60,11 +60,8 @@ class Image extends Service implements ServiceInterface
     public function delete($uuid): bool
     {       
         $image = Model::Image('image')->findById($uuid);
-        if ($image == null) {
-            return false;
-        }
-        $result = $image->deleteImage();
-
+        $result = ($image == null) ? false : $image->deleteImage();
+           
         return ($result !== false);
     }
 

@@ -15,25 +15,29 @@
         </div>                 
     </div>
 </div>
-<div class="ui segment mt-4">
-    <table class="ui compact stackable selectable borderless basic table">
-        <thead class="table-head">
-            <tr>              
-                <th class="one wide collapsing left aligned">{{ columns.action }}</th>
-                <th class="two wide">{{ columns.status }}</th>         
-                <th class="two wide collapsing">{{ columns.created }}</th>              
-                <th class="collapsing center aligned">{{ columns.thumbnail }}</th>   
-                <th class="one wide center aligned">{{ columns.size }}</th> 
-                <th>{{ columns.name }}</th>      
-                <th class="three wide">{{ columns.category }}</th>    
-                <th class="two wide">{{ columns.user }}</th>                   
-            </tr>
-        </thead>
-        <tbody id="image_rows" component="image::admin.images.view.rows" namespace="images">
-            {{ component('image::admin.images.view.rows') }} 
-        </tbody>
-    </table> 
-    <div id="paginator">      
-        {{ component("semantic~paginator",{ namespace: 'images' }) }}
+<div class="flex flex-row items-start">
+    <div class="ui segment flex-grow">
+        <table class="ui compact stackable selectable borderless basic table">
+            <thead class="table-head">
+                <tr>              
+                    <th class="one wide collapsing left aligned">{{ columns.action }}</th>
+                    <th class="two wide">{{ columns.status }}</th>         
+                    <th class="two wide collapsing">{{ columns.created }}</th>              
+                    <th class="collapsing center aligned">{{ columns.thumbnail }}</th>   
+                    <th class="one wide center aligned">{{ columns.size }}</th> 
+                    <th>{{ columns.name }}</th>      
+                    <th class="three wide">{{ columns.category }}</th>    
+                    <th class="two wide">{{ columns.user }}</th>                   
+                </tr>
+            </thead>
+            <tbody id="image_rows" component="image::admin.images.view.rows" namespace="images">
+                {{ component('image::admin.images.view.rows') }} 
+            </tbody>
+        </table> 
+        <div id="paginator">      
+            {{ component("semantic~paginator",{ namespace: 'images' }) }}
+        </div>
+    </div>  
+    <div class="pl-2 w-94 hidden" id="details_content">
     </div>
 </div>

@@ -8,8 +8,8 @@
             {{ item.file_name|baseName }}             
         </div>
     </div>
-    <div class="p-auto text-center pb-4">
-        <img width="{{ item.width}}px" height="{{ item.height}}px" src="{{ url(item.src) }}">
+    <div class="text-center pb-4">
+        <img class="ui image rounded mini text-center mx-auto" src="{{ url(item.src) }}">
     </div>    
     <div class="extra content">
         <span class="ui basic label">                    

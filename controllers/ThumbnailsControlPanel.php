@@ -26,16 +26,6 @@ class ThumbnailsControlPanel extends ControlPanelApiController
     public function init()
     {
         $this->loadMessages('image::admin.messages');
-    }
-
-    /**
-     * Constructor
-     * 
-     * @param Container
-     */
-    public function __construct($container = null) 
-    {
-        parent::__construct($container);
         $this->setModelClass('ImageThumbnails');
         $this->setExtensionName('image');
     }

@@ -257,7 +257,7 @@ class Image extends Model
     public function deleteImage(?string $name = null): bool
     {
         $model = (empty($name) == true) ? $this : $this->findImage($name);
-        if (\is_null($model) == true) {
+        if ($model == null) {
             return false;
         }
         // delete thumbnails

@@ -1,7 +1,8 @@
 {% if uuid is not empty %}
     {% set image = createModel('Image','image').findById(uuid) %}
 {% endif %}
-<div class="ui segment mt-4 w-full">  
+{% component 'semantic~panel' %}
+   
     <table class="ui table very basic definition">
         <tbody>
             <tr>
@@ -44,13 +45,13 @@
                 <td>
                     {{ image.user.user_name_or_email }}
                 </td>
+            </tr>  
+            <tr>
+                <td class="right aligned">{{ labels.src }}</td>
+                <td>
+                    {{ url(image.src) }}
+                </td>
             </tr>           
         </tbody>
     </table>
-    <div>       
-        {% component 'semantic~code' %}  
-        {%- set language = 'p-2 html' -%}                              
-        <img src="{{ url(image.src) }}"/>
-        {% endcomponent %}     
-    </div>
-</div>
+{% endcomponent %}

@@ -1,4 +1,6 @@
 {
+    "title": "Image Details",
+    "icon": "info",
     "labels": {
         "id": "Id",
         "size": "Size",
@@ -6,6 +8,7 @@
         "status": "Status",
         "type": "Type",
         "code": "Code",
+        "src": "Src",
         "file_size": "File Size"
     }
 }

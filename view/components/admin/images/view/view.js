@@ -56,6 +56,18 @@ function ImagesView() {
             }
         });    
 
+        arikaim.ui.button('.details-button',function(element) {
+            var uuid = $(element).attr('uuid');
+            
+            $('#details_content').show();
+
+            return arikaim.page.loadContent({
+                id: 'details_content',
+                component: 'image::admin.images.details',
+                params: { uuid: uuid }
+            });     
+        });
+
         arikaim.ui.button('.image-relations-button',function(element) {
             var uuid = $(element).attr('uuid');
             arikaim.ui.setActiveTab('#image_relations','.image-tab-item');

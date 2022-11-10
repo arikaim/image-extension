@@ -1,8 +1,11 @@
 {
-    "title": "QR Code Generator",
+    "title": {
+        "content": "QR Code Generator",
+        "icon": "qrcode"
+    },
     "fields": {
         "data": {
-            "label": "Data"
+            "label": "QrCode content"
         }
     },
     "labels": {

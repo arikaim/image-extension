@@ -15,7 +15,13 @@
 {% for item in items.getItems() %}  
     <tr id="{{ item.uuid }}">             
         <td>            
-            <div class="ui buttons">                     
+            <div class="ui buttons"> 
+                <button 
+                    class="ui icon mini basic button details-button" 
+                    uuid="{{ item.uuid }}" 
+                    title="{{ labels.details }}">
+                    <i class="icon info"></i>
+                </button>                       
                 <button class="ui icon mini basic button thumbnails-button" uuid="{{ item.uuid }}" title="{{ labels.thumbnails }}">
                     <i class="icon images"></i>
                 </button>   

@@ -1,4 +1,5 @@
 {% component 'semantic~tabs.vertical.content' %}
+{% set class = 'seven wide' %}
 {% if uuid is not empty %}
     {% set image = createModel('Image','image').findById(uuid) %}
 {% endif %}
