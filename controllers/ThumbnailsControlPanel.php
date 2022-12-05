@@ -53,7 +53,7 @@ class ThumbnailsControlPanel extends ControlPanelApiController
             }
             $thumbnail = Model::ImageThumbnails('image')->findThumbnail($width,$height,$uuid);
 
-            $this->setResponse(\is_object($thumbnail),function() use($thumbnail) {                  
+            $this->setResponse(($thumbnail != null),function() use($thumbnail) {                  
                 $this
                     ->message('thumbnail.create')
                     ->field('uuid',$thumbnail->uuid)
@@ -75,8 +75,8 @@ class ThumbnailsControlPanel extends ControlPanelApiController
     { 
         $this->onDataValid(function($data) { 
             $model = Model::ImageThumbnails('image')->findById($data['uuid']);  
-            if (\is_object($model) == false) {
-                $this->error('errors.thumbnail.delete');
+            if ($model == null) {
+                $this->error('errors.thumbnail.delete','Error delete thumbnail');
                 return false;
             }
 

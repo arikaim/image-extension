@@ -10,7 +10,6 @@
 namespace Arikaim\Extensions\Image\Jobs;
 
 use Arikaim\Core\Queue\Jobs\Job;
-use Arikaim\Core\Arikaim;
 
 use Arikaim\Core\Interfaces\Job\JobInterface;
 
@@ -26,12 +25,14 @@ class ImportImageJob extends Job implements JobInterface
      */
     public function execute()
     {       
+        global $container;
+
         $url = $this->params['url'] ?? null;
         $destination = $this->params['destination'] ?? null;
         if (empty($url) == true || empty($destination) == true) {
             return false;
         }
 
-        return Arikaim::getService('image.library')->import($url,$destination);
+        return $container->get('service')->get('image.library')->import($url,$destination);
     }    
 }

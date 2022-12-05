@@ -83,6 +83,11 @@ trait ImageUpload
             }                             
         }
         
+        if ($image == null) {
+            $this->error('errors.upload','Error upload image');
+            return false;
+        }
+
         if (empty($relationId) == false && empty($relationType) == false) {
             // add relation
             $this->get('image.library')->saveRelation($image,$relationId,$relationType);
@@ -93,17 +98,15 @@ trait ImageUpload
             $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
         }
             
-        $this->setResponse(\is_object($image),function() use($image,$data, $private) {   
-            // fire event 
-            $params = \array_merge($image->toArray(),$data->toArray());
-            $this->get('event')->dispatch('image.upload',$params);
-            $this
-                ->message('upload')
-                ->field('uuid',$image->uuid)
-                ->field('id',$image->id)
-                ->field('image_src',$image->src)
-                ->field('private',$private)
-                ->field('file',$image->file_name);                                  
-        },'errors.upload');     
+        // fire event 
+        $params = \array_merge($image->toArray(),$data->toArray());
+        $this->get('event')->dispatch('image.upload',$params);
+        $this
+            ->message('upload')
+            ->field('uuid',$image->uuid)
+            ->field('id',$image->id)
+            ->field('image_src',$image->src)
+            ->field('private',$private)
+            ->field('file',$image->file_name);                                  
     }
 }

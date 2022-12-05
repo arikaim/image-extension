@@ -47,50 +47,50 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function importController($request, $response, $data) 
     {          
-        $this->onDataValid(function($data) {
-            $private = $data->getBool('private',false);      
-            $url = $data->get('url',null);
-            $thumbnailWidth = $data->get('thumbnail_width',null);
-            $thumbnailHeight = $data->get('thumbnail_height',null);
-            $relationId = $data->get('relation_id',null);
-            $relationType = $data->get('relation_type',null);
-            $fileName = $data->getString('file_name',null);
-            $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
-            $denyDelete = $data->get('deny_delete',null);       
-            $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
+        $data->validate(true);   
+
+        $private = $data->getBool('private',false);      
+        $url = $data->get('url',null);
+        $thumbnailWidth = $data->get('thumbnail_width',null);
+        $thumbnailHeight = $data->get('thumbnail_height',null);
+        $relationId = $data->get('relation_id',null);
+        $relationType = $data->get('relation_type',null);
+        $fileName = $data->getString('file_name',null);
+        $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
+        $denyDelete = $data->get('deny_delete',null);       
+        $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
+    
+        // import from url and save
+        $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
+            'private'     => $private,
+            'deny_delete' => $denyDelete
+        ]);     
+
+        if ($image == null) {
+            $this->error('errors.import','Error import image');
+            return false;
+        }
+
+        if (empty($thumbnailWidth) == false && empty($thumbnailHeight) == false) {
+            // create thumbnail
+            $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
+        }
         
-            // import from url and save
-            $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
-                'private'     => $private,
-                'deny_delete' => $denyDelete
-            ]);     
+        if (empty($relationId) == false && empty($relationType) == false) {
+            // add relation
+            $this->get('image.library')->saveRelation($image,$relationId,$relationType);
+        }
 
-            if (empty($thumbnailWidth) == false && empty($thumbnailHeight) == false) {
-                // create thumbnail
-                $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
-            }
-            
-            if (empty($relationId) == false && empty($relationType) == false) {
-                // add relation
-                $this->get('image.library')->saveRelation($image,$relationId,$relationType);
-            }
-
-            $this->setResponse(\is_object($image),function() use($image,$url,$data,$relationId,$relationType) {  
-                // fire event 
-                $params = \array_merge($image->toArray(),$data->toArray());
-                $this->get('event')->dispatch('image.import',$params);
-                                
-                $this
-                    ->message('import')
-                    ->field('uuid',$image->uuid)
-                    ->field('url',$url)
-                    ->field('relation_id',$relationId)
-                    ->field('relation_type',$relationType)
-                    ->field('file',$image->file_name);                                  
-            },'errors.import');   
-
-        });
-        $data->validate();   
+        // fire event 
+        $this->get('event')->dispatch('image.import',\array_merge($image->toArray(),$data->toArray()));
+                        
+        $this
+            ->message('import')
+            ->field('uuid',$image->uuid)
+            ->field('url',$url)
+            ->field('relation_id',$relationId)
+            ->field('relation_type',$relationType)
+            ->field('file',$image->file_name);                                 
     }
 
     /**
@@ -105,8 +105,8 @@ class ImageControlPanel extends ControlPanelApiController
     { 
         $this->onDataValid(function($data) { 
             $model = Model::Image('image')->findById($data['uuid']); 
-            if (\is_object($model) == false) {
-                $this->error('errors.id');
+            if ($model == null) {
+                $this->error('errors.id','Not valid image id');
                 return false;
             } 
 
@@ -146,7 +146,7 @@ class ImageControlPanel extends ControlPanelApiController
             $model = Model::Image('image');
             $model = $model->where('base_name','like','%' . $search . '%')->take($size)->get();
           
-            $this->setResponse(\is_object($model),function() use($model,$dataField) {     
+            $this->setResponse(($model != null),function() use($model,$dataField) {     
                 $items = [];
                 foreach ($model as $item) {
                     $thumbnail = $item->thumbnail(64,64);
@@ -205,7 +205,7 @@ class ImageControlPanel extends ControlPanelApiController
         $this->onDataValid(function($data) { 
             $uuid = $data->get('uuid',null);
             $model = Model::Image('image')->findById($uuid);
-            if (\is_object($model) == false) {
+            if ($model == null) {
                 $this->error("Not valid image id.");
                 return false;
             }

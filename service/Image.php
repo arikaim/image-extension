@@ -18,7 +18,6 @@ use Arikaim\Core\Utils\Curl;
 use Arikaim\Core\Utils\File;
 use Arikaim\Core\Utils\Path;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
-use Arikaim\Core\Arikaim;
 use Arikaim\Core\System\Error\Traits\TaskErrors;
 
 /**
@@ -109,6 +108,8 @@ class Image extends Service implements ServiceInterface
      */
     public function getEncodedImage($uuid): ?string
     {
+        global $container;
+
         $image = Model::Image('image')->findById($uuid);    
         if ($image == null) {
             return null;
@@ -119,8 +120,8 @@ class Image extends Service implements ServiceInterface
             return \base64_encode($data);
         }
         
-        if (Arikaim::storage()->has($image->file_name,'storage') == true) {
-            $data = Arikaim::storage()->read($image->file_name);
+        if ($container->get('storage')->has($image->file_name,'storage') == true) {
+            $data = $container->get('storage')->read($image->file_name);
             return \base64_encode($data);
         }
 
@@ -255,7 +256,7 @@ class Image extends Service implements ServiceInterface
     public function createThumbnail($image, int $width, int $height): bool
     {
         $model = (\is_object($image) == true) ? $image : Model::Image('image')->findImage($image);      
-        if (\is_object($model) == false) {
+        if ($model == null) {
             $this->addError('errors.id');
             return false;
         }  
@@ -358,7 +359,7 @@ class Image extends Service implements ServiceInterface
             $image = $model->create($data);         
         }
 
-        if (\is_object($image) == true) {
+        if ($image != null) {
             $this->createThumbnail($image,64,64);
             return $image;
         }
@@ -375,7 +376,7 @@ class Image extends Service implements ServiceInterface
      * @param bool|null $options   
      * @return Model|null
     */
-    public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false)
+    public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {         
         Curl::downloadFile($url,$fileName);
 
