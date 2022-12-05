@@ -245,7 +245,8 @@ class Image extends Model
     public function hasImage(string $name, ?string $excludeId = null): bool
     {
         $image = $this->findImage($name,$excludeId);
-        return \is_object($image);
+        
+        return ($image != null);
     }
 
     /**

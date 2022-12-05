@@ -34,6 +34,11 @@ class Image extends Extension
         // thumbnails
         $this->addApiRoute('POST','/api/admin/image/thumbnail/create','ThumbnailsControlPanel','create','session');              
         $this->addApiRoute('DELETE','/api/admin/image/thumbnail/{uuid}','ThumbnailsControlPanel','delete','session'); 
+        // collections  
+        $this->addApiRoute('POST','/api/admin/image/collections/create','CollectionsControlPanel','create','session');   
+        $this->addApiRoute('PUT','/api/admin/image/collections/update','CollectionsControlPanel','update','session');  
+        $this->addApiRoute('DELETE','/api/admin/image/collections/{uuid}','CollectionsControlPanel','delete','session');   
+        
         // api 
         $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');  
         $this->addApiRoute('PUT','/api/image/status','ImageApi','setStatus',['session','token']);    
@@ -48,6 +53,8 @@ class Image extends Extension
         $this->createDbTable('ImageSchema');   
         $this->createDbTable('ImageRelationsSchema');                    
         $this->createDbTable('ImageThumbnailsSchema');   
+        $this->createDbTable('ImageCollectionsSchema');   
+        $this->createDbTable('ImageCollectionItemsSchema');   
         // Console Commands
         $this->registerConsoleCommand('DeleteImages');          
         // Relation map 

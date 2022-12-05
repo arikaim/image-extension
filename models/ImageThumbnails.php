@@ -66,9 +66,9 @@ class ImageThumbnails extends Model
     public function deleteThumbnail(?string $name = null): bool
     {
         $model = (empty($name) == false) ? $this->findById($name) : $this;
-        if (\is_object($model) == false) {
+        if ($model == null) {
             $model = $this->where('file_name','=',$name)->first();
-            if (\is_object($model) == false) {
+            if ($model == null) {
                 return false;
             }
         }
@@ -144,7 +144,7 @@ class ImageThumbnails extends Model
      */
     public function hasThumbnail(int $width, int $height, $imageId = null): bool
     {
-        return \is_object($this->findThumbnail($width,$height,$imageId));
+        return ($this->findThumbnail($width,$height,$imageId) != null);
     }
 
     /**
@@ -155,7 +155,7 @@ class ImageThumbnails extends Model
      * @param integer $height
      * @return Model|null
      */
-    public function findThumbnail(int $width, int $height, $imageId = null)
+    public function findThumbnail(int $width, int $height, $imageId = null): ?object
     {
         $imageId = $imageId ?? $this->image_id;
         if (\is_string($imageId) == true) {
@@ -173,16 +173,16 @@ class ImageThumbnails extends Model
      * @param integer|string|null $imageId
      * @param integer $width
      * @param integer $height
-     * @return Model|null
+     * @return bool
     */
-    public function saveThumbnail(int $width, int $height, $imageId = null)
+    public function saveThumbnail(int $width, int $height, $imageId = null): bool
     {
         $imageId = $imageId ?? $this->image_id;
       
         $image = new Image();
         $image = $image->findByid($imageId);
-        if (\is_object($image) == false) {
-            return null;
+        if ($image == null) {
+            return false;
         }
         $model = $this->findThumbnail($width,$height,$imageId);
 
@@ -195,11 +195,10 @@ class ImageThumbnails extends Model
             'file_name' => ImageLibrary::getThumbnailsPath($imageId) . $fileName
         ];
 
-        if (\is_object($model) == true) {
+        if ($model != null) {
             return (bool)$model->update($data);
         }
-        $new = $this->create($data);
-
-        return \is_object($new);
+        
+        return ($this->create($data) != null);
     }
 }

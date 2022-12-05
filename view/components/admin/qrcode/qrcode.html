@@ -1,3 +1,6 @@
+{% if hasModule('qrcode') == false %}
+    {% error 'QrCode module not installed' %}
+{% endif %}
 {% component 'semantic~tabs.vertical.content' %}
     {% set title = title %}
     {% set class = 'seven wide' %}

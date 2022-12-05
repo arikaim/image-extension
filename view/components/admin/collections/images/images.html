@@ -1,0 +1,9 @@
+{% if uuid is not empty %}
+    {% set collection = createModel('ImageCollections','image').findById(uuid) %}  
+{% endif %}
+
+{% component 'semantic~panel' %}
+<div>
+
+</div>
+{% endcomponent %}
