@@ -27,6 +27,13 @@
                 class="ui icon mini basic compact button collection-action-button">
                 <i class="icon info"></i>
             </button>  
+            <button 
+                mountTo="collection_content"
+                component="image::admin.collections.images"
+                params="uuid:{{ item.uuid }}"
+                class="ui icon mini basic compact button collection-action-button">
+                <i class="icon images"></i>
+            </button>  
             <button                
                 uuid="{{ item.uuid }}"
                 data-title="{{ item.title }}"

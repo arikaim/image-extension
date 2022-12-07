@@ -39,6 +39,23 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Gte images in collection
+     *
+     * @param string       $collection
+     * @param integer|null $userId
+     * @return object|null
+     */
+    public function getImages(string $collection, int $userId = null): ?object
+    {
+        global $container;
+
+        $userId = $userId ?? $container->get('access')->getId();
+        $model = Model::ImageCollections('image')->findCollection($collection);
+        
+        return ($model == null) ? null : $model->items()->get();
+    }
+
+    /**
      * Save collection
      *
      * @param string       $title

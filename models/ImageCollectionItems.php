@@ -34,6 +34,13 @@ class ImageCollectionItems extends Model
      */
     protected $table = 'image_collection_items';
 
+    /** 
+     *  Inclide relations
+     */
+    protected $with = [
+        'image'
+    ];
+    
     /**
      * Fillable columns
      *

@@ -46,7 +46,8 @@ function ImageUpload() {
                     resize_height: '#resize_height',
                     category_id: '#category_id',
                     image_id: '#image_id',
-                    max_file_size: '#max_file_size'                             
+                    max_file_size: '#max_file_size' ,
+                    collection: '#collection'                            
                 },
                 onSuccess: function(result) { 
                     arikaim.events.emit('image.upload',result);   
