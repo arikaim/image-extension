@@ -60,18 +60,34 @@ class ImageCollections extends Model
     public $timestamps = false;
 
     /**
-     * Add image to collection
+     * Retrun true if image exsit in collection
      *
-     * @param integer     $id
-     * @param string|null $collectionId
+     * @param integer $imageId
      * @return boolean
      */
-    public function addImage(int $id, ?string $collectionId = null): bool
-    {
-        $model = (empty($collectionId) == false) ? $this->findCollection($collectionId) : $this;
+    public function hasImage(int $imageId): bool
+    { 
+        $item = $this->whereHas('items', function($query) use($imageId) {
+            return $query->where('image_id','=',$imageId);
+        })->first();
+  
+        return ($item == null) ? false : ($item->id == $this->id);
+    }
 
-        $result = $model->items()->create([
-            'image_id' => $id
+    /**
+     * Add image to collection
+     *
+     * @param integer    $imageId
+     * @return boolean
+     */
+    public function addImage(int $imageId): bool
+    {
+        if ($this->hasImage($imageId) == true) {
+            return true;
+        }
+
+        $result = $this->items()->create([
+            'image_id' => $imageId
         ]);
 
         return ($result !== false);
@@ -140,7 +156,7 @@ class ImageCollections extends Model
             return ($created != null) ? $created : false;
         }
         
-        return ($this->update($data) !== false) ? $this : false;
+        return ($model->update($data) !== false) ? $model : false;
     }
 
     /**

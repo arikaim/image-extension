@@ -86,7 +86,8 @@ class Image extends Service implements ServiceInterface
 
         $userId = $userId ?? $container->get('access')->getId();
         $collection = (\is_object($collection) == true) ? 
-            $collection : Model::ImageCollections('image')->findCollection($collectionSlug,$userId);
+            $collection : 
+            Model::ImageCollections('image')->findCollection($collection,$userId);
 
         if ($collection == null) {
             return false;

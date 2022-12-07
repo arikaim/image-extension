@@ -100,7 +100,7 @@ trait ImageUpload
         }
             
         if (empty($collection) == false) {
-            $collectionModel = $this->get('image.library')->saveCollection($collection,$collection);
+            $collectionModel = $this->get('image.library')->saveCollection($collection);
             if ($collectionModel !== false) {
                 $this->get('image.library')->addImageToCollection($image,$collectionModel);
             }
