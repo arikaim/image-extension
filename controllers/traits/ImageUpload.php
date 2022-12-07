@@ -46,6 +46,7 @@ trait ImageUpload
         $resizeHeight = $data->get('resize_height',null);
         $categoryId = $data->get('category_id',null);
         $imageId = $data->get('image_id',null);   
+        $collection = $data->get('collection',null);
 
         if (File::exists($destinationPath) == false && $createDestinationPath == true) {
             File::makeDir($destinationPath);
@@ -98,6 +99,12 @@ trait ImageUpload
             $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
         }
             
+        if (empty($collection) == false) {
+            $collectionModel = $this->get('image.library')->saveCollection($collection,$collection);
+            if ($collectionModel !== false) {
+                $this->get('image.library')->addImageToCollection($image,$collectionModel);
+            }
+        }
         // fire event 
         $params = \array_merge($image->toArray(),$data->toArray());
         $this->get('event')->dispatch('image.upload',$params);

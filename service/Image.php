@@ -55,13 +55,22 @@ class Image extends Service implements ServiceInterface
         return Model::ImageCollections('image')->saveCollection($title,$slug,$userId);
     }
 
-    /** */
-    public function addImageToCollection($image, string $collectionSlug, ?int $userId = null): bool
+    /**
+     * Add image to collection
+     *
+     * @param mixed       $image
+     * @param mixed       $collection
+     * @param integer|null $userId
+     * @return boolean
+     */
+    public function addImageToCollection($image, $collection, ?int $userId = null): bool
     {
         global $container;
 
         $userId = $userId ?? $container->get('access')->getId();
-        $collection = Model::ImageCollections('image')->findCollection($collectionSlug,$userId);
+        $collection = (\is_object($collection) == true) ? 
+            $collection : Model::ImageCollections('image')->findCollection($collectionSlug,$userId);
+
         if ($collection == null) {
             return false;
         }
