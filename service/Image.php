@@ -52,7 +52,7 @@ class Image extends Service implements ServiceInterface
         $userId = $userId ?? $container->get('access')->getId();
         $model = Model::ImageCollections('image')->findCollection($collection);
         
-        return ($model == null) ? null : $model->items()->get();
+        return ($model == null) ? null : $model->items();
     }
 
     /**

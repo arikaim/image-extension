@@ -54,7 +54,7 @@ trait ImageUpload
         }
     
         if (File::exists($destinationPath) == false ) {
-            $this->error('Target path not exists.');
+            $this->error('errors.path','Target path not exists.');
             return false;
         };
         File::setWritable($destinationPath);

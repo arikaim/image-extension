@@ -51,7 +51,9 @@ function ImageUpload() {
                 },
                 onSuccess: function(result) { 
                     arikaim.events.emit('image.upload',result);   
-                    callFunction(self.onSuccess,result);               
+                    callFunction(self.onSuccess,result); 
+                    
+                    fileUpload.reset();       
                 }
             });     
             

@@ -70,6 +70,16 @@ class Image extends Model
     public $timestamps = false;
    
     /**
+     * Image relation in all collections
+     *
+     * @return Relation|null
+     */
+    public function collectionItems()
+    {
+        return $this->hasMany('Arikaim\\Extensions\\Image\\Models\\ImageCollectionItems','image_id');
+    }
+
+    /**
      * Category relation
      *
      * @return Relation|null
@@ -276,6 +286,9 @@ class Image extends Model
         // delete image file
         $model->deleteImageFile();
      
+        // delete from collections
+        $this->collectionItems()->delete();
+
         return (bool)$model->delete();        
     } 
 

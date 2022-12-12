@@ -34,7 +34,7 @@ class ImageApi extends ApiController
      */
     public function init()
     {
-        $this->loadMessages('image::messages');
+        $this->loadMessages('current>images.messages');
     }
 
     /**
@@ -94,7 +94,7 @@ class ImageApi extends ApiController
         $thumbnail = Model::ImageThumbnails('image')->findById($uuid);
         // not valid image thumbnail uuid or id 
         if ($thumbnail == null) {
-            $this->error('errors.id','Not valid image thumbnail id.');
+            $this->error('errors.id','Not valid image id.');
             return false;
         }
   
