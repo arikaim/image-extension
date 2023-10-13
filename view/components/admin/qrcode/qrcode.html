@@ -1,5 +1,7 @@
 {% if hasModule('qrcode') == false %}
-    {% error 'QrCode module not installed' %}
+    <div class="ui red message">
+        {% error 'QrCode module not installed' %}
+    </div>
 {% endif %}
 {% component 'semantic~tabs.vertical.content' %}
     {% set title = title %}

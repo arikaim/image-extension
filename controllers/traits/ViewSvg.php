@@ -25,8 +25,15 @@ trait ViewSvg
     public function viewSvg($request, $response, $data)
     {
         $name = $data->get('name','icons~image');
-      
-        return $this->renderSvg($response,$name,[]);       
+        $width = $data->get('width','256px');
+        $height = $data->get('height','256px');
+
+        return $this->renderSvg($response,$name,[          
+            'attr'  => [            
+                'height' => $width,
+                'width'  => $height
+            ]
+        ]);  
     }
 
     /**
@@ -55,9 +62,6 @@ trait ViewSvg
             return $response;
         }
         
-        $response->withHeader('Content-Type','image/svg+xml');
-        $response->getBody()->write($component->getHtmlCode());
-
-        return $response;
+        return $this->viewImageHeaders($response,'image/svg+xml',$component->getHtmlCode());
     }
 }
