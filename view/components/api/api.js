@@ -20,6 +20,10 @@ function ImageApi() {
     this.delete = function(uuid, onSuccess, onError) {
         return arikaim.delete('/api/image/delete/' + uuid,onSuccess,onError);      
     };
+
+    this.import = function(data, onSuccess, onError) {
+        return arikaim.post('/api/image/import',data,onSuccess,onError);      
+    };
 }
  
 var imageApi = new ImageApi();

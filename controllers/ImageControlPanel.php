@@ -11,9 +11,9 @@ namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
-use Arikaim\Core\Http\Url;
-use Arikaim\Extensions\Image\Classes\ImageLibrary;
+
 use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
+use Arikaim\Extensions\Image\Controllers\Traits\ImageImport;
 use Arikaim\Core\Controllers\Traits\Status;
 
 /**
@@ -23,6 +23,7 @@ class ImageControlPanel extends ControlPanelApiController
 {
     use    
         ImageUpload,
+        ImageImport,
         Status;
 
     /**
@@ -38,62 +39,6 @@ class ImageControlPanel extends ControlPanelApiController
     }
 
     /**
-     * Import image
-     *
-     * @param \Psr\Http\Message\ServerRequestInterface $request
-     * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
-    */
-    public function importController($request, $response, $data) 
-    {          
-        $data->validate(true);   
-
-        $private = $data->getBool('private',false);      
-        $url = $data->get('url',null);
-        $thumbnailWidth = $data->get('thumbnail_width',null);
-        $thumbnailHeight = $data->get('thumbnail_height',null);
-        $relationId = $data->get('relation_id',null);
-        $relationType = $data->get('relation_type',null);
-        $fileName = $data->getString('file_name',null);
-        $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
-        $denyDelete = $data->get('deny_delete',null);       
-        $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
-    
-        // import from url and save
-        $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
-            'private'     => $private,
-            'deny_delete' => $denyDelete
-        ]);     
-
-        if ($image == null) {
-            $this->error('errors.import','Error import image');
-            return false;
-        }
-
-        if (empty($thumbnailWidth) == false && empty($thumbnailHeight) == false) {
-            // create thumbnail
-            $this->get('image.library')->createThumbnail($image,$thumbnailWidth,$thumbnailHeight);
-        }
-        
-        if (empty($relationId) == false && empty($relationType) == false) {
-            // add relation
-            $this->get('image.library')->saveRelation($image,$relationId,$relationType);
-        }
-
-        // fire event 
-        $this->get('event')->dispatch('image.import',\array_merge($image->toArray(),$data->toArray()));
-                        
-        $this
-            ->message('import')
-            ->field('uuid',$image->uuid)
-            ->field('url',$url)
-            ->field('relation_id',$relationId)
-            ->field('relation_type',$relationType)
-            ->field('file',$image->file_name);                                 
-    }
-
-    /**
      * Delete image
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
@@ -103,27 +48,26 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function deleteController($request, $response, $data)
     { 
-        $this->onDataValid(function($data) { 
-            $model = Model::Image('image')->findById($data['uuid']); 
-            if ($model == null) {
-                $this->error('errors.id','Not valid image id');
-                return false;
-            } 
+        $data->validate(true);
 
-            if ($model->deny_delete == true) {
-                $this->error("Can't delete, image is protected.");
-                return false;
-            }
+        $model = Model::Image('image')->findById($data['uuid']); 
+        if ($model == null) {
+            $this->error('errors.id','Not valid image id');
+            return false;
+        } 
 
-            $result = $model->deleteImage();
+        if ($model->deny_delete == true) {
+            $this->error("Can't delete, image is protected.");
+            return false;
+        }
 
-            $this->setResponse($result,function() use($model) {                  
-                $this
-                    ->message('delete')
-                    ->field('uuid',$model->uuid);                  
-            },'errors.delete');
-        });       
-        $data->validate();
+        $result = $model->deleteImage();
+
+        $this->setResponse($result,function() use($model) {                  
+            $this
+                ->message('delete')
+                ->field('uuid',$model->uuid);                  
+        },'errors.delete');       
     }
 
     /**

@@ -10,7 +10,6 @@
 namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
-use Arikaim\Core\Db\Model;
 
 use Arikaim\Core\Controllers\Traits\Crud;
 
@@ -37,5 +36,4 @@ class CollectionsControlPanel extends ControlPanelApiController
             return $data;
         });
     }
-
 }

@@ -41,6 +41,7 @@ class Image extends Extension
         
         // api 
         $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');  
+        $this->addApiRoute('POST','/api/image/import','ImageApi','import','session');          
         $this->addApiRoute('PUT','/api/image/status','ImageApi','setStatus',['session','token']);    
         $this->addApiRoute('GET','/api/image/view/{uuid}[/{file_name}]','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);
