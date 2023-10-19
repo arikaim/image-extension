@@ -19,8 +19,10 @@ use Arikaim\Core\Http\Url;
 class ImageLibrary
 {
     const IMAGES_PATH = 'images' . DIRECTORY_SEPARATOR;
-    const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
+    const PUBLIC_IMAGES_PATH = 'public' . DIRECTORY_SEPARATOR . SElf::IMAGES_PATH;
     
+    const VIEW_PROTECTED_IMAGE_URL = '/api/image/view/';
+
     const THUMBNAILS_PATH = 'public' . DIRECTORY_SEPARATOR . Self::IMAGES_PATH . 'thumbnails' . DIRECTORY_SEPARATOR;
     const THUMBNAILS_FILE_NAME_PREFIX = 'thumbnail-';
 

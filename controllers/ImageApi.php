@@ -144,8 +144,10 @@ class ImageApi extends ApiController
      * @param Validator $data
      * @return Psr\Http\Message\ResponseInterface
     */
-    public function deleteController($request, $response, $data) 
+    public function delete($request, $response, $data) 
     {   
+        $this->validate(true);
+
         $uuid = $data->get('uuid',null);
         $image = Model::Image('image')->findById($uuid);
         // not valid image id
@@ -163,6 +165,7 @@ class ImageApi extends ApiController
         }
 
         $result = $image->deleteImage();
+        $this->get('image.library')->deleteImageFile($image->file_name);
 
         $this->setResponse($result,function() use($image) {                  
             $this

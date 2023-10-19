@@ -143,6 +143,23 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Delete image file
+     *
+     * @param string $fileName
+     * @return boolean
+     */
+    public function deleteImageFile(string $fileName): bool
+    {
+        global $container;
+
+        if ($container->get('storage')->has($fileName) == true) {
+            return $container->get('storage')->delete($fileName);
+        }
+
+        return true;
+    }
+
+    /**
      * Get encoded image
      *
      * @param mixed $uuid
@@ -288,6 +305,22 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
+     * Get images path
+     *
+     * @param integer|null $userId
+     * @param boolean      $protected
+     * @return string
+     */
+    public function getImagesPath(?int $userId, bool $protected): string
+    {
+        if (empty($userId) == true) {
+            return ImageLibrary::PUBLIC_IMAGES_PATH;
+        }
+
+        return ($protected == true) ? $this->createProtectedImagesPath($userId) : ImageLibrary::PUBLIC_IMAGES_PATH;
+    }
+
+    /**
      * Create thumbnail
      *
      * @param mixed $image
@@ -378,7 +411,7 @@ class Image extends Service implements ServiceInterface
             'file_name'   => $fileName,
             'file_size'   => $container->get('storage')->getSize($fileName),
             'mime_type'   => $container->get('storage')->getMimetype($fileName),
-            'base_name'   => File::baseName($fileName),
+            'base_name'   => File::baseName($path),
             'user_id'     => $userId,  
             'deny_delete' => $options['deny_delete'] ?? null,
             'category_id' => $options['category_id'] ?? null,
@@ -429,15 +462,16 @@ class Image extends Service implements ServiceInterface
 
         $fullPath = $container->get('storage')->getFullPath($fileName);
 
+        Curl::downloadFile($url,$fullPath);
+
         if (empty(File::getExtension($fullPath)) == true) {
             $mimeType = File::getMimetype($fullPath);
             $tokens = \explode('/',$mimeType);
-            $fileName .= '.' . $tokens[1];
-            $fullPath = $container->get('storage')->getFullPath($fileName);
+            // rename file
+            $container->get('storage')->rename($fileName,$fileName . '.' . $tokens[1]);
+            $fileName .= '.' . $tokens[1];           
         }
-
-        Curl::downloadFile($url,$fullPath);
-
+        
         return $this->save($fileName,$userId,$options,$protected);
     }          
 }

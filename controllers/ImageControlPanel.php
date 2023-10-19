@@ -62,6 +62,7 @@ class ImageControlPanel extends ControlPanelApiController
         }
 
         $result = $model->deleteImage();
+        $this->get('image.library')->deleteImageFile($model->file_name);
 
         $this->setResponse($result,function() use($model) {                  
             $this

@@ -43,7 +43,7 @@ trait ImageImport
         $userId = $this->getUserId();
 
         if (empty($destinationPath) == true) {
-            $destinationPath = ($private == false) ? ImageLibrary::getImagesPath(false) : $this->get('image.library')->createProtectedImagesPath($userId);
+            $destinationPath = $this->get('image.library')->getImagesPath($userId,$private);
         }
        
         // import from url and save
