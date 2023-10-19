@@ -33,8 +33,10 @@
     </div>
     {% endif %} 
     <div class="field">
-        <label>{{ fields.protected.label }}</label>
-        <input type="checkbox" name="private_image" id="private_image" value="1">
+        <div class="ui checkbox private-image">
+            <input type="checkbox" name="private_image" id="private_image" value="1">
+            <label>{{ fields.protected.label }}</label>
+        </div>
         <span class="px-1">
             {{ fields.protected.placeholder }}
         </span>

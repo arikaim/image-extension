@@ -14,15 +14,15 @@ function ImageUpload() {
         arikaim.ui.form.addRules("#upload_form");
         $('.private-image').checkbox({
             onChecked: function() {
-                $(this).val(1);
+                $('#private_image').val(1) 
             },
-            onUnchecked: function() {
-                $(this).val(false);
+            onUnchecked: function() {              
+                $('#private_image').val(0)              
             }
         });
 
-        var checked = $('.private-image').checkbox('is checked');
-        $('#private').val(checked);
+        var checked = $('#private_image').checkbox('is checked');
+        $('#private_image').val(checked);
 
         arikaim.component.loadLibrary('filepond:preview',function(result) {    
             if (isEmpty(FilePondPluginImagePreview) == false) {
