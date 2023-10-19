@@ -39,7 +39,8 @@ trait ImageImport
         $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
         $denyDelete = $data->get('deny_delete',null);       
         $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
-    
+        $collection = $data->get('collection',null);
+
         // import from url and save
         $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
             'private'     => $private,
@@ -59,6 +60,13 @@ trait ImageImport
         if (empty($relationId) == false && empty($relationType) == false) {
             // add relation
             $this->get('image.library')->saveRelation($image,$relationId,$relationType);
+        }
+
+        if (empty($collection) == false) {
+            $collectionModel = $this->get('image.library')->saveCollection($collection);
+            if ($collectionModel !== false) {
+                $this->get('image.library')->addImageToCollection($image,$collectionModel);
+            }
         }
 
         // fire event 
