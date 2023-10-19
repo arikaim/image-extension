@@ -36,16 +36,21 @@ trait ImageImport
         $relationId = $data->get('relation_id',null);
         $relationType = $data->get('relation_type',null);
         $fileName = $data->getString('file_name',null);
-        $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
+        $destinationPath = $data->get('target_path',null);
         $denyDelete = $data->get('deny_delete',null);       
         $fileName = (empty($fileName) == true) ? Url::getUrlFileName($url) : $fileName . '-' . Url::getUrlFileName($url);
         $collection = $data->get('collection',null);
+        $userId = $this->getUserId();
 
+        if (empty($destinationPath) == true) {
+            $destinationPath = ($private == false) ? ImageLibrary::getImagesPath(false) : $this->get('image.library')->createProtectedImagesPath($userId);
+        }
+       
         // import from url and save
-        $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$this->getUserId(),[
+        $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$userId,[
             'private'     => $private,
             'deny_delete' => $denyDelete
-        ]);     
+        ],$private);     
 
         if ($image == null) {
             $this->error('errors.import','Error import image');

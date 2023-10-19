@@ -38,6 +38,12 @@
         {{ component('image::thumbnails.size',{ skip: ['custom'], class: 'selection mini fluid' }) }}
     </div> 
     {% endif %}
-
+    <div class="field">
+        <label>{{ fields.protected.label }}</label>
+        <input type="checkbox" name="private" id="private" value="1">
+        <span class="px-1">
+            {{ fields.protected.placeholder }}
+        </span>
+    </div>
     {{ component('semantic~form.footer',{ button_title: buttons.import }) }}   
 </form>

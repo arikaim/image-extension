@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Extensions\Image\Service;
 
-use Psr\Container\ContainerInterface;
-
 use Arikaim\Core\Db\Model;
 use Arikaim\Core\Service\Service;
 use Arikaim\Core\Service\ServiceInterface;
@@ -28,14 +26,31 @@ class Image extends Service implements ServiceInterface
     use TaskErrors;
 
     /**
-     * Constructor
-     */
-    public function __construct(?ContainerInterface $container = null)
+     * Init service
+    */
+    public function boot()
     {
         $this->setServiceName('image.library');
         $this->includeServices(['image']);
+    }
 
-        parent::__construct($container);
+    /**
+     * Create user images path (protected)
+     *
+     * @param integer $userId
+     * @return string
+     */
+    public function createProtectedImagesPath(int $userId): ?string
+    {
+        global $container;
+
+        $path = ImageLibrary::IMAGES_PATH . 'user-' . (string)$userId . DIRECTORY_SEPARATOR;
+
+        if ($container->get('storage')->has($path) == false) {
+            return ($container->get('storage')->createDir($path) == true) ? $path : null;
+        }
+
+        return $path;
     }
 
     /**
@@ -282,6 +297,8 @@ class Image extends Service implements ServiceInterface
      */
     public function createThumbnail($image, int $width, int $height): bool
     {
+        global $container;
+
         $model = (\is_object($image) == true) ? $image : Model::Image('image')->findImage($image);      
         if ($model == null) {
             $this->addError('errors.id');
@@ -289,7 +306,9 @@ class Image extends Service implements ServiceInterface
         }  
 
         $thumbnail = Model::ImageThumbnails('image');
-        $image = $this->getService('image')->resize($model->getImagePath(false),$width,$height);
+        $fullPath = $container->get('storage')->getFullPath($model->file_name);
+
+        $image = $this->getService('image')->resize($fullPath,$width,$height);
         if (empty($image) == true) {
             $this->addError('errors.image.resize');
             return false;
@@ -347,16 +366,18 @@ class Image extends Service implements ServiceInterface
      */
     public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {
-        $path = ($protected == false) ? Path::getRelativePath($fileName,false) : $fileName;
+        global $container;
+
+        $path = $container->get('storage')->getFullPath($fileName);
         $model = Model::Image('image');   
 
         $imageId = $options['image_id'] ?? null;
         $image = (empty($imageId) == false) ? $model->findById($imageId) : null;
         
         $data = [
-            'file_name'   => $path,
-            'file_size'   => File::getSize($fileName),
-            'mime_type'   => File::getMimetype($fileName),
+            'file_name'   => $fileName,
+            'file_size'   => $container->get('storage')->getSize($fileName),
+            'mime_type'   => $container->get('storage')->getMimetype($fileName),
             'base_name'   => File::baseName($fileName),
             'user_id'     => $userId,  
             'deny_delete' => $options['deny_delete'] ?? null,
@@ -364,7 +385,7 @@ class Image extends Service implements ServiceInterface
             'private'     => $options['private'] ?? null
         ];
 
-        $size = $this->getService('image')->getSize($fileName);
+        $size = $this->getService('image')->getSize($path);
         if (\is_array($size) == true) {
             $data['width'] = $size['width']; 
             $data['height'] = $size['height'];
@@ -387,11 +408,10 @@ class Image extends Service implements ServiceInterface
         }
 
         if ($image != null) {
-            $this->createThumbnail($image,64,64);
-            return $image;
+            $this->createThumbnail($image,64,64);           
         }
-
-        return null;
+        
+        return $image;
     }
 
     /**
@@ -405,7 +425,18 @@ class Image extends Service implements ServiceInterface
     */
     public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {         
-        Curl::downloadFile($url,$fileName);
+        global $container;
+
+        $fullPath = $container->get('storage')->getFullPath($fileName);
+
+        if (empty(File::getExtension($fullPath)) == true) {
+            $mimeType = File::getMimetype($fullPath);
+            $tokens = \explode('/',$mimeType);
+            $fileName .= '.' . $tokens[1];
+            $fullPath = $container->get('storage')->getFullPath($fileName);
+        }
+
+        Curl::downloadFile($url,$fullPath);
 
         return $this->save($fileName,$userId,$options,$protected);
     }          
