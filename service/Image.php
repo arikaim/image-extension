@@ -14,7 +14,6 @@ use Arikaim\Core\Service\Service;
 use Arikaim\Core\Service\ServiceInterface;
 use Arikaim\Core\Utils\Curl;
 use Arikaim\Core\Utils\File;
-use Arikaim\Core\Utils\Path;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 use Arikaim\Core\System\Error\Traits\TaskErrors;
 
@@ -35,17 +34,23 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
-     * Create user images path (protected)
+     * Create images path
      *
-     * @param integer $userId
-     * @return string
+     * @param integer|null $userId
+     * @param bool $protected
+     * @param string|null $path
+     * @return string|null
      */
-    public function createProtectedImagesPath(int $userId): ?string
+    public function createImagesPath(?int $userId, bool $protected, ?string $path = null): ?string
     {
         global $container;
 
-        $path = ImageLibrary::IMAGES_PATH . 'user-' . (string)$userId . DIRECTORY_SEPARATOR;
-
+        if ($protected == true && empty($userId) == false) {
+            $path = ImageLibrary::IMAGES_PATH . 'user-' . (string)$userId . DIRECTORY_SEPARATOR;
+        } else {
+            $path = ImageLibrary::PUBLIC_IMAGES_PATH . $path ?? '';
+        }
+       
         if ($container->get('storage')->has($path) == false) {
             return ($container->get('storage')->createDir($path) == true) ? $path : null;
         }
@@ -305,22 +310,6 @@ class Image extends Service implements ServiceInterface
     }
 
     /**
-     * Get images path
-     *
-     * @param integer|null $userId
-     * @param boolean      $protected
-     * @return string
-     */
-    public function getImagesPath(?int $userId, bool $protected): string
-    {
-        if (empty($userId) == true) {
-            return ImageLibrary::PUBLIC_IMAGES_PATH;
-        }
-
-        return ($protected == true) ? $this->createProtectedImagesPath($userId) : ImageLibrary::PUBLIC_IMAGES_PATH;
-    }
-
-    /**
      * Create thumbnail
      *
      * @param mixed $image
@@ -378,9 +367,13 @@ class Image extends Service implements ServiceInterface
         array $options = [],
         bool $protected = false)
     {
+        global $container;
+
         if (empty($width) == false && empty($height) == false) {
-            $image = $this->getService('image')->resize($fileName,$width,$height);
-            $result = $this->getService('image')->save($image,$fileName,'');
+            $fullPath = $container->get('storage')->getFullPath($fileName);
+
+            $image = $this->getService('image')->resize($fullPath,$width,$height);
+            $result = $this->getService('image')->save($image,$fullPath,'');
             if ($result === false) {
                 return null;
             }

@@ -42,9 +42,7 @@ trait ImageImport
         $collection = $data->get('collection',null);
         $userId = $this->getUserId();
 
-        if (empty($destinationPath) == true) {
-            $destinationPath = $this->get('image.library')->getImagesPath($userId,$private);
-        }
+        $destinationPath = $this->get('image.library')->createImagesPath($userId,$private,$destinationPath);
        
         // import from url and save
         $image = $this->get('image.library')->import($url,$destinationPath . $fileName,$userId,[

@@ -1,4 +1,3 @@
-{% set target_path = (target_path is empty) ? service('image.library').getDefaultImagesPath() : target_path %}
 <form class="ui equal width form" id="upload_form" enctype="multipart/form-data">  
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
     <input type="hidden" name="deny_delete" id="deny_delete" value="{{ deny_delete }}">
@@ -33,5 +32,13 @@
         <div class="ui basic label">{{ resize_height }}px</div>
     </div>
     {% endif %} 
+    <div class="field">
+        <label>{{ fields.protected.label }}</label>
+        <input type="checkbox" name="private_image" id="private_image" value="1">
+        <span class="px-1">
+            {{ fields.protected.placeholder }}
+        </span>
+    </div>
+
     {{ component('semantic~form.footer',{ button_title: buttons.save.content }) }}   
 </form>

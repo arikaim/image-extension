@@ -35,9 +35,7 @@ trait ImageUpload
         $fileName = $data->get('file_name',null);      
         $denyDelete = $data->getString('deny_delete',null);   
         $private = $data->getBool('private_image',false);                                     
-        $destinationPath = $data->get('target_path',ImageLibrary::getImagesPath(false));
-        $createDestinationPath = $data->getBool('create_target_path',true);
-        $createDestinationPath= (empty($createDestinationPath) == true) ? true : $createDestinationPath;
+        $destinationPath = $data->get('target_path',null);     
         $relationId = $data->get('relation_id',null);
         $relationType = $data->get('relation_type',null);
         $thumbnailWidth = $data->get('thumbnail_width',null);
@@ -47,26 +45,19 @@ trait ImageUpload
         $categoryId = $data->get('category_id',null);
         $imageId = $data->get('image_id',null);   
         $collection = $data->get('collection',null);
+        $userId = $this->getUserId();
 
-        if (File::exists($destinationPath) == false && $createDestinationPath == true) {
-            File::makeDir($destinationPath);
-            File::setWritable($destinationPath);
-        }
-    
-        if (File::exists($destinationPath) == false ) {
-            $this->error('errors.path','Target path not exists.');
-            return false;
-        };
-        File::setWritable($destinationPath);
+        $destinationPath = $this->get('image.library')->createImagesPath($userId,$private,$destinationPath);
+        $fullPath = $this->get('storage')->getFullPath($destinationPath);
 
-        $files = $this->uploadFiles($request,$destinationPath,false,true,$fileName);
+        $files = $this->uploadFiles($request,$fullPath,false,true,$fileName);
            
         // process uploaded files        
         foreach ($files as $item) {               
             if (empty($item['error']) == false) continue;
             
             if (empty($resizeWidth) == false && empty($resizeHeight) == false) {
-                $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$this->getUserId(),
+                $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$userId,
                 $resizeWidth,
                 $resizeHeight,[
                     'private'     => $private,
@@ -75,7 +66,7 @@ trait ImageUpload
                     'image_id'    => $imageId
                 ],$private);  
             } else {
-                $image = $this->get('image.library')->save($destinationPath . $item['name'],$this->getUserId(),[
+                $image = $this->get('image.library')->save($destinationPath . $item['name'],$userId,[
                     'private'     => $private,
                     'category_id' => (empty($categoryId) == true) ? null : $categoryId,
                     'deny_delete' => $denyDelete,

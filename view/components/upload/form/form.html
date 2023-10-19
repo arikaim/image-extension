@@ -1,4 +1,3 @@
-{% set target_path = (target_path is empty) ? service('image.library').getDefaultImagesPath() : target_path %}
 {% set accept = accept|default('image/*') %}
 <form class="ui form {{ class }}" id="upload_form" enctype="multipart/form-data">  
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">

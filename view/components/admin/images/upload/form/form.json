@@ -1,5 +1,9 @@
 {
-    "fields": {        
+    "fields": {    
+        "protected": {
+            "label": "Protected",               
+            "placeholder": "Upload image in protected storage."        
+        },    
         "path": {
             "label": "Destination Path",               
             "placeholder": "Enter target path"            
