@@ -38,7 +38,6 @@ class Image extends Extension
         $this->addApiRoute('POST','/api/admin/image/collections/create','CollectionsControlPanel','create','session');   
         $this->addApiRoute('PUT','/api/admin/image/collections/update','CollectionsControlPanel','update','session');  
         $this->addApiRoute('DELETE','/api/admin/image/collections/{uuid}','CollectionsControlPanel','delete','session');   
-        
         // api 
         $this->addApiRoute('POST','/api/image/upload','ImageApi','upload','session');  
         $this->addApiRoute('POST','/api/image/import','ImageApi','import','session');          
@@ -46,6 +45,7 @@ class Image extends Extension
         $this->addApiRoute('GET','/api/image/view/{uuid}[/{file_name}]','ImageApi','view',null);    
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);
         $this->addApiRoute('GET','/api/image/svg/view/{name}[/{width}[/{height}]]','ImageApi','viewSvg',null);
+        $this->addApiRoute('GET,PUT','/api/image/download/{uuid}','ImageApi','downloadImage',null);
         $this->addApiRoute('DELETE','/api/image/delete/{uuid}','ImageApi','delete','session');   
         // qrcode (rquires qrcode module)
         $this->addApiRoute('POST','/api/admin/image/qrcode/generate','ImageControlPanel','generateQrCode','session');  

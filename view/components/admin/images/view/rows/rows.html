@@ -30,7 +30,13 @@
                 </button>     
                 <button class="ui icon mini basic button image-relations-button" uuid="{{ item.uuid }}" title="{{ labels.relations }}">
                     <i class="icon blue project diagram"></i>
-                </button>              
+                </button>       
+                <a 
+                    title="{{ labels.download }}"
+                    href="{{ url('/api/image/download/' ~ item.uuid) }}" 
+                    class="ui icon mini basic button">
+                    <i class="icon download"></i>
+                </a>   
                 {% if item.deny_delete != true %}                                      
                 <button class="ui icon mini basic button delete-button" uuid="{{ item.uuid }}" data-title="{{ item.file_name }}">
                     <i class="icon trash orange"></i>

@@ -16,6 +16,7 @@ use Arikaim\Core\Utils\File;
 use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 use Arikaim\Extensions\Image\Controllers\Traits\ImageImport;
 use Arikaim\Extensions\Image\Controllers\Traits\ViewSvg;
+use Arikaim\Extensions\Image\Controllers\Traits\DownloadImage;
 use Arikaim\Core\Controllers\Traits\FileDownload;
 
 /**
@@ -27,6 +28,7 @@ class ImageApi extends ApiController
         ImageUpload,
         ImageImport,
         ViewSvg,
+        DownloadImage,
         FileDownload;
 
     /**
@@ -146,7 +148,8 @@ class ImageApi extends ApiController
     */
     public function delete($request, $response, $data) 
     {   
-        $this->validate(true);
+        $data
+            ->validate(true);
 
         $uuid = $data->get('uuid',null);
         $image = Model::Image('image')->findById($uuid);
