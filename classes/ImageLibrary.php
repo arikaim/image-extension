@@ -44,13 +44,15 @@ class ImageLibrary
      * @param string|null $path
      * @return string
      */
-    public static function getImagesPath(bool $relative = true, ?string $path = null): string
+    public static function getImagesPath(bool $relative = true, ?string $path = null, bool $public = true): string
     {
-        $imagesPath = ($relative == false) ? Path::STORAGE_PUBLIC_PATH . Self::IMAGES_PATH : Self::IMAGES_PATH;  
-        
-        return (empty($path) == true) ? $imagesPath : $imagesPath . $path . DIRECTORY_SEPARATOR;
-    }
+        $storagePath = ($relative == false) ? Path::STORAGE_PATH : '';
+        $imagesPath = ($public == true) ? Self::PUBLIC_IMAGES_PATH : Self::IMAGES_PATH;  
+        $imagesPath = (empty($path) == false) ? $storagePath . $path . DIRECTORY_SEPARATOR : $imagesPath;
 
+        return $storagePath . $imagesPath;
+    }
+    
     /**
      * Get thumbnails storage path
      *

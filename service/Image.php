@@ -302,11 +302,12 @@ class Image extends Service implements ServiceInterface
      *
      * @param boolean $relative
      * @param string|null $path
+     * @param bool $public
      * @return string
      */
-    public function getDefaultImagesPath(bool $relative = false, ?string $path = null): string
+    public function getDefaultImagesPath(bool $relative = false, ?string $path = null, bool $public = true): string
     {
-        return ImageLibrary::getImagesPath($relative,$path);
+        return ImageLibrary::getImagesPath($relative,$path,$public);
     }
 
     /**
@@ -455,7 +456,9 @@ class Image extends Service implements ServiceInterface
 
         $fullPath = $container->get('storage')->getFullPath($fileName);
 
-        Curl::downloadFile($url,$fullPath);
+        $container->get('http')->get($url,[
+            'sink' => $fullPath
+        ]);
 
         if (empty(File::getExtension($fullPath)) == true) {
             $mimeType = File::getMimetype($fullPath);

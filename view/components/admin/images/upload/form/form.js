@@ -41,8 +41,7 @@ function ImageUpload() {
             var fileUpload = new FileUpload('#upload_form',{
                 url: '/api/admin/image/upload',
                 maxFiles: 1,
-                allowMultiple: false,
-                maxFileSize: '100KB',
+                allowMultiple: false,              
                 acceptedFileTypes: [],      
                 formFields: {            
                     private_image: '#private_image',
