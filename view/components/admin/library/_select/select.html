@@ -1,0 +1,19 @@
+{{  component('semantic~tabs.vertical',{ 
+        items: [ 
+            { 
+                title: labels.main, 
+                component: 'image::admin.library.select.main', 
+                icon: 'image', 
+                active: true, 
+                params : { uuid: uuid } 
+            }           
+        ], 
+        menu: { id: 'image_slelect_menu' }, 
+        item_class: 'image-selector-tab-item',
+        content: { 
+            id: 'images_selector_content',
+            component: 'image::admin.library.select.main',
+            params: { uuid: uuid } 
+        } 
+    })
+}}

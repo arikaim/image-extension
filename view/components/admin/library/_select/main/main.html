@@ -1,0 +1,19 @@
+//   file_name: 'category-image-' ~ model.uuid ~ '.png'
+<div 
+    class="p-2" id="main_model_image" uuid="{{ uuid }}">
+    <div class="flex flex-row items-start">
+        {{ component('image::admin.library.select.main.image',{ model: model }) }}
+        <div class="w-full">
+            {{  component('image::admin.library',{ 
+                    type: 'main',
+                    relation_id: relation_id, 
+                    relation_type: relation_type,
+                    hide_path: true,               
+                    hide_labels: true,
+                    private_image: false,   
+                    image_id: model.image.uuid                                                   
+                }) 
+            }}            
+        </div>           
+    </div>
+</div>

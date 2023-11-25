@@ -2,6 +2,8 @@
     "labels": {
         "relations": "Linked",
         "library": "Library",
-        "upload": "Upload"
+        "upload": "Upload",
+        "main": "Main",
+        "images": "Linked Images"
     }
 }

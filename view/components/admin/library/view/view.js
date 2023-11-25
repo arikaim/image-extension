@@ -22,8 +22,10 @@ function ImagesLibrary() {
             });   
         });
 
-        arikaim.ui.button('.use-image',function(element) {
+        arikaim.ui.button('.set-main',function(element) {
             var imageId = $(element).attr('image-id');
+            
+            console.log(imageId);
             
             arikaim.events.emit('image.library.main.use',{
                 image_id: imageId
@@ -36,9 +38,9 @@ function ImagesLibrary() {
             var imageId = $(element).attr('image-id');
            
             relations.add('ImageRelations','image',imageId,relationType,relationId,function(result) {            
-                arikaim.ui.setActiveTab('#images_library_relations_tab','.images-library-tab-item');               
+             //   arikaim.ui.setActiveTab('#images_library_relations_tab','.images-library-tab-item');               
                 return arikaim.page.loadContent({
-                    id: 'images_library_content',
+                    id: 'image_relations_content',
                     component: 'image::admin.library.relations',
                     params: { 
                         relation_id: relationId,

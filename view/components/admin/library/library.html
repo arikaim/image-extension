@@ -6,28 +6,53 @@
 %}
 {% if type == 'main' %}
     {% set items = [  
-            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
+            { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
             { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
         ]
     %}
 {% else %}
     {% set items = [  
-            { title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
+            { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
             { id:'images_library_relations_tab', title: labels.relations, component: 'image::admin.library.relations', icon: 'project diagram', params },
             { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
         ]
     %}
 {% endif %}
-<div class="ui segment">
-    {{  component('semantic~tabs.vertical',{ 
-            items: items, 
-            menu: { id: 'images_library_menu' }, 
-            item_class: 'images-library-tab-item',
-            content: { 
-                id: 'images_library_content',
-                component: 'image::admin.library.view',
-                params: params 
-            } 
-        })
-    }}
+<div class="{{ class }}">
+    <div class="w-full flex flex-rows items-start flex-grow">
+        <div class="w-1/4">
+            <h4 class="bg-gray-100 p-2 px-4 rounded">
+                {{ labels.main }}
+            </h4>
+            {{  component('image::admin.library.image',{
+                    model: model
+                }) 
+            }}
+        </div>
+        <div class="w-3/4 pl-2">
+            <h4 class="bg-gray-100 p-2 px-4 rounded">
+                {{ labels.images }}
+            </h4>   
+            <div class="py-2" id="image_relations_content">
+                {{  component('image::admin.library.relations',{                   
+                        relation_id: relation_id,
+                        relation_type: relation_type
+                    }) 
+                }}   
+            </div>           
+        </div>
+    </div>
+    <div class="flex-grow w-full">
+        {{  component('semantic~tabs.vertical',{ 
+                items: items, 
+                menu: { id: 'images_library_menu' }, 
+                item_class: 'images-library-tab-item',
+                content: { 
+                    id: 'images_library_content',
+                    component: 'image::admin.library.view',
+                    params: params 
+                } 
+            })
+        }}
+    </div>
 </div>

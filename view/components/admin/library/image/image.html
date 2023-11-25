@@ -1,0 +1,13 @@
+<div class="w-64 p-4 flex flex-rows items-start"> 
+    <img 
+        id="model_image"
+        class="ui image bordered rounded" 
+        src="{{ url(model.image.src) }}?t={{ today() }}">  
+    <div class="px-2">
+        <button 
+            class="ui icon mini basic button delete-image-button" 
+            uuid="{{ model.uuid }}">
+            <i class="icon trash orange"></i>
+        </button>  
+    </div>      
+</div>

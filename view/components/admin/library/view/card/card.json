@@ -1,9 +1,6 @@
 {
     "labels": {
-        "use": "Use",
-        "delete": "Delete",
-        "add": "Use Image",
-        "details": "Details",
-        "size": "File Size"
+        "main": "Main",      
+        "add": "Add to Images"       
     }
 }
