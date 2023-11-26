@@ -4,7 +4,7 @@ function ImagesLibrary() {
     var self = this;
    
     this.init = function() {
-        paginator.init('image_library_rows',"image::admin.library.view.items",'images.library'); 
+        paginator.init('image_library_items',"image::admin.library.view.items",'images.library'); 
 
         this.loadMessages('image::admin.messages');
     };
@@ -25,7 +25,6 @@ function ImagesLibrary() {
     };
 
     this.initRows = function() {
-
         arikaim.ui.button('.set-main',function(element) {
             var imageId = $(element).attr('image-id');
            
@@ -39,8 +38,7 @@ function ImagesLibrary() {
             var relationId = $('#image_library').attr('relation-id');
             var imageId = $(element).attr('image-id');
            
-            relations.add('ImageRelations','image',imageId,relationType,relationId,function(result) {            
-                       
+            relations.add('ImageRelations','image',imageId,relationType,relationId,function(result) {                                   
                 return arikaim.page.loadContent({
                     id: 'image_relations_content',
                     component: 'image::admin.library.relations',
