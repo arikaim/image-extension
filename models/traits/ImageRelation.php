@@ -67,6 +67,6 @@ trait ImageRelation
     {
         $imageId = $this->attributes[$this->getImageColumn()] ?? null;
 
-        return (empty($imageId) == true) ? false : ($this->image->first() !== null);
+        return (empty($imageId) == true) ? false : ($this->image !== null);
     }
 }
