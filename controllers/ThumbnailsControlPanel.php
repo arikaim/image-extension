@@ -11,7 +11,6 @@ namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
 use Arikaim\Core\Db\Model;
-use Arikaim\Extensions\Image\Classes\ImageLibrary;
 
 /**
  * Thumbnails contorl panel api controller
@@ -40,27 +39,27 @@ class ThumbnailsControlPanel extends ControlPanelApiController
     */
     public function createController($request, $response, $data) 
     {          
-        $this->onDataValid(function($data) { 
-            $uuid = $data->get('uuid');  
-            $width = $data->get('width');
-            $height = $data->get('height');         
+        $data
+            ->validate(true);   
 
-            $result = $this->get('image.library')->createThumbnail($uuid,$width,$height);
-            if ($result == false) {
-                $errors = $this->get('image.library')->getErrors();
-                $this->addErrors($errors);
-                return false;
-            }
-            $thumbnail = Model::ImageThumbnails('image')->findThumbnail($width,$height,$uuid);
+        $uuid = $data->get('uuid');  
+        $width = $data->get('width');
+        $height = $data->get('height');         
 
-            $this->setResponse(($thumbnail != null),function() use($thumbnail) {                  
-                $this
-                    ->message('thumbnail.create')
-                    ->field('uuid',$thumbnail->uuid)
-                    ->field('file_name',$thumbnail->file_name);                                                   
-            },'errors.thumbnail.create');
-        });
-        $data->validate();   
+        $result = $this->get('image.library')->createThumbnail($uuid,$width,$height);
+        if ($result == false) {
+            $errors = $this->get('image.library')->getErrors();
+            $this->addErrors($errors);
+            return false;
+        }
+        $thumbnail = Model::ImageThumbnails('image')->findThumbnail($width,$height,$uuid);
+
+        $this->setResponse(($thumbnail != null),function() use($thumbnail) {                  
+            $this
+                ->message('thumbnail.create')
+                ->field('uuid',$thumbnail->uuid)
+                ->field('file_name',$thumbnail->file_name);                                                   
+        },'errors.thumbnail.create');
     }
 
     /**
@@ -73,21 +72,21 @@ class ThumbnailsControlPanel extends ControlPanelApiController
     */
     public function deleteController($request, $response, $data)
     { 
-        $this->onDataValid(function($data) { 
-            $model = Model::ImageThumbnails('image')->findById($data['uuid']);  
-            if ($model == null) {
-                $this->error('errors.thumbnail.delete','Error delete thumbnail');
-                return false;
-            }
+        $data
+            ->validate(true);
 
-            $result = $model->deleteThumbnail();
+        $model = Model::ImageThumbnails('image')->findById($data['uuid']);  
+        if ($model == null) {
+            $this->error('errors.thumbnail.delete','Error delete thumbnail');
+            return false;
+        }
 
-            $this->setResponse($result,function() use($model) {                  
-                $this
-                    ->message('thumbnail.delete')
-                    ->field('uuid',$model->uuid);                  
-            },'errors.thumbnail.delete');
-        });       
-        $data->validate();
+        $result = $model->deleteThumbnail();
+
+        $this->setResponse($result,function() use($model) {                  
+            $this
+                ->message('thumbnail.delete')
+                ->field('uuid',$model->uuid);                  
+        },'errors.thumbnail.delete');
     }
 }

@@ -81,35 +81,33 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function getList($request, $response, $data)
     {
-        $this->requireControlPanelPermission();
+        $data
+            ->validate(true);
 
-        $this->onDataValid(function($data) {          
-            $search = $data->get('query','');
-            $dataField = $data->get('data_field','uuid');
-            $size = $data->get('size',15);
-            
-            $model = Model::Image('image');
-            $model = $model->where('base_name','like','%' . $search . '%')->take($size)->get();
-          
-            $this->setResponse(($model != null),function() use($model,$dataField) {     
-                $items = [];
-                foreach ($model as $item) {
-                    $thumbnail = $item->thumbnail(64,64);
-                    $imageUrl = (\is_object($thumbnail) == true) ? $this->getPageUrl($thumbnail->src) : null;
+        $search = $data->get('query','');
+        $dataField = $data->get('data_field','uuid');
+        $size = $data->get('size',15);
+        
+        $model = Model::Image('image');
+        $model = $model->where('base_name','like','%' . $search . '%')->take($size)->get();
+        
+        $this->setResponse(($model != null),function() use($model,$dataField) {     
+            $items = [];
+            foreach ($model as $item) {
+                $thumbnail = $item->thumbnail(64,64);
+                $imageUrl = (\is_object($thumbnail) == true) ? $this->getPageUrl($thumbnail->src) : null;
 
-                    $items[] = [
-                        'name'  => $item['base_name'],
-                        'image' => $imageUrl,
-                        'value' => $item[$dataField]
-                    ];
-                }
-                $this                    
-                    ->field('success',true)
-                    ->field('results',$items);  
-            },'errors.list');
-        });
-        $data->validate();
-
+                $items[] = [
+                    'name'  => $item['base_name'],
+                    'image' => $imageUrl,
+                    'value' => $item[$dataField]
+                ];
+            }
+            $this                    
+                ->field('success',true)
+                ->field('results',$items);  
+        },'errors.list');
+       
         return $this->getResponse(true); 
     }
 
@@ -123,18 +121,17 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function generateQrCodeController($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $qrCodeData = $data->get('data','Test');
-            $image = $this->get('qrcode')->render($qrCodeData);
+        $data
+            ->validate(true);
 
-            $this->setResponse(!empty($image),function() use($image) {                  
-                $this
-                    ->message('qrcode')
-                    ->field('image',$image);                          
-            },'errors.qrcode');
+        $qrCodeData = $data->get('data','Test');
+        $image = $this->get('qrcode')->render($qrCodeData);
 
-        });
-        $data->validate();
+        $this->setResponse(!empty($image),function() use($image) {                  
+            $this
+                ->message('qrcode')
+                ->field('image',$image);                          
+        },'errors.qrcode');
     }
 
     /**
@@ -147,21 +144,21 @@ class ImageControlPanel extends ControlPanelApiController
     */
     public function updateController($request, $response, $data)
     {
-        $this->onDataValid(function($data) { 
-            $uuid = $data->get('uuid',null);
-            $model = Model::Image('image')->findById($uuid);
-            if ($model == null) {
-                $this->error("Not valid image id.");
-                return false;
-            }
+        $data
+            ->validate(true);
 
-            $result = $model->update($data->toArray());
-            $this->setResponse(($result !== false),function() use($uuid) {                  
-                $this
-                    ->message('update')
-                    ->field('uuid',$uuid);                          
-            },'errors.update');
-        });
-        $data->validate();
+        $uuid = $data->get('uuid',null);
+        $model = Model::Image('image')->findById($uuid);
+        if ($model == null) {
+            $this->error("Not valid image id.");
+            return false;
+        }
+
+        $result = $model->update($data->toArray());
+        $this->setResponse(($result !== false),function() use($uuid) {                  
+            $this
+                ->message('update')
+                ->field('uuid',$uuid);                          
+        },'errors.update');
     }
 }

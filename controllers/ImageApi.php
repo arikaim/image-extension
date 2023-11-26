@@ -17,6 +17,7 @@ use Arikaim\Extensions\Image\Controllers\Traits\ImageUpload;
 use Arikaim\Extensions\Image\Controllers\Traits\ImageImport;
 use Arikaim\Extensions\Image\Controllers\Traits\ViewSvg;
 use Arikaim\Extensions\Image\Controllers\Traits\DownloadImage;
+use Arikaim\Extensions\Image\Controllers\Traits\ImageRelations;
 use Arikaim\Core\Controllers\Traits\FileDownload;
 
 /**
@@ -27,6 +28,7 @@ class ImageApi extends ApiController
     use       
         ImageUpload,
         ImageImport,
+        ImageRelations,
         ViewSvg,
         DownloadImage,
         FileDownload;

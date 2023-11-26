@@ -1,12 +1,12 @@
+{% set image_src = (model.hasImage() == false) ? '/api/image/svg/view/icons~image' : model.image.src %}
 <div class="w-64 p-4 flex flex-rows items-start"> 
     <img 
-        id="model_image"
+        id="model_main_image"
         class="ui image bordered rounded" 
-        src="{{ url(model.image.src) }}?t={{ today() }}">  
+        src="{{ url(image_src) }}?t={{ today() }}">  
     <div class="px-2">
         <button 
-            class="ui icon mini basic button delete-image-button" 
-            uuid="{{ model.uuid }}">
+            class="ui icon mini basic button delete-image-button">
             <i class="icon trash orange"></i>
         </button>  
     </div>      

@@ -7,12 +7,6 @@
     </div>
 {% else %}
     {% for item in items.getItems() %}
-        {{  component('image::admin.library.view.card',{ 
-                image: item, 
-                type: type,
-                relation_id: relation_id,                     
-                relation_type: relation_type 
-            }) 
-        }}   
+        {{ component('image::admin.library.view.card',{ image: item }) }}   
     {% endfor %}    
 {% endif %} 

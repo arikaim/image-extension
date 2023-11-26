@@ -24,6 +24,12 @@ function ImageApi() {
     this.import = function(data, onSuccess, onError) {
         return arikaim.post('/api/image/import',data,onSuccess,onError);      
     };
+
+    this.updateMainRelation = function(data, onSuccess, onError) {
+        return arikaim.put('/api/image/relations/main',data,onSuccess,onError);      
+    };
+
+    
 }
  
 var imageApi = new ImageApi();

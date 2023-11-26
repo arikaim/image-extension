@@ -9,36 +9,38 @@ function ImagesLibrary() {
         this.loadMessages('image::admin.messages');
     };
 
-    this.initRows = function() {
+    this.updateMainRelation = function(imageId, onSuccess) {
+        var uuid = $('#image_library').attr('uuid');
+        var extension = $('#image_library').attr('extension');
+        var modelClass = $('#image_library').attr('model-class');
 
-        arikaim.ui.button('.image-details',function(element) {
-            $('#image_details').fadeIn(500);
-            var uuid = $(element).attr('uuid');
-
-            arikaim.page.loadContent({
-                id: 'image_details',
-                component: 'image::admin.library.details',
-                params: { uuid: uuid }
-            });   
+        imageApi.updateMainRelation({
+            image_id: imageId,
+            extension: extension,
+            model_class: modelClass,
+            uuid: uuid
+        },function(result) {
+            callFunction(onSuccess,result);
         });
+    };
+
+    this.initRows = function() {
 
         arikaim.ui.button('.set-main',function(element) {
             var imageId = $(element).attr('image-id');
-            
-            console.log(imageId);
-            
-            arikaim.events.emit('image.library.main.use',{
-                image_id: imageId
-            });
+           
+            self.updateMainRelation(imageId,function(result) {
+                $('#model_main_image').attr('src',result.image_src);
+            });  
         });
 
         arikaim.ui.button('.add-image-relation',function(element) {
-            var relationType = $(element).attr('relation-type');
-            var relationId = $(element).attr('relation-id');
+            var relationType = $('#image_library').attr('relation-type');
+            var relationId = $('#image_library').attr('relation-id');
             var imageId = $(element).attr('image-id');
            
             relations.add('ImageRelations','image',imageId,relationType,relationId,function(result) {            
-             //   arikaim.ui.setActiveTab('#images_library_relations_tab','.images-library-tab-item');               
+                       
                 return arikaim.page.loadContent({
                     id: 'image_relations_content',
                     component: 'image::admin.library.relations',

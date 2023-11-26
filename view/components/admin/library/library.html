@@ -4,21 +4,13 @@
         type: type
     } 
 %}
-{% if type == 'main' %}
-    {% set items = [  
-            { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
-            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
-        ]
-    %}
-{% else %}
-    {% set items = [  
-            { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', params, active: true },        
-            { id:'images_library_relations_tab', title: labels.relations, component: 'image::admin.library.relations', icon: 'project diagram', params },
-            { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
-        ]
-    %}
-{% endif %}
-<div class="{{ class }}">
+<div 
+    id="image_library"
+    relation-id="{{ relation_id }}"
+    relation-type="{{ relation_type }}"
+    extension="{{ extension }}"
+    model-class="{{ model_class }}"
+    uuid="{{ model.uuid }}">
     <div class="w-full flex flex-rows items-start flex-grow">
         <div class="w-1/4">
             <h4 class="bg-gray-100 p-2 px-4 rounded">
@@ -44,13 +36,16 @@
     </div>
     <div class="flex-grow w-full">
         {{  component('semantic~tabs.vertical',{ 
-                items: items, 
+                items: [  
+                    { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', active: true },        
+                    { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
+                ], 
                 menu: { id: 'images_library_menu' }, 
                 item_class: 'images-library-tab-item',
                 content: { 
                     id: 'images_library_content',
                     component: 'image::admin.library.view',
-                    params: params 
+                    params: {} 
                 } 
             })
         }}

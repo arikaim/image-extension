@@ -1,6 +1,7 @@
 {
     "include": {
         "js": [
+            "image::api",
             "system:admin.orm.relations"
         ]
     },

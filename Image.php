@@ -46,7 +46,9 @@ class Image extends Extension
         $this->addApiRoute('GET','/api/image/view/thumbnail/{slug}','ImageApi','viewThumbnail',null);
         $this->addApiRoute('GET','/api/image/svg/view/{name}[/{width}[/{height}]]','ImageApi','viewSvg',null);
         $this->addApiRoute('GET,PUT','/api/image/download/{uuid}','ImageApi','downloadImage',null);
-        $this->addApiRoute('DELETE','/api/image/delete/{uuid}','ImageApi','delete','session');   
+        $this->addApiRoute('DELETE','/api/image/delete/{uuid}','ImageApi','delete','session');  
+        // image relations
+        $this->addApiRoute('PUT','/api/image/relations/main','ImageApi','setMainImage','session');  
         // qrcode (rquires qrcode module)
         $this->addApiRoute('POST','/api/admin/image/qrcode/generate','ImageControlPanel','generateQrCode','session');  
 
