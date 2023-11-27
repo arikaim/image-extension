@@ -12,7 +12,6 @@ namespace Arikaim\Extensions\Image\Service;
 use Arikaim\Core\Db\Model;
 use Arikaim\Core\Service\Service;
 use Arikaim\Core\Service\ServiceInterface;
-use Arikaim\Core\Utils\Curl;
 use Arikaim\Core\Utils\File;
 use Arikaim\Extensions\Image\Classes\ImageLibrary;
 use Arikaim\Core\System\Error\Traits\TaskErrors;
