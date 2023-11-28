@@ -68,7 +68,7 @@ class Image extends Extension
         $this->createStorageFolder(ImageLibrary::IMAGES_PATH,true);
         $this->createStorageFolder(ImageLibrary::IMAGES_PATH . 'thumbnails',true);
         // Services
-        $this->registerService('Image');
+        $this->registerService('ImageService');
         // Events
         $this->registerEvent('image.upload','Trigger after image is uplaoded.');
         $this->registerEvent('image.import','Trigger after image is imported from remote url.');

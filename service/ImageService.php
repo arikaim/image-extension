@@ -19,7 +19,7 @@ use Arikaim\Core\System\Error\Traits\TaskErrors;
 /**
  * Image service class
 */
-class Image extends Service implements ServiceInterface
+class ImageService extends Service implements ServiceInterface
 {
     use TaskErrors;
 
@@ -463,10 +463,10 @@ class Image extends Service implements ServiceInterface
             $mimeType = File::getMimetype($fullPath);
             $tokens = \explode('/',$mimeType);
             // rename file
-            $container->get('storage')->rename($fileName,$fileName . '.' . $tokens[1]);
+            $container->get('storage')->rename($fileName,$fileName . '.' . $tokens[1]);          
             $fileName .= '.' . $tokens[1];           
         }
-        
+         
         return $this->save($fileName,$userId,$options,$protected);
     }          
 }
