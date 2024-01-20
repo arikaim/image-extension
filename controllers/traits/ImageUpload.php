@@ -62,14 +62,14 @@ trait ImageUpload
                 $resizeHeight,[
                     'private'     => $private,
                     'category_id' => (empty($categoryId) == true) ? null : $categoryId,
-                    'deny_delete' => $denyDelete,
+                    'deny_delete' => empty($denyDelete) ? 0 : 1,
                     'image_id'    => $imageId
                 ],$private);  
             } else {
                 $image = $this->get('image.library')->save($destinationPath . $item['name'],$userId,[
                     'private'     => $private,
                     'category_id' => (empty($categoryId) == true) ? null : $categoryId,
-                    'deny_delete' => $denyDelete,
+                    'deny_delete' => empty($denyDelete) ? 0 : 1,
                     'image_id'    => $imageId
                 ],$private); 
             }                             
