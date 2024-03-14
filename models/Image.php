@@ -129,11 +129,7 @@ class Image extends Model
      */
     public function getImagePath(bool $relative = true): string
     {
-        if ($this->private == 1) {
-            return ($relative == true) ? Path::getRelativePath($this->file_name) : $this->file_name;
-        }
-
-        return ($relative == true) ? $this->file_name : ROOT_PATH . BASE_PATH . $this->file_name;
+        return ($relative == true) ? $this->file_name : Path::STORAGE_PATH . $this->file_name;
     }
 
     /**

@@ -42,7 +42,7 @@ class ImageService extends Service implements ServiceInterface
      */
     public function createImagesPath(?int $userId, bool $protected, ?string $path = null): ?string
     {
-        global $container;
+        global $arikaim;
 
         if ($protected == true && empty($userId) == false) {
             $path = ImageLibrary::IMAGES_PATH . 'user-' . (string)$userId . DIRECTORY_SEPARATOR;
@@ -50,8 +50,8 @@ class ImageService extends Service implements ServiceInterface
             $path = ImageLibrary::PUBLIC_IMAGES_PATH . $path ?? '';
         }
        
-        if ($container->get('storage')->has($path) == false) {
-            return ($container->get('storage')->createDir($path) == true) ? $path : null;
+        if ($arikaim->get('storage')->has($path) == false) {
+            return ($arikaim->get('storage')->createDir($path) == true) ? $path : null;
         }
 
         return $path;
@@ -66,9 +66,9 @@ class ImageService extends Service implements ServiceInterface
      */
     public function getImages(string $collection, int $userId = null): ?object
     {
-        global $container;
+        global $arikaim;
 
-        $userId = $userId ?? $container->get('access')->getId();
+        $userId = $userId ?? $arikaim->get('access')->getId();
         $model = Model::ImageCollections('image')->findCollection($collection);
         
         return ($model == null) ? null : $model->items();
@@ -84,9 +84,9 @@ class ImageService extends Service implements ServiceInterface
      */
     public function saveCollection(string $title, ?string $slug = null, ?int $userId = null)
     {
-        global $container;
+        global $arikaim;
 
-        $userId = $userId ?? $container->get('access')->getId();
+        $userId = $userId ?? $arikaim->get('access')->getId();
 
         return Model::ImageCollections('image')->saveCollection($title,$slug,$userId);
     }
@@ -101,9 +101,9 @@ class ImageService extends Service implements ServiceInterface
      */
     public function addImageToCollection($image, $collection, ?int $userId = null): bool
     {
-        global $container;
+        global $arikaim;
 
-        $userId = $userId ?? $container->get('access')->getId();
+        $userId = $userId ?? $arikaim->get('access')->getId();
         $collection = (\is_object($collection) == true) ? 
             $collection : 
             Model::ImageCollections('image')->findCollection($collection,$userId);
@@ -154,10 +154,10 @@ class ImageService extends Service implements ServiceInterface
      */
     public function deleteImageFile(string $fileName): bool
     {
-        global $container;
+        global $arikaim;
 
-        if ($container->get('storage')->has($fileName) == true) {
-            return $container->get('storage')->delete($fileName);
+        if ($arikaim->get('storage')->has($fileName) == true) {
+            return $arikaim->get('storage')->delete($fileName);
         }
 
         return true;
@@ -171,7 +171,7 @@ class ImageService extends Service implements ServiceInterface
      */
     public function getEncodedImage($uuid): ?string
     {
-        global $container;
+        global $arikaim;
 
         $image = Model::Image('image')->findById($uuid);    
         if ($image == null) {
@@ -183,8 +183,8 @@ class ImageService extends Service implements ServiceInterface
             return \base64_encode($data);
         }
         
-        if ($container->get('storage')->has($image->file_name,'storage') == true) {
-            $data = $container->get('storage')->read($image->file_name);
+        if ($arikaim->get('storage')->has($image->file_name,'storage') == true) {
+            $data = $arikaim->get('storage')->read($image->file_name);
             return \base64_encode($data);
         }
 
@@ -319,7 +319,7 @@ class ImageService extends Service implements ServiceInterface
      */
     public function createThumbnail($image, int $width, int $height): bool
     {
-        global $container;
+        global $arikaim;
 
         $model = (\is_object($image) == true) ? $image : Model::Image('image')->findImage($image);      
         if ($model == null) {
@@ -328,7 +328,7 @@ class ImageService extends Service implements ServiceInterface
         }  
 
         $thumbnail = Model::ImageThumbnails('image');
-        $fullPath = $container->get('storage')->getFullPath($model->file_name);
+        $fullPath = $arikaim->get('storage')->getFullPath($model->file_name);
 
         $image = $this->getService('image')->resize($fullPath,$width,$height);
         if (empty($image) == true) {
@@ -367,10 +367,10 @@ class ImageService extends Service implements ServiceInterface
         array $options = [],
         bool $protected = false)
     {
-        global $container;
+        global $arikaim;
 
         if (empty($width) == false && empty($height) == false) {
-            $fullPath = $container->get('storage')->getFullPath($fileName);
+            $fullPath = $arikaim->get('storage')->getFullPath($fileName);
 
             $image = $this->getService('image')->resize($fullPath,$width,$height);
             $result = $this->getService('image')->save($image,$fullPath,'');
@@ -392,9 +392,9 @@ class ImageService extends Service implements ServiceInterface
      */
     public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {
-        global $container;
+        global $arikaim;
 
-        $path = $container->get('storage')->getFullPath($fileName);
+        $path = $arikaim->get('storage')->getFullPath($fileName);
         $model = Model::Image('image');   
 
         $imageId = $options['image_id'] ?? null;
@@ -402,8 +402,8 @@ class ImageService extends Service implements ServiceInterface
         
         $data = [
             'file_name'   => $fileName,
-            'file_size'   => $container->get('storage')->getSize($fileName),
-            'mime_type'   => $container->get('storage')->getMimetype($fileName),
+            'file_size'   => $arikaim->get('storage')->getSize($fileName),
+            'mime_type'   => $arikaim->get('storage')->getMimetype($fileName),
             'base_name'   => File::baseName($path),
             'user_id'     => $userId,  
             'deny_delete' => $options['deny_delete'] ?? null,
@@ -451,11 +451,11 @@ class ImageService extends Service implements ServiceInterface
     */
     public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
     {         
-        global $container;
+        global $arikaim;
 
-        $fullPath = $container->get('storage')->getFullPath($fileName);
+        $fullPath = $arikaim->get('storage')->getFullPath($fileName);
 
-        $container->get('http')->get($url,[
+        $arikaim->get('http')->get($url,[
             'sink' => $fullPath
         ]);
 
@@ -463,7 +463,7 @@ class ImageService extends Service implements ServiceInterface
             $mimeType = File::getMimetype($fullPath);
             $tokens = \explode('/',$mimeType);
             // rename file
-            $container->get('storage')->rename($fileName,$fileName . '.' . $tokens[1]);          
+            $arikaim->get('storage')->rename($fileName,$fileName . '.' . $tokens[1]);          
             $fileName .= '.' . $tokens[1];           
         }
          
