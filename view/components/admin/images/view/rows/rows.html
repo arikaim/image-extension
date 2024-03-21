@@ -1,6 +1,5 @@
 {% set image = createModel('Image','image').where('id','>',0) %}
 {% set user_filter = searchValue('user_id','images') %}
-{{ user_filter }}
 {% if user_filter is not empty %}
     {% set image = image.userImagesQuery(user_filter) %}
 {% endif %}
@@ -88,10 +87,7 @@
             <span title="{{ item.file_size|fileSize }}">
                 {{ item.file_name|baseName }}
             </span>   
-        </td>              
-        <td>
-            {{ item.category.getTranslationTitle() }}
-        </td>                        
+        </td>                                           
         <td>{{ item.user.user_name }}</td>                                               
     </tr>
 {% endfor %}

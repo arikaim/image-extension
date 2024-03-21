@@ -15,22 +15,24 @@
                     {{ component('semantic~paginator.dropdown',{ class: 'mini', namespace: 'collections' }) }}
                 </div>
             </div>
-        </div>      
-        <table class="ui compact stackable selectable basic table">
-            <thead class="table-head">
-                <tr>             
-                    <th class="three wide">{{ columns.actions }}</th>
-                    <th class="three wide">{{ columns.date }}</th>   
-                    <th class="four wide">{{ columns.slug }}</th>   
-                    <th>{{ columns.title }}</th>
-                    <th class="one wide">{{ columns.images }}</th>         
-                    <th class="two wide">{{ columns.owner }}</th>                                                                         
-                </tr>
-            </thead>
-            <tbody id="collections_rows" component="image::admin.collections.view.items" namespace="collections">
-                {{ component('image::admin.collections.view.items') }}
-            </tbody>
-        </table>
+        </div>     
+        <div class="ui segment">      
+            <table class="ui compact stackable selectable basic borderless table">
+                <thead class="table-head">
+                    <tr>             
+                        <th class="three wide">{{ columns.actions }}</th>
+                        <th class="three wide">{{ columns.date }}</th>   
+                        <th class="four wide">{{ columns.slug }}</th>   
+                        <th>{{ columns.title }}</th>
+                        <th class="one wide">{{ columns.images }}</th>         
+                        <th class="two wide">{{ columns.owner }}</th>                                                                         
+                    </tr>
+                </thead>
+                <tbody id="collections_rows" component="image::admin.collections.view.items" namespace="collections">
+                    {{ component('image::admin.collections.view.items') }}
+                </tbody>
+            </table>
+        </div>
         <div id="paginator">
             {{ component("semantic~paginator",{ namespace: 'collections' }) }}
         </div>            
