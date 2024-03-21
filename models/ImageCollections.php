@@ -108,25 +108,24 @@ class ImageCollections extends Model
      *
      * @param Builder      $query
      * @param string       $slug
-     * @param integer|null $userId
+     * @param integer $userId
      * @return Builder
      */
-    public function scopeFindCollectionQuery($query, string $slug, ?int $userId = null)
+    public function scopeFindCollectionQuery($query, string $slug, int $userId)
     {
-        $userId = (empty($userId) == true) ? $this->user_id : $userId;
-        $query->where('slug','=',$slug);
-      
-        return (empty($userId) == false) ? $query->where('user_id','=',$userId) : $query;         
+        return $query
+            ->where('slug','=',$slug)
+            ->where('user_id','=',$userId);
     }
 
     /**
      * Find collection
      *
      * @param string       $slug
-     * @param integer|null $userId
+     * @param integer $userId
      * @return object|null
      */
-    public function findCollection(string $slug, ?int $userId = null): ?object
+    public function findCollection(string $slug, int $userId = null): ?object
     {
         $model = $this->findCollectionQuery($slug,$userId)->first();
 

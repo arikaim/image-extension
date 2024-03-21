@@ -64,12 +64,15 @@ class ImageService extends Service implements ServiceInterface
      * @param integer|null $userId
      * @return object|null
      */
-    public function getImages(string $collection, int $userId = null): ?object
+    public function getImages(string $collection, ?int $userId = null): ?object
     {
         global $arikaim;
 
-        $userId = $userId ?? $arikaim->get('access')->getId();
-        $model = Model::ImageCollections('image')->findCollection($collection);
+        
+        $model = Model::ImageCollections('image')->findCollection(
+            $collection,
+            $userId ?? $arikaim->get('access')->getId()
+        );
         
         return ($model == null) ? null : $model->items();
     }
