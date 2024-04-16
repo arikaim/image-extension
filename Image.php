@@ -53,11 +53,11 @@ class Image extends Extension
         $this->addApiRoute('POST','/api/admin/image/qrcode/generate','ImageControlPanel','generateQrCode','session');  
 
         // create db tables
-        $this->createDbTable('ImageSchema');   
-        $this->createDbTable('ImageRelationsSchema');                    
-        $this->createDbTable('ImageThumbnailsSchema');   
-        $this->createDbTable('ImageCollectionsSchema');   
-        $this->createDbTable('ImageCollectionItemsSchema');   
+        $this->createDbTable('Image');   
+        $this->createDbTable('ImageRelations');                    
+        $this->createDbTable('ImageThumbnails');   
+        $this->createDbTable('ImageCollections');   
+        $this->createDbTable('ImageCollectionItems');   
         // Console Commands
         $this->registerConsoleCommand('DeleteImages');          
         // Relation map 

@@ -12,16 +12,16 @@ namespace Arikaim\Extensions\Image\Models\Schema;
 use Arikaim\Core\Db\Schema;
 
 /**
- * Image thumbnails table schema definition.
+ * Image collections database table schema definition.
  */
-class ImageThumbnailsSchema extends Schema  
+class ImageCollections extends Schema  
 {    
     /**
      * Table name
      *
      * @var string
      */
-    protected $tableName = 'image_thumbnails';
+    protected $tableName = 'image_collections';
 
     /**
      * Create table
@@ -33,19 +33,16 @@ class ImageThumbnailsSchema extends Schema
     {            
         // columns
         $table->id();
-        $table->prototype('uuid');        
-        $table->relation('image_id','image');
-        $table->string('folder')->nullable(true);
-        $table->string('mime_type')->nullable(true);
-        $table->string('file_name')->nullable(true);       
-        $table->string('url')->nullable(true);       
-        $table->integer('width')->nullable(true);
-        $table->integer('height')->nullable(true);       
+        $table->prototype('uuid');  
+        $table->userId();
+        $table->status();
+        $table->slug(false);
+        $table->string('title')->nullable(false);
+        $table->text('description')->nullable(true);
         $table->dateCreated();
         // indexes        
-        $table->unique('file_name');
-        $table->unique(['image_id','file_name']);
-        $table->unique(['image_id','width','height']);
+        $table->unique(['slug','user_id']); 
+        $table->index(['status','user_id']);       
     }
 
     /**
@@ -55,6 +52,6 @@ class ImageThumbnailsSchema extends Schema
      * @return void
      */
     public function update($table) 
-    {              
+    {       
     }
 }

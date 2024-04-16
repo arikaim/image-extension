@@ -68,7 +68,6 @@ class ImageService extends Service implements ServiceInterface
     {
         global $arikaim;
 
-        
         $model = Model::ImageCollections('image')->findCollection(
             $collection,
             $userId ?? $arikaim->get('access')->getId()
@@ -427,9 +426,9 @@ class ImageService extends Service implements ServiceInterface
             return $image;
         }
 
-        if ($model->hasImage($path) == true) {
+        if ($model->hasImage($fileName) == true) {
             // update
-            $model = $model->findImage($path);
+            $model = $model->findImage($fileName);
             $image = ($model->update($data) !== false) ? $model : null;          
         } else {
             // create

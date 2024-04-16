@@ -14,7 +14,7 @@ use Arikaim\Core\Db\Schema;
 /**
  * Image database table schema definition.
  */
-class ImageSchema extends Schema  
+class Image extends Schema  
 {    
     /**
      * Table name

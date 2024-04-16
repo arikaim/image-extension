@@ -12,16 +12,16 @@ namespace Arikaim\Extensions\Image\Models\Schema;
 use Arikaim\Core\Db\Schema;
 
 /**
- * Image collections database table schema definition.
+ * Image relations table
  */
-class ImageCollectionsSchema extends Schema  
+class ImageRelations extends Schema  
 {    
     /**
      * Table name
      *
      * @var string
      */
-    protected $tableName = 'image_collections';
+    protected $tableName = 'image_relations';
 
     /**
      * Create table
@@ -30,19 +30,9 @@ class ImageCollectionsSchema extends Schema
      * @return void
      */
     public function create($table) 
-    {            
-        // columns
-        $table->id();
-        $table->prototype('uuid');  
-        $table->userId();
-        $table->status();
-        $table->slug(false);
-        $table->string('title')->nullable(false);
-        $table->text('description')->nullable(true);
-        $table->dateCreated();
-        // indexes        
-        $table->unique(['slug','user_id']); 
-        $table->index(['status','user_id']);       
+    {
+        $table->tablePolymorphicRelations('image_id','image',function($table) {
+        });       
     }
 
     /**
@@ -52,6 +42,6 @@ class ImageCollectionsSchema extends Schema
      * @return void
      */
     public function update($table) 
-    {       
+    {               
     }
 }

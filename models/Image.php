@@ -249,10 +249,8 @@ class Image extends Model
      * @return boolean
      */
     public function hasImage(string $name, ?string $excludeId = null): bool
-    {
-        $image = $this->findImage($name,$excludeId);
-        
-        return ($image != null);
+    { 
+        return ($this->findImage($name,$excludeId) != null);
     }
 
     /**

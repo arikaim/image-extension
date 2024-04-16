@@ -12,16 +12,16 @@ namespace Arikaim\Extensions\Image\Models\Schema;
 use Arikaim\Core\Db\Schema;
 
 /**
- * Image collection items database table schema definition.
+ * Image thumbnails table schema definition.
  */
-class ImageCollectionItemsSchema extends Schema  
+class ImageThumbnails extends Schema  
 {    
     /**
      * Table name
      *
      * @var string
      */
-    protected $tableName = 'image_collection_items';
+    protected $tableName = 'image_thumbnails';
 
     /**
      * Create table
@@ -33,12 +33,19 @@ class ImageCollectionItemsSchema extends Schema
     {            
         // columns
         $table->id();
-        $table->prototype('uuid');  
-        $table->relation('collection_id','image_collections');
-        $table->relation('image_id','image',true);
+        $table->prototype('uuid');        
+        $table->relation('image_id','image');
+        $table->string('folder')->nullable(true);
+        $table->string('mime_type')->nullable(true);
+        $table->string('file_name')->nullable(true);       
+        $table->string('url')->nullable(true);       
+        $table->integer('width')->nullable(true);
+        $table->integer('height')->nullable(true);       
         $table->dateCreated();
         // indexes        
-        $table->unique(['collection_id','image_id']); 
+        $table->unique('file_name');
+        $table->unique(['image_id','file_name']);
+        $table->unique(['image_id','width','height']);
     }
 
     /**
@@ -48,6 +55,6 @@ class ImageCollectionItemsSchema extends Schema
      * @return void
      */
     public function update($table) 
-    {       
+    {              
     }
 }
