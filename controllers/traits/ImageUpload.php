@@ -9,8 +9,6 @@
 */
 namespace Arikaim\Extensions\Image\Controllers\Traits;
 
-use Arikaim\Extensions\Image\Classes\ImageLibrary;
-use Arikaim\Core\Utils\File;
 use Arikaim\Core\Controllers\Traits\FileUpload;
 
 /**
@@ -54,7 +52,10 @@ trait ImageUpload
            
         // process uploaded files        
         foreach ($files as $item) {               
-            if (empty($item['error']) == false) continue;
+            if (empty($item['error']) == false) {
+                $this->error($item['error']);
+                return false;
+            };
             
             if (empty($resizeWidth) == false && empty($resizeHeight) == false) {
                 $image = $this->get('image.library')->resizeAndSave($destinationPath . $item['name'],$userId,
@@ -96,9 +97,9 @@ trait ImageUpload
                 $this->get('image.library')->addImageToCollection($image,$collectionModel);
             }
         }
+
         // fire event 
-        $params = \array_merge($image->toArray(),$data->toArray());
-        $this->get('event')->dispatch('image.upload',$params);
+        $this->get('event')->dispatch('image.upload',\array_merge($image->toArray(),$data->toArray()));
         $this
             ->message('upload')
             ->field('uuid',$image->uuid)
