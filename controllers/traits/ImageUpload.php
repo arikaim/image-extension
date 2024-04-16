@@ -53,7 +53,7 @@ trait ImageUpload
         // process uploaded files        
         foreach ($files as $item) {               
             if (empty($item['error']) == false) {
-                $this->error($item['error']);
+                $this->error('Error upload image');
                 return false;
             };
             
