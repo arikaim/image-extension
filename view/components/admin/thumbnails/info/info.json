@@ -1,5 +1,6 @@
 {
     "title": "Details",
+    "icon": "info",
     "labels": {
         "id": "Id",
         "size": "Size",

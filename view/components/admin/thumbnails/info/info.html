@@ -1,10 +1,11 @@
 {% if uuid is not empty %}
     {% set image = createModel('ImageThumbnails','image').findById(uuid) %}
 {% endif %}
-<div class="ui segment">
+{% component 'semantic~panel' %}
+
     <div class="ui mini header">
         <i class="icon blue circle info"></i>
-        {{ title }}
+        {{ title }} ff
     </div>
     <div class="ui grid">
         <div class="ui two wide column">
@@ -48,4 +49,5 @@
     {%- set language = 'p-2 html' -%}                              
     <img src="{{ url(image.src) }}"/>
     {% endcomponent %}           
-</div>
+
+{% endcomponent %}
