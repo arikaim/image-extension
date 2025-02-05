@@ -4,6 +4,7 @@
         "delete": "Delete",
         "size": "Size",
         "width": "Width",
-        "height": "Height"
+        "height": "Height",
+        "aspect": "Keep aspect ratio"
     }
 }

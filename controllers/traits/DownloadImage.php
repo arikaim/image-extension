@@ -22,11 +22,13 @@ trait DownloadImage
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
      * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
+     * @return mixed
     */
     public function downloadImage($request, $response, $data)
     {
         $uuid = $data->get('uuid',null);
+        $thumbnail = $data->get('thumbnail',null);
+
         $image = Model::Image('image')->findById($uuid);
         // not valid image uuid or id 
         if ($image == null) {
@@ -44,6 +46,14 @@ trait DownloadImage
             $this->requireUserOrControlPanel($image->user_id);
         }
         
+        if (empty($thumbnail) == false) {          
+            $image = $image->findThumbnail($thumbnail);
+            if ($image == null) {
+                $this->error('errors.id','Not valid thumbnail id.');
+                return false;
+            }
+        }
+
         if ($this->get('storage')->has($image->file_name,'storage') == false) {
             $this->error('errors.file','Image file not exist.');
             return false;

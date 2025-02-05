@@ -10,7 +10,6 @@
 namespace Arikaim\Extensions\Image\Controllers;
 
 use Arikaim\Core\Controllers\ControlPanelApiController;
-
 use Arikaim\Core\Controllers\Traits\Crud;
 
 /**

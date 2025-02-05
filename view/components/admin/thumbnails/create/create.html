@@ -4,6 +4,11 @@
         <label>{{ labels.size }}</label>
         {{ component('image::thumbnails.size',{ skip: ['custom'], class: 'selection mini fluid' }) }}
     </div> 
+    {{  component('semantic~form.fields.checkbox',{
+            name: 'aspect_ratio',
+            field_label: labels.aspect
+        }) 
+    }}
     <div class="mt-12">
         <div class="field">
             <label>{{ labels.width }}</label>

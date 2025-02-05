@@ -34,8 +34,8 @@ class ThumbnailsControlPanel extends ControlPanelApiController
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
+     * @param \Arikaim\Core\Validator\Validator $data
+     * @return mixed
     */
     public function createController($request, $response, $data) 
     {          
@@ -45,14 +45,13 @@ class ThumbnailsControlPanel extends ControlPanelApiController
         $uuid = $data->get('uuid');  
         $width = $data->get('width');
         $height = $data->get('height');         
+        $aspectRatio = $data->getBool('aspect_ratio',false);      
 
-        $result = $this->get('image.library')->createThumbnail($uuid,$width,$height);
-        if ($result == false) {
-            $errors = $this->get('image.library')->getErrors();
-            $this->addErrors($errors);
+        $thumbnail = $this->get('image.library')->createThumbnail($uuid,$width,$height,$aspectRatio);
+        if ($thumbnail === false) {
+            $this->error('errors.thumbnail.create');       
             return false;
         }
-        $thumbnail = Model::ImageThumbnails('image')->findThumbnail($width,$height,$uuid);
 
         $this->setResponse(($thumbnail != null),function() use($thumbnail) {                  
             $this
@@ -67,8 +66,8 @@ class ThumbnailsControlPanel extends ControlPanelApiController
      *
      * @param \Psr\Http\Message\ServerRequestInterface $request
      * @param \Psr\Http\Message\ResponseInterface $response
-     * @param Validator $data
-     * @return Psr\Http\Message\ResponseInterface
+     * @param \Arikaim\Core\Validator\Validator $data
+     * @return mixed
     */
     public function deleteController($request, $response, $data)
     { 

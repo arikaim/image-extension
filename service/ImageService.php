@@ -315,11 +315,12 @@ class ImageService extends Service implements ServiceInterface
      * Create thumbnail
      *
      * @param mixed $image
-     * @param integer $width
-     * @param integer $height
-     * @return bool
+     * @param integer|null $width
+     * @param integer|null $height
+     * @param bool $aspectRatio
+     * @return false|object
      */
-    public function createThumbnail($image, int $width, int $height): bool
+    public function createThumbnail($image, ?int $width, ?int $height, bool $aspectRatio = false)
     {
         global $arikaim;
 
@@ -332,15 +333,22 @@ class ImageService extends Service implements ServiceInterface
         $thumbnail = Model::ImageThumbnails('image');
         $fullPath = $arikaim->get('storage')->getFullPath($model->file_name);
 
-        $image = $this->getService('image')->resize($fullPath,$width,$height);
+        $callback = ($aspectRatio == true) ?
+            function($constraint){
+                $constraint->aspectRatio();
+            } : null;
+
+        $image = $this->getService('image')->resize($fullPath,$width,$height,$callback);
         if (empty($image) == true) {
             $this->addError('errors.image.resize');
             return false;
         }   
-    
+        
+        $size = $this->getService('image')->getSize($image);
+
         // save thumb image
-        $fileName = ImageLibrary::createThumbnailFileName($model->file_name,$width,$height);
-        $path = ImageLibrary::createThumbnailsPath($model->id,false);
+        $fileName = ImageLibrary::createThumbnailFileName($model->file_name,$size['width'],$size['height']);
+        $path = ImageLibrary::createThumbnailsPath($model->id);
 
         $result = $this->getService('image')->save($image,$path,$fileName);
         if ($result === false) {
@@ -348,7 +356,12 @@ class ImageService extends Service implements ServiceInterface
             return false;
         }
 
-        return $thumbnail->saveThumbnail($width,$height,$model->id);          
+        $result = $thumbnail->saveThumbnail($size['width'],$size['height'],$model->id);  
+        if ($result == false) {
+            return false;
+        }        
+
+        return $thumbnail->findThumbnail($size['width'],$size['height'],$model->id);
     }
 
     /**
@@ -448,7 +461,7 @@ class ImageService extends Service implements ServiceInterface
      * @param string $url
      * @param string $fileName
      * @param integer|null $userId
-     * @param bool|null $options   
+     * @param array $options   
      * @return Model|null
     */
     public function import(string $url, string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object

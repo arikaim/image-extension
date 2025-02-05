@@ -164,9 +164,20 @@ class Image extends Model
     }
 
     /**
+     * Find image thumbnail by uuid
+     * @param string|null $uuid
+     * @return object|null
+     */
+    public function findThumbnail(?string $uuid): ?object
+    {
+        return (empty($uuid) == true) ? null : 
+            $this->thumbnails()->where('uuid','=',$uuid)->first();
+    }
+
+    /**
      * Image relations
      *
-     * @return Relation|null
+     * @return mixed
      */
     public function relations()
     {

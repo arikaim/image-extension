@@ -1,6 +1,7 @@
 {
     "labels": {               
         "url": "Url",
+        "download": "Download",     
         "name": "File Name",
         "size": "Size",
         "type": "Mime Type",     

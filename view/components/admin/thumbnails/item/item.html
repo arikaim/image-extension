@@ -18,6 +18,14 @@
         <span class="ui basic label">                  
             {{ item.mime_type }}
         </span>  
+    </div> 
+    <div class="extra content">
+        <a 
+            title="{{ labels.download }}"
+            href="{{ url('/api/image/download/' ~ item.image.uuid ~ '/' ~ item.uuid) }}" 
+            class="ui icon mini basic button">
+            <i class="icon download"></i>
+        </a>   
         {% if item.width != 64 and item.height != 64 %}
         <button 
             class="ui basic icon mini right floated button delete-thumbnail" 
