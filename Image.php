@@ -70,7 +70,7 @@ class Image extends Extension
         // Services
         $this->registerService('ImageService');
         // Events
-        $this->registerEvent('image.upload','Trigger after image is uplaoded.');
+        $this->registerEvent('ImageUploadEvent');
         $this->registerEvent('image.import','Trigger after image is imported from remote url.');
     }       
 
