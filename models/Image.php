@@ -23,6 +23,7 @@ use Arikaim\Core\Db\Traits\Status;
 use Arikaim\Core\Db\Traits\UserRelation;
 use Arikaim\Core\Db\Traits\DateCreated;
 use Arikaim\Core\Db\Traits\FileTypeTrait;
+use Google\Service\TrafficDirectorService\NullMatch;
 
 /**
  * Image db model class
@@ -72,7 +73,7 @@ class Image extends Model
     /**
      * Image relation in all collections
      *
-     * @return Relation|null
+     * @return object|null
      */
     public function collectionItems()
     {
@@ -82,7 +83,7 @@ class Image extends Model
     /**
      * Category relation
      *
-     * @return Relation|null
+     * @return object|null
      */
     public function category()
     {
@@ -156,7 +157,7 @@ class Image extends Model
     /**
      * Thumbnails relation
      *
-     * @return Relation|null
+     * @return object|null
      */
     public function thumbnails()
     {
@@ -187,13 +188,22 @@ class Image extends Model
     /**
      * Thumbnail
      *
-     * @param integer $width
-     * @param integer $height
-     * @return Model|null
+     * @param integer|null $width
+     * @param integer|null $height
+     * @return object|null
      */
-    public function thumbnail(int $width, int $height): ?object
+    public function thumbnail(?int $width, ?int $height): ?object
     {
-        return $this->thumbnails->where('width','=',$width)->where('height','=',$height)->first();
+        $query = $this->thumbnails;
+
+        if (empty($width) == false) {
+            $query = $query->where('width','=',$width);
+        }
+        if (empty($height) == false) {
+            $query = $query->where('height','=',$height);
+        }
+      
+        return $query->first();
     }
 
     /**
