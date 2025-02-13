@@ -72,7 +72,7 @@
             {% endif %}
         </td>
         <td title="{{ item.file_name }}">  
-            {% if item.deny_delete is not empty %}
+            {% if item.deny_delete == true %}
                 <div class="ui basic label">{{ labels.delete }}</div>
             {% endif %}  
             {% if item.private == true %}

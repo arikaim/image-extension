@@ -207,7 +207,7 @@ class ImageService extends Service implements ServiceInterface
     /**
      * Save image relation
      *
-     * @param Model|int $image
+     * @param mixed $image
      * @param integer $relationId
      * @param string $relationType
      * @return Model|bool
@@ -225,7 +225,7 @@ class ImageService extends Service implements ServiceInterface
      *
      * @param integer|null $relationId
      * @param string|null $relationType
-     * @return Colleciton|null
+     * @return \Arikaim\Core\Collection\Collection|null
      */
     public function getRelatedImages(?int $relationId, ?string $relationType)
     {
@@ -402,7 +402,7 @@ class ImageService extends Service implements ServiceInterface
      *
      * @param string $fileName
      * @param integer|null $userId
-     * @param bool $options    
+     * @param array $options    
      * @return Model|null
      */
     public function save(string $fileName, ?int $userId, array $options = [], bool $protected = false): ?object
