@@ -36,7 +36,7 @@ class Image extends Schema
         $table->prototype('uuid');  
         $table->userId();
         $table->status();
-        $table->relation('category_id','category',true);
+        $table->bigInteger('category_id')->unsigned()->nullable(true);
         $table->string('file_name')->nullable(true);
         $table->string('base_name')->nullable(true);
         $table->string('mime_type')->nullable(true);
@@ -65,7 +65,7 @@ class Image extends Schema
             $table->status();
         }   
         if ($this->hasColumn('category_id') == false) {
-            $table->relation('category_id','category',true);
+            $table->bigInteger('category_id')->unsigned()->nullable(true);
         }           
     }
 }
