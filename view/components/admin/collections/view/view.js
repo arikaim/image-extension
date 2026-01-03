@@ -10,10 +10,10 @@ function ImageCollectionsView() {
     var self = this;
 
     this.init = function() {     
-        this.loadMessages('image::admin.collections.messages');
-        paginator.init('collections_rows',"image::admin.collections.view.items",'collections'); 
+        this.loadMessages('image::admin.collections.messages');      
         
         arikaim.ui.loadComponentButton('.create-collection');
+        this.initRows();
     };
 
     this.loaItems = function() {
@@ -51,5 +51,4 @@ var collectionsView = createObject(ImageCollectionsView,ControlPanelView);
 
 arikaim.component.onLoaded(function() {
     collectionsView.init();
-    collectionsView.initRows();
 });

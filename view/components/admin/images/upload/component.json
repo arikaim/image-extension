@@ -1,7 +1,7 @@
 {    
     "include": {
         "js": [
-            "semantic~upload"                       
+            "system:admin.upload"                       
         ]
     },
     "access": {

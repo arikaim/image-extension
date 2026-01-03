@@ -12,6 +12,8 @@ function ImageUpload() {
 
     this.init = function() {
         arikaim.ui.form.addRules("#upload_form");
+
+        /*
         $('.private-image').checkbox({
             onChecked: function() {
                 $('#private_image').val(1) 
@@ -20,8 +22,10 @@ function ImageUpload() {
                 $('#private_image').val(0)              
             }
         });
+        */
 
-        var checked = $('#private_image').checkbox('is checked');
+        
+        var checked = false; //$('#private_image').checkbox('is checked');
         $('#private_image').val(checked);
 
         arikaim.component.loadLibrary('filepond:preview',function(result) {    

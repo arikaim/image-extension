@@ -31,7 +31,3 @@ function ImageControlPanel() {
 };
 
 var imageControlPanel = new ImageControlPanel();
-
-arikaim.component.onLoaded(function() {
-    arikaim.ui.tab();
-});

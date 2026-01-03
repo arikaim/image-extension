@@ -10,10 +10,8 @@ function ImagesView() {
     var self = this;
    
     this.init = function() {
-        paginator.init('image_rows',"image::admin.images.view.rows",'images'); 
-
         $('.users-dropdown').on('change',function() {
-            var selected = $(this).dropdown('get value');
+            var selected = $(this).val();
                     
             search.setSearch({
                 search: {
@@ -49,11 +47,11 @@ function ImagesView() {
     };
 
     this.initRows = function() {
-        $('.status-dropdown').dropdown({
-            onChange: function(value) {               
-                var uuid = $(this).attr('uuid');
-                imageControlPanel.setStatus(uuid,value);
-            }
+        $('.status-dropdown').on('change', function() {
+            var val = $(this).val();      
+            var uuid = $(this).attr('uuid');
+
+            self.setStatus(uuid,val);          
         });    
 
         arikaim.ui.button('.details-button',function(element) {

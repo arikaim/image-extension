@@ -1,8 +1,6 @@
 {
-    "title": {
-        "content": "QR Code Generator",
-        "icon": "qrcode"
-    },
+    "title": "QR Code Generator",       
+    "icon": "icons~qrcode",
     "fields": {
         "data": {
             "label": "QrCode content"

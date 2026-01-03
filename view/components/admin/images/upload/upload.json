@@ -1,7 +1,5 @@
 {   
-    "title": {
-        "content": "Upload Image",
-        "icon": "upload"
-    },
+    "title": "Upload Image",     
+    "icon": "icons~upload",
     "message": "Image module not installed."
 }

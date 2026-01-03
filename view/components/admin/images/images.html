@@ -1,14 +1,42 @@
-{{  component('semantic~tabs.vertical',{ 
+{{  component('system:admin.tabs.vertical',{       
+        id: 'images_menu_tab',
         items: [ 
-            { id: 'view_images', title: labels.view, component: 'image::admin.images.view', icon: 'list', active: true },
-            { title: labels.upload, component: 'image::admin.images.upload', icon: 'upload' },   
-            { title: labels.import, component: 'image::admin.images.import', icon: 'file import' },
-            { id: 'thumbnails_image', title: labels.thumbnails, component: 'image::admin.thumbnails', icon: 'images' },
-            { id: 'edit_image', title: labels.edit, component: 'image::admin.images.edit', icon: 'edit' },
-            { id: 'image_relations', title: labels.relations, component: 'image::admin.images.relations', icon: 'project diagram' }
-        ], 
-        menu: { id: 'image_menu' }, 
-        item_class: 'image-tab-item',
-        content: { id: 'image_content', component: 'image::admin.images.view', params: params } 
+            { 
+                title: labels.view, 
+                component: 'image::admin.images.view', 
+                svg_icon: 'icons~list', 
+                active: true 
+            },
+            { 
+                title: labels.upload, 
+                component: 'image::admin.images.upload', 
+                svg_icon: 'icons~upload' 
+            },   
+            { 
+                title: labels.import, 
+                component: 'image::admin.images.import', 
+                svg_icon: 'icons~document' 
+            },
+            { 
+                title: labels.thumbnails, 
+                component: 'image::admin.thumbnails', 
+                svg_icon: 'icons~image' 
+            },
+            { 
+                title: labels.edit, 
+                component: 'image::admin.images.edit', 
+                svg_icon: 'icons~edit' 
+            },
+            { 
+                title: labels.relations, 
+                component: 'image::admin.images.relations', 
+                svg_icon: 'icons~info' 
+            }
+        ],   
+        content: { 
+            id: 'images_menu_tab_content', 
+            component: 'image::admin.images.view', 
+            params: {} 
+        } 
     })
 }}

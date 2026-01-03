@@ -1,21 +1,22 @@
-{% component 'semantic~tabs.vertical.content' %}
-{% set class = 'seven wide' %}
-<div class="mt-8">
-    {% if hasModule('image') == true %}
-    {{  component('image::admin.images.upload.form',{ 
-            hide_protected: hide_protected,
-            file_name: file_name,  
-            deny_delete: deny_delete,
-            target_path: target_path,
-            resize_width: resize_width,
-            resize_height: resize_height,
-            create_target_path: create_target_path 
-        }) 
-    }}
-    {% else %}
-        <div class="ui warning message">
-            {{ message }}
-        </div>
-    {% endif %}
-</div>    
+{% component 'system:admin.panel' %}    
+    {% set size = 'w-1/2' %}
+    <div class="mt-4">
+        {% if hasModule('image') == true %}
+            {{  component('image::admin.images.upload.form',{ 
+                    hide_protected: hide_protected,
+                    file_name: file_name,  
+                    deny_delete: deny_delete,
+                    target_path: target_path,
+                    resize_width: resize_width,
+                    resize_height: resize_height,
+                    create_target_path: create_target_path 
+                }) 
+            }}
+        {% else %}
+            {{  component('system:admin.alert.warning',{
+                    message: message
+                }) 
+            }}
+        {% endif %}
+    </div>    
 {% endcomponent %}

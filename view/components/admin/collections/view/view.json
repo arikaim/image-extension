@@ -2,6 +2,9 @@
     "tooltip": {    
         "create": "Create Collection" 
     },
+    "buttons": {
+        "create": "Create"
+    },
     "columns": {        
         "actions": "Actions",
         "title": "Title",

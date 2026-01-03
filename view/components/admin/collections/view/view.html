@@ -1,24 +1,17 @@
-<div class="ui two column grid">
-    <div class="column">
-        <div class="ui segment">     
-            <div class="ui stackable two column grid">      
-                <div class="column">
-                    <button 
-                        mountTo="collection_content"
-                        component="image::admin.collections.add"
-                        title="{{ tooltip.create }}"
-                        class="ui mini curcular green icon button create-collection">
-                        <i class="icon plus"></i>
-                    </button>
-                </div>
-                <div class="right aligned column">                   
-                    {{ component('semantic~paginator.dropdown',{ class: 'mini', namespace: 'collections' }) }}
-                </div>
-            </div>
+<div class="flex flex-row items-start">
+    <div class="w-1/2">
+        <div class="{{ theme.panel }}">     
+            <button 
+                mountTo="collection_content"
+                component="image::admin.collections.add"
+                title="{{ tooltip.create }}"
+                class="{{ theme.buttons.green }} create-collection">
+                {{ buttons.create }}
+            </button>                
         </div>     
-        <div class="ui segment">      
-            <table class="ui compact stackable selectable basic borderless table">
-                <thead class="table-head">
+        <div class="mt-4 {{ theme.panel }}">      
+            <table class="{{ theme.table.default }}">
+                <thead>
                     <tr>             
                         <th class="three wide">{{ columns.actions }}</th>
                         <th class="three wide">{{ columns.date }}</th>   
@@ -28,15 +21,18 @@
                         <th class="two wide">{{ columns.owner }}</th>                                                                         
                     </tr>
                 </thead>
-                <tbody id="collections_rows" component="image::admin.collections.view.items" namespace="collections">
+                <tbody 
+                    id="collections_rows" 
+                    component="image::admin.collections.view.items" 
+                    namespace="collections">
                     {{ component('image::admin.collections.view.items') }}
                 </tbody>
             </table>
         </div>
         <div id="paginator">
-            {{ component("semantic~paginator",{ namespace: 'collections' }) }}
+            
         </div>            
     </div>
-    <div class="column" id="collection_content">
+    <div class="ml-4 w-1/2" id="collection_content">
     </div>
 </div>
