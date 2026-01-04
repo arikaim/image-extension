@@ -16,6 +16,8 @@
         "created": "Date"
     },
     "labels": {
+        "upload": "Upload",    
+        "import": "Import",      
         "user": "User"
     }
 }

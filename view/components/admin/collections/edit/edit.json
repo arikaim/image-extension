@@ -1,6 +1,4 @@
 {
     "title": "Edit Image Collection",
-    "icon": "edit",
-    "labels": {        
-    }
+    "icon": "icons~edit"
 }

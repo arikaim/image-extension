@@ -1,6 +1,6 @@
 {
     "title": "Image Details",
-    "icon": "info",
+    "icon": "icons~info",
     "labels": {
         "id": "Id",
         "size": "Size",

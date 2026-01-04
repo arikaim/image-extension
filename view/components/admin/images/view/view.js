@@ -6,10 +6,12 @@
  */
 'use strict';
 
-function ImagesView() {
-    var self = this;
+class ImagesView extends View {
    
-    this.init = function() {
+    self = this;
+
+    init() {
+
         $('.users-dropdown').on('change',function() {
             var selected = $(this).val();
                     
@@ -34,48 +36,28 @@ function ImagesView() {
         },'imageSearch');
 
         this.loadMessages('image::admin.messages');
+        this.initRows();  
     };
 
-    this.loadList = function() {        
+    loadList() {        
         arikaim.page.loadContent({
             id: 'image_rows',         
             component: 'image::admin.images.view.rows'
-        },function(result) {
-            self.initRows();  
-            paginator.reload(); 
+        },(result) => {
+            this.initRows();  
+            //paginator.reload(); 
         });
     };
 
-    this.initRows = function() {
+    initRows() {
+        arikaim.ui.loadComponentButton('.image-action');
+
         $('.status-dropdown').on('change', function() {
             var val = $(this).val();      
             var uuid = $(this).attr('uuid');
 
-            self.setStatus(uuid,val);          
+            imageControlPanel.setStatus(uuid,val);          
         });    
-
-        arikaim.ui.button('.details-button',function(element) {
-            var uuid = $(element).attr('uuid');
-            
-            $('#details_content').show();
-
-            return arikaim.page.loadContent({
-                id: 'details_content',
-                component: 'image::admin.images.details',
-                params: { uuid: uuid }
-            });     
-        });
-
-        arikaim.ui.button('.image-relations-button',function(element) {
-            var uuid = $(element).attr('uuid');
-            arikaim.ui.setActiveTab('#image_relations','.image-tab-item');
-
-            return arikaim.page.loadContent({
-                id: 'image_content',
-                component: 'image::admin.images.relations',
-                params: { uuid: uuid }
-            });     
-        });
 
         arikaim.ui.button('.delete-button',function(element) {
             var uuid = $(element).attr('uuid');
@@ -91,34 +73,11 @@ function ImagesView() {
                 });
             });
         });
-
-        arikaim.ui.button('.thumbnails-button',function(element) {
-            var uuid = $(element).attr('uuid');    
-            arikaim.ui.setActiveTab('#thumbnails_image','.image-tab-item');
-            
-            return arikaim.page.loadContent({
-                id: 'image_content',
-                component: 'image::admin.thumbnails',
-                params: { uuid: uuid }
-            });          
-        });
-
-        arikaim.ui.button('.edit-button',function(element) {
-            var uuid = $(element).attr('uuid');    
-            arikaim.ui.setActiveTab('#edit_image','.image-tab-item');
-            
-            return arikaim.page.loadContent({
-                id: 'image_content',
-                component: 'image::admin.images.edit',
-                params: { uuid: uuid }
-            });          
-        });
     };
 };
 
-var imagesView = createObject(ImagesView,ControlPanelView);
+var imagesView = new ImagesView();
 
 arikaim.component.onLoaded(function() {
     imagesView.init();
-    imagesView.initRows();  
 }); 

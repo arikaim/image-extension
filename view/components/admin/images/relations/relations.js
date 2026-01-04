@@ -1,6 +1,8 @@
 'use strict';
 
 arikaim.component.onLoaded(function() {
+    /*
+
     $('#select_image').dropdown({
         onChange: function(value, text, choice) {            
             arikaim.page.loadContent({
@@ -15,4 +17,5 @@ arikaim.component.onLoaded(function() {
             });  
         }
     });
+    */
 });

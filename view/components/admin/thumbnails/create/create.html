@@ -1,31 +1,56 @@
-<form class="ui mini form {{ class }}" id="create_thumbnail_form">
+<form 
+    class="form {{ class }}" 
+    id="create_thumbnail_form">
     <input type="hidden" name="uuid" id="uuid" value="{{ uuid }}">  
-    <div class="field">
-        <label>{{ labels.size }}</label>
-        {{ component('image::thumbnails.size',{ skip: ['custom'], class: 'selection mini fluid' }) }}
+    <div class="{{ theme.form.field }}">
+        <label class="{{ theme.form.label }}">
+            {{ labels.size }}
+        </label>
+        {{  component('image::thumbnails.size',{ 
+                skip: ['custom'], 
+                class: 'input-sm' 
+            }) 
+        }}
     </div> 
-    {{  component('semantic~form.fields.checkbox',{
+    {{  component('system:form.fields.checkbox',{
             name: 'aspect_ratio',
             field_label: labels.aspect
         }) 
     }}
-    <div class="mt-12">
-        <div class="field">
-            <label>{{ labels.width }}</label>
-            <div class="ui right labeled input">    
-                <input type="text" rule="integer" id="width" name="width" value="">
-                <div class="ui basic label">px</div>
+    <div class="mt-2">
+        <div class="{{ theme.form.field }}">
+            <label class="{{ theme.form.label }}">
+                {{ labels.width }}
+            </label>
+            <div class="{{ theme.form.input }}">    
+                <input                   
+                    type="text" 
+                    rule="integer" 
+                    id="width" 
+                    name="width" 
+                    value="">
+                <span class="label-text my-auto">px</span>        
             </div>   
         </div>
-        <div class="field">
-            <label>{{ labels.height }}</label>
-            <div class="ui right labeled input">               
-                <input type="text" rule="integer" id="height" name="height" value="">
-                <div class="ui basic label">px</div>
+        <div class="{{ theme.form.field }}">
+            <label class="{{ theme.form.label }}">
+                {{ labels.height }}
+            </label>
+            <div class="{{ theme.form.input }}">               
+                <input 
+                    type="text" 
+                    rule="integer" 
+                    id="height" 
+                    name="height" 
+                    value="">
+                <span class="label-text my-auto">px</span>              
             </div>           
         </div>     
     </div>      
-    <div class="field">
-        {{ component('semantic~form.footer',{ button_class: 'button green mini', button_title: labels.create }) }}               
+    <div class="{{ theme.form.field }}">
+        {{  component('system:form.footer',{              
+                button_title: labels.create 
+            }) 
+        }}               
     </div>
 </form>

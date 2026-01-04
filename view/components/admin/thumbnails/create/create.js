@@ -1,6 +1,8 @@
 'use strict';
 
 arikaim.component.onLoaded(function() {
+   
+    /*
     $('#thumbnail_size_dropdown').dropdown({
         onChange: function(value, text, item) { 
             $('#width').val($(item).attr('data-width'));
@@ -8,7 +10,8 @@ arikaim.component.onLoaded(function() {
             $('#size').val($(item).attr('data-size'));           
         }
     });
-
+    */
+   
     arikaim.ui.form.addRules("#create_thumbnail_form",{});
 
     arikaim.ui.form.onSubmit("#create_thumbnail_form",function() {  

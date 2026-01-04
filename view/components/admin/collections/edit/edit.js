@@ -3,7 +3,9 @@
 arikaim.component.onLoaded(function() {
     arikaim.ui.form.onSubmit('#collection_form',function() {
         return imageCollectionsControlPanel.update('#collection_form');
-    },function(result) {        
+    },function(result) {       
+        collectionsView.updateItem(result.uuid);
+
         arikaim.ui.form.showMessage({
             message: result.message
         });

@@ -14,5 +14,8 @@
         "description": "Description",
         "date": "Date Created",
         "edit": "Edit"
+    },
+    "messages": {
+        "delete": "Confirm delete collection"
     }
 }

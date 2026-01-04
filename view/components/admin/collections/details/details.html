@@ -2,67 +2,64 @@
     {% set collection = createModel('ImageCollections','image').findById(uuid) %}  
 {% endif %}
 
-{% component 'semantic~panel' %}
-<div>
-    <table class="ui very basic definition table">
+{% component 'system:admin.panel' %}   
+    <table class="{{ theme.table.details }}">
         <thead>
             <tr>
-                <th class="three wide"></th>
-                <th></th>
+                <th class="w-1/4"></th>
+                <th class="w-3/4"></th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td class="right aligned">{{ labels.id }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.id }}</td>
                 <td>
-                    <div class="ui basic label">
-                        {{ collection.id }}
-                    </div>
-                    {{ collection.uuid }}
+                    {{ component('system:admin.view.id',{ model: collection }) }}                                                     
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.title }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.title }}</td>
                 <td>
                     {{ collection.title }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">
+                <td class="{{ theme.table.field.label }}">
                     {{ labels.slug }}
                 </td>
                 <td>
-                    <div class="ui basic label">
+                    <div class="badge badge-sm badge-outline">
                         {{ collection.slug }}
                     </div>
                 </td>
             </tr>   
             <tr>
-                <td class="right aligned">{{ labels.description }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.description }}</td>
                 <td>
                     {{ collection.description }}
                 </td>
             </tr>         
             <tr>
-                <td class="right aligned">{{ labels.date }}</td>
-                <td>
-                    <i class="icon outline calendar blue"></i>
-                    {{ collection.date_created|dateFormat }}
+                <td class="{{ theme.table.field.label }}">{{ labels.date }}</td>
+                <td class="flex flex-row items-center">
+                    {{ component('icons~calendar',theme.icons.blue,'svg') }}
+                    <span class="ml-1">
+                        {{ collection.date_created|dateFormat }}
+                    </span>                    
                 </td>
             </tr> 
             <tr>
-                <td class="right aligned">{{ labels.images }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.images }}</td>
                 <td>
                     {{ collection.items.count() }}
                 </td>
             </tr>  
             <tr>
-                <td class="right aligned">{{ labels.owner }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.owner }}</td>
                 <td>
                     {{ collection.user.user_name_or_email }}
                 </td>
             </tr>         
         </tbody>  
-    </table>     
-</div>
+    </table>        
 {% endcomponent %}

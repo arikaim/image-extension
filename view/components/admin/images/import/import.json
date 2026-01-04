@@ -1,8 +1,6 @@
 {   
-    "title": {
-        "content": "Import Image",
-        "icon": "download"
-    },
+    "title": "Import Image",
+    "icon": "icons~download",
     "fields": {      
         "url": {
             "label": "Url",               

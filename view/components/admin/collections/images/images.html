@@ -2,15 +2,21 @@
     {% set collection = createModel('ImageCollections','image').findById(uuid) %}  
 {% endif %}
 
-{% component 'semantic~panel' %}
-<div class="ui ten cards">
-  
-    {% for item in collection.items().get() %}
-    <div
-        title="{{ item.image.base_name }}" 
-        class="card">
-        <img src="{{ url(item.image.src) }}">
+{% component 'system:admin.panel' %}
+    {% if collection.items().get()|length == 0 %}
+        {{  component('system:admin.alert.info',{
+                message: info
+            }) 
+        }}
+    {% endif %}
+    <div class="{{ theme.grid.five }}">
+        {% for item in collection.items().get() %}
+        <div
+            title="{{ item.image.base_name }}" 
+            class="{{ theme.card }}">
+            <img 
+                src="{{ url(item.image.src) }}">
+        </div>
+        {% endfor %}
     </div>
-    {% endfor %}
-</div>
 {% endcomponent %}

@@ -1,4 +1,4 @@
-<form class="ui equal width form" id="import_image_form">    
+<form class="form" id="import_image_form">    
     <input type="hidden" name="url" id="url" value="{{ url }}">
     <input type="hidden" name="file_name" id="file_name" value="{{ file_name }}">
     <input type="hidden" name="thumbnail_width" id="thumbnail_width" value="{{ thumbnail_width }}">
@@ -12,10 +12,12 @@
     {% endif %}
 
     {% if hide_preview != true %}
-    <div class="field">      
-        <img class="ui rounded image medium bordered" src="{{ url }}">
+    <div class="{{ theme.form.field }}">      
+        <img 
+            class="rounded" 
+            src="{{ url }}">
         <div class="mt-4">
-            <div class="ui basic label">
+            <div class="badge badge-sm badge-outline">
                 {{ url }}
             </div>
         </div>      
@@ -23,27 +25,33 @@
     {% endif %}
 
     {% if target_path is not empty %}
-    <div class="field">
+    <div class="{{ theme.form.field }}">
         <input type="hidden" name="target_path" id="target_path" value="{{ target_path }}">      
-        <label>{{ fields.path.label }}</label>
-        <div class="ui basic label">
+        <label class="{{ theme.form.label }}">
+            {{ fields.path.label }}
+        </label>
+        <div class="badge badge-sm badge-outline">
             ..{{ target_path|relativePath }} {{ file_name }}
         </div>
     </div>
     {% endif %}   
        
     {% if create_thumbnail == true %}
-    <div class="field">
-        <label>{{ fields.thumbnail.label }}</label>
+    <div class="{{ theme.form.field }}">
+        <label class="{{ theme.form.label }}">
+            {{ fields.thumbnail.label }}
+        </label>
         {{ component('image::thumbnails.size',{ skip: ['custom'], class: 'selection mini fluid' }) }}
     </div> 
     {% endif %}
-    <div class="field">
-        <label>{{ fields.protected.label }}</label>
+    <div class="{{ theme.form.field }}">
+         <label class="{{ theme.form.label }}">
+            {{ fields.protected.label }}
+        </label>
         <input type="checkbox" name="private" id="private" value="1">
         <span class="px-1">
             {{ fields.protected.placeholder }}
         </span>
     </div>
-    {{ component('semantic~form.footer',{ button_title: buttons.import }) }}   
+    {{ component('system:form.footer',{ button_title: buttons.import }) }}   
 </form>

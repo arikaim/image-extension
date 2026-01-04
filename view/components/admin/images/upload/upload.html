@@ -1,5 +1,5 @@
 {% component 'system:admin.panel' %}    
-    {% set size = 'w-1/2' %}
+    {% set parent = 'show' %}
     <div class="mt-4">
         {% if hasModule('image') == true %}
             {{  component('image::admin.images.upload.form',{ 

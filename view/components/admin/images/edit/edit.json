@@ -1,8 +1,6 @@
 {   
-    "title": {
-        "content": "Edit Image",
-        "icon": "edit"
-    },
+    "title":"Edit Image",    
+    "icon": "icons~edit",
     "fields": {      
         "category": {
             "label": "Category",               

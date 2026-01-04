@@ -6,48 +6,39 @@
  */
 'use strict';
 
-function ImageCollectionsView() {
-    var self = this;
-
-    this.init = function() {     
-        this.loadMessages('image::admin.collections.messages');      
+class ImageCollectionsView extends View {
+  
+    init() {     
+        this.loadMessages('image::admin.collections.messages',() => {           
+        });      
         
+        this.setItemSelector('row_');
+        this.setItemsSelector('collections_rows');
+        this.setItemComponentName('image::admin.collections.view.item');
+
         arikaim.ui.loadComponentButton('.create-collection');
         this.initRows();
     };
 
-    this.loaItems = function() {
-        return arikaim.page.loadContent({
-            id: 'collections_rows',           
-            component: 'image::admin.collections.view.items'                  
-        },function(result) {
-            self.initRows();
-        });         
-    };
-
-    this.initRows = function() {
+    initRows() {
         arikaim.ui.loadComponentButton('.collection-action-button');
        
-       
-        arikaim.ui.button('.delete-collection',function(element) {
+        arikaim.ui.button('.delete-collection',(element) => {
             var uuid = $(element).attr('uuid');
             var title = $(element).attr('data-title');
-            var message = arikaim.ui.template.render(self.getMessage('remove.content'),{ title: title });
+            var message = arikaim.ui.template.render(this.getMessage('remove.content'),{ title: title });
 
-            modal.confirmDelete({ 
-                title: self.getMessage('remove.title'),
-                description: message
-            },function() {
+            arikaim.ui.getComponent('delete_collection').open(function() {
                 imageCollectionsControlPanel.delete(uuid,function(result) {
                     arikaim.ui.table.removeRow('#row_' + uuid);     
-                    arikaim.page.toastMessage(result.message);
+                    arikaim.ui.getComponent('toast').show(result.message);
                 });               
-            });           
+            },message);      
         });
     };    
 }
 
-var collectionsView = createObject(ImageCollectionsView,ControlPanelView);
+var collectionsView = new ImageCollectionsView();
 
 arikaim.component.onLoaded(function() {
     collectionsView.init();

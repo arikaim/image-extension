@@ -9,10 +9,10 @@
     <input type="hidden" name="resize_height" id="resize_height" value="{{ resize_height }}">       
     {% if target_path is not empty %}
     <div class="{{ theme.form.field }}">        
-        <label>
+        <label class="{{ theme.form.label }}">
             {{ fields.path.label }}
         </label>
-        <div class="ui basic label">
+        <div class="badge badge-sm badge-outline">
             ..{{ target_path|relativePath }} {{ file_name }}
         </div>
     </div>
@@ -34,15 +34,20 @@
         <div class="badge badge-sm badge-outline">{{ resize_height }}px</div>
     </div>
     {% endif %} 
-    <div class="{{ theme.form.field }}">
-        <div class="private-image">
-            <input type="checkbox" name="private_image" id="private_image" value="1">
-            <label>{{ fields.protected.label }}</label>
-        </div>
-        <span class="px-1">
-            {{ fields.protected.placeholder }}
-        </span>
+    <div class="{{ theme.form.field }} flex flex-rows items-center gap-1">     
+        <input 
+            type="checkbox" 
+            name="private_image" 
+            id="private_image" 
+            value="1">
+        <label class="{{ theme.form.label }}">
+            {{ fields.protected.label }}
+        </label>
     </div>
+    <div class="mt-1 px-1 text-sm">
+        {{ fields.protected.placeholder }}
+    </div>
+   
     {{  component('system:form.footer',{ 
             button_title: buttons.save.content 
         }) 

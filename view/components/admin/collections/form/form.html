@@ -1,20 +1,32 @@
 {% if uuid is not empty %}
     {% set collection = createModel('ImageCollections','image').findById(uuid) %}  
 {% endif %}
-<form class="ui form" id="collection_form">  
+<form class="form" id="collection_form">  
     <input type="hidden" name="uuid" id="uuid" value="{{ collection.uuid }}">  
-    <div class="field required">
-        <label>{{ fields.title.label }}</label>       
-        <input rule="minLength[2]" type="text" name="title" id="title" {{ fields.title.placeholder|attr('placeholder') }} value="{{ collection.title }}">         
+    <div class="{{ theme.form.field }} required">
+        <label class="{{ theme.form.label }}">
+            {{ fields.title.label }}
+        </label>       
+        <input 
+            class="{{ theme.form.input }}"
+            rule="minLength[2]" 
+            type="text" 
+            name="title" 
+            id="title" 
+            {{ fields.title.placeholder|attr('placeholder') }} 
+            value="{{ collection.title }}">         
     </div> 
-    <div class="field">
-        <label>{{ fields.description.label }}</label>
+    <div class="{{ theme.form.field }}">
+        <label class="{{ theme.form.label }}">
+            {{ fields.description.label }}
+        </label>
         <textarea 
+            class="{{ theme.form.textarea }}"
             name="description" 
             id="description" 
             rows="7" 
             cols="7" 
             {{ fields.description.placeholder|attr('placeholder') }}>{{ collection.description }}</textarea>       
     </div>  
-    {{ component('semantic~form.footer') }}    
+    {{ component('system:form.footer') }}    
 </form>

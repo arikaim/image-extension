@@ -1,45 +1,44 @@
 {% if uuid is not empty %}
     {% set image = createModel('Image','image').findById(uuid) %}
 {% endif %}
-{% component 'semantic~panel' %}
+{% component 'system:admin.panel' %}   
     <div class="ui image p-4 bordered">
         <img src="{{ image.thumbnail(64,64).src }}">
     </div>
-    <table class="ui table very basic definition">
+    <table class="{{ theme.table.details }}">
         <tbody>
             <tr>
-                <td class="right aligned">{{ labels.id }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.id }}</td>
                 <td>
-                    <div class="ui basic label">{{ image.id }}</div>
-                    {{ image.uuid }}
+                    {{ component('system:admin.view.id',{ model: image }) }}                    
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.status }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.status }}</td>
                 <td>
-                    {{ component('semantic~status.label',{ status: image.status }) }}
+                    {{ component('system:admin.status.label',{ status: image.status }) }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.path }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.path }}</td>
                 <td>
                     {{ image.file_name }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.file_name }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.file_name }}</td>
                 <td>
                     {{ image.base_name }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.type }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.type }}</td>
                 <td>
                     {{ image.mime_type }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.size }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.size }}</td>
                 <td>
                     {% if image.width is empty and image.height is empty %}
                         N/A
@@ -49,19 +48,19 @@
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.file_size }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.file_size }}</td>
                 <td>
                     {{ image.file_size|fileSize }}
                 </td>
             </tr>
             <tr>
-                <td class="right aligned">{{ labels.owner }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.owner }}</td>
                 <td>
                     {{ image.user.user_name_or_email }}
                 </td>
             </tr>  
             <tr>
-                <td class="right aligned">{{ labels.src }}</td>
+                <td class="{{ theme.table.field.label }}">{{ labels.src }}</td>
                 <td>
                     {{ url(image.src) }}
                 </td>

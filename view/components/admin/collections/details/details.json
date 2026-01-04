@@ -1,6 +1,6 @@
 {
     "title": "Image Collection Details",
-    "icon": "info",
+    "icon": "icons~info",
     "labels": {        
         "id": "Id",   
         "slug": "Slug",           

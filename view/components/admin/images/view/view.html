@@ -1,26 +1,43 @@
 {% set status_filter = searchValue('status','images') %}
 <div class="mt-4 {{ theme.panel }} flex flex-row items-center">
-    <div class="column left aligned">
+    <button 
+        mountTo="details_content"
+        component="image::admin.images.upload"
+        class="{{ theme.buttons.icon }} image-action"       
+        title="{{ labels.upload }}">
+        {{ component('icons~upload',theme.icons.menu,'svg') }}
+    </button>     
+    <button 
+        mountTo="details_content"
+        component="image::admin.images.import"
+        class="{{ theme.buttons.icon }} image-action"       
+        title="{{ labels.import }}">
+        {{ component('icons~document',theme.icons.menu,'svg') }}
+    </button> 
+    <div class="">
         {% if hasExtension('users') == true %}
             <span class="font-bold px-1">{{ labels.user }}</span>
             {# component('users::admin.users.dropdown',{ 
                 class: 'clearable', data_field: 'id' }) #}
         {% endif %}
     </div>      
-    <div class="column">   
+    <div class="w-1/3">   
         {{ component('system:admin.search.form',{ namespace: 'images' }) }}      
     </div>            
 </div>
 <div class="mt-4 flex flex-row items-start">
+    <div 
+        class="hidden mr-4" 
+        id="details_content">
+    </div>
     <div class="{{ theme.panel }} w-full flex-grow">
-        <table class="{{ theme.table.default }}">
+        <table class="{{ theme.table.default }} table-sm">
             <thead>
                 <tr>              
                     <th class="">{{ columns.action }}</th>
                     <th class="">{{ columns.thumbnail }}</th>   
                     <th class="">{{ columns.status }}</th>         
-                    <th class="">{{ columns.created }}</th>              
-                  
+                    <th class="">{{ columns.created }}</th>                                
                     <th class="">{{ columns.size }}</th> 
                     <th>{{ columns.name }}</th>                         
                     <th class="">{{ columns.user }}</th>                   
@@ -36,6 +53,4 @@
         <div id="paginator">                 
         </div>
     </div>  
-    <div class="ml-4 w-94 hidden" id="details_content">
-    </div>
 </div>

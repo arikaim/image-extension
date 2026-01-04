@@ -1,0 +1,52 @@
+{% if uuid is not empty %}
+    {% set item = createModel('ImageCollections','image').findById(uuid) %}
+{% endif %}
+
+<tr id="row_{{ item.uuid }}">
+    <td>
+        <button 
+            mountTo="collection_content"
+            component="image::admin.collections.edit"
+            params="uuid:{{ item.uuid }}"
+            class="{{ theme.buttons.icon }} collection-action-button">
+            {{ component('icons~edit',theme.icons.menu,'svg') }}
+        </button>  
+        <button 
+            mountTo="collection_content"
+            component="image::admin.collections.details"
+            params="uuid:{{ item.uuid }}"
+            class="{{ theme.buttons.icon }} collection-action-button">
+            {{ component('icons~info',theme.icons.menu,'svg') }}
+        </button>  
+        <button 
+            mountTo="collection_content"
+            component="image::admin.collections.images"
+            params="uuid:{{ item.uuid }}"
+            class="{{ theme.buttons.icon }} collection-action-button">
+            {{ component('icons~image',theme.icons.menu,'svg') }}
+        </button>  
+        <button                
+            uuid="{{ item.uuid }}"
+            data-title="{{ item.title }}"
+            class="{{ theme.buttons.icon }} delete-collection">
+            {{ component('icons~trash',theme.icons.delete,'svg') }}
+        </button>  
+    </td>
+    <td>
+        {{ item.date_created|dateFormat }}
+    </td>
+    <td>
+        <div class="badge badge-sm badge-outline">
+            {{ item.slug }}
+        </div>
+    </td>
+    <td>
+        {{ item.title }}
+    </td>
+    <td>
+        {{ item.items.count() }}
+    </td>
+    <td>
+        {{ item.user.user_name_or_email }}
+    </td>
+</tr>

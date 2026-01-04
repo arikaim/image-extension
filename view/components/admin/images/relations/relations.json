@@ -1,8 +1,6 @@
 {
-    "title": {
-        "content": "Relations",
-        "icon": "project diagram"
-    },
+    "title":  "Relations",   
+    "icon": "icons~share",
     "labels":{
         "image": "Image"
     }

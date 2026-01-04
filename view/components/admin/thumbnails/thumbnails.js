@@ -14,22 +14,6 @@ function ThumbnailsControlPanel() {
     this.delete = function(uuid, onSuccess, onError) {
         return arikaim.delete('/api/admin/image/thumbnail/' + uuid,onSuccess,onError);          
     };
-
-    this.init = function() {
-        $('.image-dropdown').on('change',function() {
-            var selected = $('.image-dropdown').dropdown("get value");
-            
-            arikaim.page.loadContent({
-                id: 'image_details_content',
-                component: 'image::admin.thumbnails.details',             
-                params: { uuid: selected }
-            });  
-        });
-    }
 };
 
 var thumbnailsControlPanel = new ThumbnailsControlPanel();
-
-arikaim.component.onLoaded(function() {
-    thumbnailsControlPanel.init();
-});
