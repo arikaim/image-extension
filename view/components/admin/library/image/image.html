@@ -1,16 +1,16 @@
 {% set image_src = (model.hasImage() == false) ? '/api/image/svg/view/icons~image' : model.image.src %}
-<div class="p-2 flex flex-col items-start"> 
+<div class="p-2 flex flex-row items-start"> 
     <div>
         <img 
             id="model_main_image"
-            class="ui image bordered rounded" 
+            class="h-20 w-20" 
             src="{{ url(image_src) }}?t={{ today() }}">  
     </div>   
     <div class="p-2">
         <button 
             title="{{ labels.remove }}"
-            class="ui icon mini basic button delete-image-button">
-            <i class="icon trash orange"></i>
+            class="{{ theme.buttons.icon }} delete-image-button">
+            {{ component('icons~trash',theme.icons.delete,'svg') }}
         </button>  
     </div>      
 </div>

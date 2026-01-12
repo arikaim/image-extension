@@ -13,7 +13,7 @@
     uuid="{{ model.uuid }}">
     <div class="w-full flex flex-rows items-start flex-grow">
         <div class="w-1/4">
-            <h4 class="bg-gray-100 p-2 px-4 rounded">
+            <h4 class="bg-gray-100 py-1 font-bold px-4 rounded">
                 {{ labels.main }}
             </h4>
             {{  component('image::admin.library.image',{
@@ -22,7 +22,7 @@
             }}
         </div>
         <div class="w-3/4 pl-2">
-            <h4 class="bg-gray-100 p-2 px-4 rounded">
+            <h4 class="bg-gray-100 py-1 px-4 rounded font-bold">
                 {{ labels.images }}
             </h4>   
             <div class="p-2" id="image_relations_content">
@@ -35,16 +35,30 @@
         </div>
     </div>
     <div class="flex-grow w-full">
-        {{  component('semantic~tabs',{ 
+        {{  component('system:admin.tabs',{ 
+                id: 'images_library_tab_menu',
                 items: [  
-                    { id: 'library_tab', title: labels.library, component: 'image::admin.library.view', icon: 'images', active: true },        
-                    { title: labels.upload, component: 'image::admin.library.upload', icon: 'upload', params },              
+                    {                        
+                        title: labels.library, 
+                        component: 'image::admin.library.view', 
+                        svg_icon: 'icons~image', 
+                        active: true 
+                    },        
+                    { 
+                        title: labels.upload, 
+                        component: 'image::admin.library.upload', 
+                        svg_icon: 'icons~upload', 
+                        params: '' 
+                    },              
                 ], 
-                item_class: 'images-library-tab-item',
                 content: { 
                     id: 'images_library_content',
                     component: 'image::admin.library.view',
-                    params: {} 
+                    params: { 
+                        relation_id: relation_id,      
+                        relation_type: relation_type,
+                        type: type
+                    }
                 } 
             })
         }}

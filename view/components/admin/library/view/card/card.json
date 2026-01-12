@@ -2,5 +2,9 @@
     "labels": {
         "main": "Set Main",      
         "add": "Add to linked images"       
+    },
+    "buttons": {
+        "main": "Main",
+        "link": "Link"
     }
 }

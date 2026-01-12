@@ -1,6 +1,6 @@
 {% set items = service('image.library').getRelatedImages(relation_id,relation_type) %}
 {% if items|length == 0 %}
-    <div class="ui message">
+    <div class="px-1">
         {{ labels.empty }}
     </div>
 {% else %}

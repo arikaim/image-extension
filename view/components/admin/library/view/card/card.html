@@ -1,21 +1,27 @@
 <div 
-    class="ui card" 
+    class="{{ theme.card.small }}" 
     id="row_{{ relation_uuid|default(image.uuid) }}">
-    <div class="image">
-        <img src="{{ url(image.thumbnail(64,64).src) }}">   
+    <div class="text-xs font-bold" title="{{ image.file_name }}">
+        {{ image.base_name }}
     </div>
-    <div class="extra content">
-        <button 
-            class="ui basic button compact mini icon set-main" 
-            title="{{ labels.main }}"                   
-            image-id="{{ image.id }}">
-            <i class="icon home"></i>         
-        </button>
-        <button 
-            class="ui basic button compact mini icon add-image-relation" 
-            title="{{ labels.add }}"
-            image-id="{{ image.id }}">
-            <i class="icon plus"></i>
-        </button>          
-    </div>   
+    <div class="mt-2 flex flex-row items-start">
+        <img 
+            class="h-20 w-20"
+            src="{{ url(image.thumbnail(64,64).src) }}">   
+       
+        <div class="ml-2 join">
+            <button 
+                class="join-item {{ theme.buttons.green }} btn-xs set-main" 
+                title="{{ labels.main }}"                   
+                image-id="{{ image.id }}">
+                {{ buttons.main }}
+            </button>
+            <button 
+                class="join-item {{ theme.buttons.blue }} btn-xs add-image-relation" 
+                title="{{ labels.add }}"
+                image-id="{{ image.id }}">
+                {{ buttons.link }}         
+            </button>          
+        </div>   
+    </div>
 </div>    

@@ -4,8 +4,6 @@ function ImagesLibrary() {
     var self = this;
    
     this.init = function() {
-        paginator.init('image_library_items',"image::admin.library.view.items",'images.library'); 
-
         this.loadMessages('image::admin.messages');
     };
 
@@ -53,7 +51,3 @@ function ImagesLibrary() {
 };
 
 var imagesLibrary = createObject(ImagesLibrary,ControlPanelView);
-
-arikaim.component.onLoaded(function() { 
-    arikaim.ui.tab('.images-library-tab-item','images_library_content',['relation_id','relation_type']);  
-});

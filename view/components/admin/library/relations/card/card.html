@@ -1,14 +1,21 @@
-<div class="ui card" 
+<div class="{{ theme.card.small }}" 
     id="row_{{ relation_uuid|default(image.uuid) }}">
-    <div class="image">
-        <img src="{{ url(image.thumbnail(64,64).src) }}">   
+    <div class="text-xs font-bold" title="{{ image.file_name }}">
+        {{ image.base_name }}
     </div>
-    <div class="extra content">
-        <button 
-            class="ui basic icon mini compact button remove-image-relation" 
-            title="{{ labels.delete }}"
-            uuid="{{ relation_uuid }}">
-            <i class="icon orange trash"></i>
-        </button>
-    </div>
+    <div class="mt-1 flex flex-row items-start">
+        <div class="">
+            <img 
+                class="h-full w-full"
+                src="{{ url(image.thumbnail(64,64).src) }}">   
+        </div>
+        <div class="ml-1">
+            <button 
+                class="{{ theme.buttons.icon }} remove-image-relation" 
+                title="{{ labels.delete }}"
+                uuid="{{ relation_uuid }}">
+                {{ component('icons~trash',theme.icons.delete,'svg') }}
+            </button>
+        </div>
+    </div>   
 </div>    

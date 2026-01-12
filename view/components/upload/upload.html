@@ -1,6 +1,8 @@
 <div class="{{ class|default('mt-8') }}">
     {% if hide_title != true %}
-    <h4>{{ title }}</h4>
+        <h4 class="font-bold">
+            {{ title }}
+        </h4>
     {% endif %}
     {{  component('image::upload.form',{ 
             hide_protected: hide_protected,

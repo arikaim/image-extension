@@ -42,7 +42,3 @@ function ImagesLibraryRelatins() {
 };
 
 var imagesLibraryRelations = createObject(ImagesLibraryRelatins,ControlPanelView);
-
-arikaim.component.onLoaded(function() { 
-    arikaim.ui.tab('.images-library-tab-item','images_library_content',['relation_id','relation_type']);  
-});
